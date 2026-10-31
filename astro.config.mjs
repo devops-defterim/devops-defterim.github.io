@@ -9,6 +9,10 @@ export default defineConfig({
 	output: 'static',
 	trailingSlash: 'always',
 	build: { inlineStylesheets: 'never' },
+	// Küçük font dosyaları CSS'e data: URI olarak gömülmesin; CSP font-src 'self' kalsın.
+	vite: { build: { assetsInlineLimit: 0 } },
+	// Komutlardaki -- ve tırnaklar tipografik karakterlere dönüşmesin.
+	markdown: { smartypants: false },
 	integrations: [
 		starlight({
 			title: 'Bulut Defteri',
@@ -36,7 +40,11 @@ export default defineConfig({
 					codeFontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace",
 					codeFontSize: '0.875rem',
 					uiFontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-					frames: { shadowColor: 'transparent' },
+					frames: {
+						shadowColor: 'transparent',
+						editorActiveTabIndicatorTopColor: 'var(--sl-color-accent)',
+						editorActiveTabIndicatorBottomColor: 'transparent',
+					},
 				},
 			},
 			components: {

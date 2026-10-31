@@ -1,0 +1,16 @@
+# Elle incelenmiş, hassas olmayan değerler (her satıra bir değer).
+# AWS dokümantasyonundaki standart örnek hesap numarası
+123456789012
+# Mini projede verilen örnek hedef ağ
+199.199.199.0
+# dig www.google.com çıktısındaki Google'a ait public adresler
+209.85.202.99
+209.85.202.103
+209.85.202.104
+209.85.202.105
+209.85.202.106
+209.85.202.147
+# Yer tutucu kullanıcı/host adları ve systemd birim adı
+ornekkullanici@github.com
+ec2-user@ec2-203-0-113-10.compute-1.amazonaws.com
+refresh-policy-routes@enX0.service

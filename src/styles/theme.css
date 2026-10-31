@@ -39,10 +39,6 @@
 }
 
 /* Başlıklar */
-.sl-markdown-content h2 {
-	padding-top: 0.5rem;
-	border-top: 1px solid var(--sl-color-hairline-light);
-}
 .sl-markdown-content h2,
 .sl-markdown-content h3 {
 	letter-spacing: -0.01em;
@@ -116,4 +112,9 @@
 .bd-module-list p {
 	margin: 0.25rem 0 0;
 	color: var(--sl-color-gray-3);
+}
+
+/* Tema seçici: "Otomatik" etiketi kırpılmasın */
+.bd-end starlight-theme-select select {
+	width: 8.5rem !important;
 }
