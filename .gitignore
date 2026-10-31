@@ -1,0 +1,33 @@
+# Kaynak dosyalar ve çalışma dosyaları (asla repoya girmez)
+*.pdf
+/*.png
+/sources/
+/work/
+/renders/
+claude-code-prompt.md
+private-notes/
+
+# Gizli bilgiler
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Build ve bağımlılıklar
+node_modules/
+dist/
+.astro/
+.wrangler/
+
+# Test çıktıları
+/test-results/
+/playwright-report/
+/screenshots/
+
+# İşletim sistemi ve editör
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
