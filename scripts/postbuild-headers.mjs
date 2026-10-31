@@ -1,4 +1,4 @@
-// Build sonrası dist/_headers dosyasını üretir.
+// Build sonrası dist/_headers ve dist/404.html dosyalarını üretir.
 // HTML içindeki inline script'lerin SHA-256 hash'lerini toplayıp CSP'ye ekler,
 // böylece script-src 'unsafe-inline' gerekmez.
 import crypto from 'node:crypto';
@@ -7,6 +7,10 @@ import path from 'node:path';
 import { walk } from './lib.mjs';
 
 const DIST = path.resolve('dist');
+
+// Cloudflare Pages bulunamayan adreslerde kökteki 404.html dosyasını sunar.
+const notFound = path.join(DIST, '404', 'index.html');
+if (fs.existsSync(notFound)) fs.copyFileSync(notFound, path.join(DIST, '404.html'));
 const INLINE_SCRIPT = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/gi;
 
 const hashes = new Set();

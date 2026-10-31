@@ -9,7 +9,7 @@ const items = keys.map((key) => ({ label: lessonLabel(key), title: lessons[key a
 <Default />
 {
 	items.length > 0 && (
-		<p class="bd-lesson-meta">
+		<p class="bd-lesson-meta" data-pagefind-ignore>
 			<span class="bd-lesson-meta-label">Kaynak:</span>
 			{items.map((item, i) => (
 				<span>

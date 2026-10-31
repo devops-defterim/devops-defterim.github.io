@@ -21,6 +21,7 @@ export default defineConfig({
 			locales: { root: { label: 'Türkçe', lang: 'tr' } },
 			sidebar: buildSidebar(modules),
 			lastUpdated: false,
+			disable404Route: true,
 			pagination: true,
 			tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 3 },
 			customCss: [

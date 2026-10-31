@@ -1,0 +1,13 @@
+{
+	"menuButton.accessibleLabel": "Menüyü aç veya kapat",
+	"pagefind.clear_search": "Temizle",
+	"pagefind.load_more": "Daha fazla sonuç",
+	"pagefind.search_label": "Bu sitede ara",
+	"pagefind.filters_label": "Filtreler",
+	"pagefind.zero_results": "[SEARCH_TERM] için sonuç bulunamadı",
+	"pagefind.many_results": "[SEARCH_TERM] için [COUNT] sonuç",
+	"pagefind.one_result": "[SEARCH_TERM] için [COUNT] sonuç",
+	"pagefind.alt_search": "[SEARCH_TERM] için sonuç yok. Bunun yerine [DIFFERENT_TERM] sonuçları gösteriliyor",
+	"pagefind.search_suggestion": "[SEARCH_TERM] için sonuç yok. Şunlardan birini dene:",
+	"pagefind.searching": "[SEARCH_TERM] aranıyor..."
+}
