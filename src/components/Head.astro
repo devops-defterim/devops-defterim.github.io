@@ -1,0 +1,13 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+---
+
+<Default />
+{/* Masaüstünde menünün kapalı tercihini ilk boyamadan önce uygular. Hash'i CSP'ye build sonrası eklenir. */}
+<script is:inline>
+	try {
+		if (localStorage.getItem('bd-sidebar') === 'closed') {
+			document.documentElement.setAttribute('data-sidebar-collapsed', '');
+		}
+	} catch (e) {}
+</script>

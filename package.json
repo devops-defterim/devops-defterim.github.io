@@ -5,10 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/postbuild-headers.mjs",
     "preview": "astro preview",
     "check:links": "node scripts/check-links.mjs",
-    "check:leaks": "node scripts/check-leaks.mjs"
+    "check:sensitive": "node scripts/check-sensitive.mjs",
+    "check": "npm run check:links && npm run check:sensitive"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.8",
@@ -16,5 +17,8 @@
     "@fontsource/jetbrains-mono": "^5.3.0",
     "astro": "^7.4.4",
     "sharp": "^0.35.5"
+  },
+  "engines": {
+    "node": ">=22.23.4"
   }
 }

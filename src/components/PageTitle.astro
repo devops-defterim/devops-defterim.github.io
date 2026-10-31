@@ -1,0 +1,35 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import { lessons, lessonLabel } from '../config/lessons.mjs';
+
+const keys = Astro.locals.starlightRoute.entry.data.lessons ?? [];
+const items = keys.map((key) => ({ label: lessonLabel(key), title: lessons[key as keyof typeof lessons] }));
+---
+
+<Default />
+{
+	items.length > 0 && (
+		<p class="bd-lesson-meta">
+			<span class="bd-lesson-meta-label">Kaynak:</span>
+			{items.map((item, i) => (
+				<span>
+					{i > 0 && '; '}
+					{item.label}
+					{item.title && <span class="bd-lesson-title"> · {item.title}</span>}
+				</span>
+			))}
+		</p>
+	)
+}
+
+<style>
+	.bd-lesson-meta {
+		margin-top: 0.5rem;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+	.bd-lesson-meta-label {
+		font-weight: 600;
+		margin-inline-end: 0.25rem;
+	}
+</style>

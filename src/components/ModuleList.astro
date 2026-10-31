@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import { modules } from '../config/modules.mjs';
+
+const docs = await getCollection('docs');
+const items = modules
+	.map((m) => {
+		const pages = docs
+			.filter((d) => d.id.startsWith(`${m.dir}/`))
+			.sort((a, b) => (a.data.order ?? 999) - (b.data.order ?? 999));
+		return pages.length ? { ...m, href: `/${pages[0].id}/`, count: pages.length } : null;
+	})
+	.filter((m) => m !== null);
+---
+
+<ul class="bd-module-list">
+	{
+		items.map((m) => (
+			<li>
+				<a href={m.href}>{m.label}</a>
+				<p>{m.summary}</p>
+			</li>
+		))
+	}
+</ul>

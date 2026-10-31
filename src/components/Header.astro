@@ -1,0 +1,109 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+
+const { hasSidebar } = Astro.locals.starlightRoute;
+---
+
+<div class="bd-header">
+	<div class="bd-start">
+		{
+			hasSidebar && (
+				<button
+					type="button"
+					class="bd-menu-button"
+					popovertarget="starlight__sidebar"
+					aria-controls="starlight__sidebar"
+					aria-expanded="false"
+					data-sidebar-toggle
+				>
+					<Icon name="bars" size="1.25rem" />
+					<span class="sr-only">Menüyü aç veya kapat</span>
+				</button>
+			)
+		}
+		<div class="bd-title">
+			<SiteTitle />
+		</div>
+	</div>
+	<div class="bd-search print:hidden">
+		<Search />
+	</div>
+	<div class="bd-end print:hidden">
+		<a class="bd-about" href="/hakkinda/">Hakkında</a>
+		<ThemeSelect />
+	</div>
+</div>
+
+<script>
+	import '../scripts/sidebar-toggle';
+</script>
+
+<style>
+	.bd-header {
+		display: flex;
+		align-items: center;
+		gap: var(--sl-nav-gap);
+		height: 100%;
+	}
+	.bd-start {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-width: 0;
+	}
+	.bd-title {
+		overflow: clip;
+		min-width: 0;
+		padding: 0.25rem;
+		margin: -0.25rem;
+	}
+	.bd-search {
+		display: flex;
+		flex: 1;
+		justify-content: flex-end;
+	}
+	.bd-end {
+		display: none;
+		align-items: center;
+		gap: 1rem;
+	}
+	.bd-menu-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width: 2.5rem;
+		height: 2.5rem;
+		margin-inline-start: -0.5rem;
+		border: 1px solid transparent;
+		border-radius: 6px;
+		background: transparent;
+		color: var(--sl-color-white);
+		cursor: pointer;
+	}
+	.bd-menu-button:hover {
+		background: var(--sl-color-gray-6);
+	}
+	.bd-menu-button[aria-expanded='true'] {
+		border-color: var(--sl-color-hairline);
+	}
+	.bd-about {
+		color: var(--sl-color-gray-2);
+		text-decoration: none;
+		font-size: var(--sl-text-sm);
+	}
+	.bd-about:hover {
+		color: var(--sl-color-white);
+	}
+	@media (min-width: 50rem) {
+		.bd-search {
+			justify-content: center;
+		}
+		.bd-end {
+			display: flex;
+		}
+	}
+</style>

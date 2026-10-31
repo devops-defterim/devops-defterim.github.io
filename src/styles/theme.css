@@ -1,0 +1,119 @@
+/* Bulut Defteri teması: tek vurgu rengi (petrol yeşili) ve sıcak nötrler. */
+
+:root {
+	--sl-font: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--sl-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+	--sl-content-width: 46rem;
+	--sl-line-height: 1.7;
+	--sl-text-h1: 2rem;
+	--sl-text-h2: 1.5rem;
+	--sl-text-h3: 1.2rem;
+
+	/* Koyu mod (Starlight varsayılanı) */
+	--sl-color-accent-low: #12312b;
+	--sl-color-accent: #2f9e88;
+	--sl-color-accent-high: #8fdcc9;
+	--sl-color-white: #eef0ee;
+	--sl-color-gray-1: #dde1de;
+	--sl-color-gray-2: #b9c0bc;
+	--sl-color-gray-3: #8e9792;
+	--sl-color-gray-4: #5d6662;
+	--sl-color-gray-5: #383f3c;
+	--sl-color-gray-6: #232826;
+	--sl-color-black: #151817;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: #d4ebe5;
+	--sl-color-accent: #0e6b5c;
+	--sl-color-accent-high: #094a40;
+	--sl-color-white: #161a19;
+	--sl-color-gray-1: #252b29;
+	--sl-color-gray-2: #3a423f;
+	--sl-color-gray-3: #59625e;
+	--sl-color-gray-4: #838d89;
+	--sl-color-gray-5: #c7cdc9;
+	--sl-color-gray-6: #e8ebe7;
+	--sl-color-gray-7: #f2f4f0;
+	--sl-color-black: #fbfbf8;
+}
+
+/* Başlıklar */
+.sl-markdown-content h2 {
+	padding-top: 0.5rem;
+	border-top: 1px solid var(--sl-color-hairline-light);
+}
+.sl-markdown-content h2,
+.sl-markdown-content h3 {
+	letter-spacing: -0.01em;
+	font-weight: 600;
+}
+
+/* Bağlantılar */
+.sl-markdown-content a {
+	text-underline-offset: 0.2em;
+	text-decoration-thickness: 1px;
+}
+
+/* Satır içi kod */
+.sl-markdown-content :not(pre) > code {
+	padding: 0.1em 0.35em;
+	border-radius: 4px;
+	background: var(--sl-color-gray-6);
+	font-size: 0.875em;
+}
+
+/* Tablolar */
+.sl-markdown-content table {
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content th {
+	text-align: start;
+	background: var(--sl-color-gray-6);
+}
+
+/* Menüde aktif sayfa */
+.sidebar-content a[aria-current='page'] {
+	font-weight: 600;
+}
+
+/* Masaüstünde menüyü gizleme */
+@media (min-width: 50rem) {
+	:root[data-has-sidebar][data-sidebar-collapsed] {
+		--sl-content-inline-start: 0rem;
+	}
+	:root[data-sidebar-collapsed] .sidebar-pane {
+		display: none !important;
+	}
+}
+
+/* Mobilde Starlight'ın sağdaki menü düğmesi için ayrılan boşluk gereksiz */
+:root[data-has-sidebar] header.header {
+	padding-inline-end: var(--sl-nav-pad-x);
+}
+
+/* Ana sayfa */
+.bd-module-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-top: 1px solid var(--sl-color-hairline);
+}
+.bd-module-list li {
+	margin: 0;
+	padding: 1rem 0;
+	border-bottom: 1px solid var(--sl-color-hairline);
+}
+.bd-module-list a {
+	font-weight: 600;
+	font-size: var(--sl-text-lg);
+	text-decoration: none;
+	color: var(--sl-color-white);
+}
+.bd-module-list a:hover {
+	color: var(--sl-color-accent-high);
+}
+.bd-module-list p {
+	margin: 0.25rem 0 0;
+	color: var(--sl-color-gray-3);
+}
