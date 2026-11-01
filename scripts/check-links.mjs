@@ -4,8 +4,8 @@ import path from 'node:path';
 import { walk } from './lib.mjs';
 
 const DIST = path.resolve('dist');
-// Site bir alt dizinde yayınlanıyor (GitHub Pages proje sitesi); kontrol ederken bu önek atılır.
-const BASE = (process.env.SITE_BASE ?? '/devops-defterim').replace(/\/$/, '');
+// Site bir alt dizinde yayınlanıyorsa (SITE_BASE) kontrol ederken bu önek atılır.
+const BASE = (process.env.SITE_BASE ?? '').replace(/\/$/, '');
 if (!fs.existsSync(DIST)) {
 	console.error('dist yok. Önce npm run build çalıştır.');
 	process.exit(1);

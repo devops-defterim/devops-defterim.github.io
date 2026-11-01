@@ -1,6 +1,6 @@
 // Build sonrası:
 // 1. dist/404/index.html → dist/404.html (GitHub Pages bulunamayan adreslerde bunu sunar).
-// 2. "/" ile başlayan ama site öneki (base) taşımayan iç bağlantılara öneki ekler
+// 2. Site bir alt dizinde yayınlanıyorsa (SITE_BASE), "/" ile başlayan ama öneki taşımayan iç bağlantılara öneki ekler
 //    (Markdown ve ön bilgi alanındaki /modul/sayfa/ bağlantıları).
 // 3. Her HTML sayfasının <head> başına CSP ve referrer meta etiketlerini ekler.
 //    GitHub Pages özel HTTP başlığı desteklemediği için güvenlik politikası meta etiketle verilir.
@@ -12,7 +12,7 @@ import path from 'node:path';
 import { walk } from './lib.mjs';
 
 const DIST = path.resolve('dist');
-const BASE = (process.env.SITE_BASE ?? '/devops-defterim').replace(/\/$/, '');
+const BASE = (process.env.SITE_BASE ?? '').replace(/\/$/, '');
 const notFound = path.join(DIST, '404', 'index.html');
 if (fs.existsSync(notFound)) fs.copyFileSync(notFound, path.join(DIST, '404.html'));
 

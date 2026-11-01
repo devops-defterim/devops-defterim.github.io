@@ -4,9 +4,10 @@ import starlight from '@astrojs/starlight';
 import { modules } from './src/config/modules.mjs';
 import { buildSidebar } from './src/config/sidebar.mjs';
 
-// GitHub Pages proje sitesi: https://ozmenyasin111.github.io/devops-defterim/
-const SITE = 'https://ozmenyasin111.github.io';
-const BASE = '/devops-defterim';
+// GitHub Pages: devops-defterim organizasyonunun devops-defterim.github.io reposu, kök adreste yayınlanır.
+// Başka bir adreste/alt dizinde yayınlamak için SITE_URL ve SITE_BASE ortam değişkenleri kullanılabilir.
+const SITE = process.env.SITE_URL ?? 'https://devops-defterim.github.io';
+const BASE = process.env.SITE_BASE ?? '/';
 
 export default defineConfig({
 	site: SITE,

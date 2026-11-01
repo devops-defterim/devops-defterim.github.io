@@ -2,7 +2,7 @@
 
 Linux, Git ve GitHub, bulut bilişim temelleri ve AWS üzerine Türkçe ders notları. Notlar, Ottoo ve Ayti.tech iş birliğiyle düzenlenen "Bulut Bilişim ve DevOps Bootcamp" eğitiminden tutulmuş kişisel notlardır; resmi materyal değildir.
 
-Site [Astro](https://astro.build) ve [Starlight](https://starlight.astro.build) ile üretilen tamamen statik bir dokümantasyon sitesidir ve GitHub Pages'te yayınlanır: https://ozmenyasin111.github.io/devops-defterim/
+Site [Astro](https://astro.build) ve [Starlight](https://starlight.astro.build) ile üretilen tamamen statik bir dokümantasyon sitesidir ve GitHub Pages'te yayınlanır: https://devops-defterim.github.io/
 
 ## Çalıştırma
 

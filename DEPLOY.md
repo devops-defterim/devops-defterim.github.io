@@ -1,6 +1,8 @@
 # Yayın: GitHub Pages
 
-Site `https://ozmenyasin111.github.io/devops-defterim/` adresinde, alan adı gerektirmeden ve ücretsiz yayınlanır. Kaynak: `github.com/ozmenyasin111/devops-defterim` (public).
+Site `https://devops-defterim.github.io/` adresinde, alan adı gerektirmeden ve ücretsiz yayınlanır. Kaynak: `github.com/devops-defterim/devops-defterim.github.io` (public).
+
+Adreste kişisel kullanıcı adı görünmesin diye site, kişisel hesaba bağlı ücretsiz bir GitHub **organizasyonunda** (`devops-defterim`) durur. Kişisel hesabın ayarları değişmez; organizasyon üyeliği varsayılan olarak gizlidir.
 
 ## Karar
 
@@ -22,15 +24,24 @@ Kaynak: https://docs.github.com/en/pages/getting-started-with-github-pages/githu
 
 Kontrollerden biri başarısız olursa yayın yapılmaz. Pull request'lerde `.github/workflows/ci.yml` aynı kontrolleri yayınlamadan çalıştırır.
 
-Site bir alt dizinde (`/devops-defterim/`) yayınlandığı için `astro.config.mjs` içinde `base` tanımlıdır. Markdown'da iç bağlantılar `/modul/sayfa/` biçiminde yazılır; `scripts/postbuild.mjs` önekleri build sonrasında ekler.
+Repo adı `devops-defterim.github.io` olduğu için site kök adreste yayınlanır; alt dizin öneki yoktur. Başka bir adreste veya alt dizinde yayınlamak gerekirse `SITE_URL` ve `SITE_BASE` ortam değişkenleri verilir (ör. `SITE_BASE=/devops-defterim`); `scripts/postbuild.mjs` iç bağlantılara öneki ekler, `scripts/check-links.mjs` buna göre kontrol eder.
 
-## İlk kurulum (yapıldı)
+## İlk kurulum
 
-1. Repo oluşturuldu ve gönderildi: `gh repo create ozmenyasin111/devops-defterim --public --source . --push`
-2. Pages kaynağı GitHub Actions olarak ayarlandı: repo → **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. İlk yayın `deploy.yml` ile yapıldı.
+1. **Organizasyon (web arayüzü, bir kez):** https://github.com/account/organizations/new?plan=free adresinde
+   - Organization name: `devops-defterim`
+   - Contact email: kendi e-postan (herkese açık gösterilmez)
+   - "This organization belongs to: My personal account"
+   - Create organization. Davet ekranını "Skip this step" ile geç.
+2. **Repo ve Pages:**
 
-Başka bir hesap veya repo adına taşınırsa `astro.config.mjs` içindeki `SITE` ve `BASE`, `scripts/postbuild.mjs` ve `scripts/check-links.mjs` içindeki varsayılan `/devops-defterim` değerleri güncellenmelidir (ya da `SITE_BASE` ortam değişkeni verilir).
+   ```bash
+   gh repo create devops-defterim/devops-defterim.github.io --public --source . --remote origin
+   gh api -X POST repos/devops-defterim/devops-defterim.github.io/pages -f build_type=workflow
+   git push -u origin main
+   ```
+
+3. İlk yayın `deploy.yml` ile birkaç dakika içinde tamamlanır: repo → **Actions**.
 
 ## Güncelleme akışı
 

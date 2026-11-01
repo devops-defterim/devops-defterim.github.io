@@ -76,5 +76,5 @@ Dosya ve klasör adları ASCII (ç→c, ğ→g, ı/İ→i, ö→o, ş→s, ü→
 - Push (= yayın) kullanıcı istemeden yapılmaz.
 - Harici script, analitik, font CDN'i eklenmez. Fontlar `@fontsource` paketleriyle self-host.
 - Yeni inline script eklenirse CSP hash'i build sonrası otomatik eklenir; harici kaynak eklenmez.
-- Site GitHub Pages'te `/devops-defterim/` alt dizininde yayınlanır (`main`'e push = yayın, `.github/workflows/deploy.yml`). İç bağlantılar `/modul/sayfa/` yazılır; önek build sonrası eklenir.
+- Site GitHub Pages'te `https://devops-defterim.github.io/` adresinde, `devops-defterim` organizasyonunun `devops-defterim.github.io` reposundan yayınlanır (`main`'e push = yayın, `.github/workflows/deploy.yml`). İç bağlantılar `/modul/sayfa/` yazılır.
 - Bağımlılıklar minimumda; `npm audit` temiz kalmalı.
