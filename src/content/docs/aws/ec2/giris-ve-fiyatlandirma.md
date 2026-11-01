@@ -26,19 +26,11 @@ Reserved Instance 'RI' & Savings Plan, eğer sanal makinenizi ne kadar süre kul
 
 **Reserved Instances (RI):** Daha geleneksel olan bu yöntemde, donanımı net bir şekilde rezerve edersiniz. Örneğin, "Önümüzdeki bir yıl boyunca şu özelliklerde 5 adet makine kullanacağım" dersiniz. Ödemeyi tek seferde, aylık veya parçalı olarak yapma seçenekleriniz vardır ve her durumda size büyük bir indirim yansır.
 
-**Savings Plans:** RI modelinin daha esnek ve geliştirilmiş halidir. Belirli bir makine tipine sıkışmak veya makine ihtiyacınızın bitmesi gibi durumlar göz önüne alınarak tasarlanmıştır. Bu modelde, örneğin "Önümüzdeki üç yıl boyunca günde 10 dolar ödemeyi taahhüt ediyorum" gibi bir anlaşma yaparsınız. Bu günlük 10 dolarlık limit dâhilinde istediğiniz tipte sanal makineyi açıp kullanmakta özgürsünüzdür. Eğer limitinizi aşarsanız, aşan miktar standart On-Demand fiyatları üzerinden hesaplanır.
-
-:::caution[Düzeltme]
-Savings Plans taahhüdü günlük değil, saatlik harcama tutarı olarak verilir (ör. 1 veya 3 yıl boyunca saatte 0.42 dolar). Mantık aynıdır: taahhüdü aşan kullanım On-Demand fiyatıyla ücretlendirilir.
-:::
+**Savings Plans:** RI modelinin daha esnek ve geliştirilmiş halidir. Belirli bir makine tipine sıkışmak veya makine ihtiyacınızın bitmesi gibi durumlar göz önüne alınarak tasarlanmıştır. Bu modelde, örneğin "Önümüzdeki üç yıl boyunca saatte 10 dolar ödemeyi taahhüt ediyorum" gibi bir anlaşma yaparsınız. Bu saatlik 10 dolarlık limit dâhilinde istediğiniz tipte sanal makineyi açıp kullanmakta özgürsünüzdür. Eğer limitinizi aşarsanız, aşan miktar standart On-Demand fiyatları üzerinden hesaplanır.
 
 ### Spot
 
 AWS, sunucularındaki kullanılmayan kapasiteyi değerlendirmek için bu makineleri devasa indirimlerle sunar. Sistem tıpkı bir borsa gibi çalışır; fiyatlar anlık talebe göre değişir. Burada kullanıcı olarak bütçenize göre bir sınır belirleyebilirsiniz; örneğin, "Bu sanal makine için saatlik en fazla 0.7 Dolar öderim" şeklinde bir talep açarsınız. Eğer AWS'nin güncel fiyatı sizin teklifinizle uyuşuyorsa makineyi bu çok düşük fiyattan kullanmaya başlarsınız. Ancak ufak bir risk vardır: Eğer o makinelere olan genel talep artar ve güncel fiyat sizin belirlediğiniz 0.7 Dolar sınırını aşarsa, AWS size kısa bir bildirim göndererek makineyi otomatik olarak kapatır. Bu yüzden anlık kesintiye tahammülü olan ve arka planda çalışan esnek işler için harika bir seçenektir.
-
-:::caution[Düzeltme]
-2017'den beri Spot fiyatları anlık teklifle değil, uzun vadeli arz ve talebe göre yavaşça değişir. İsteğe bağlı bir en yüksek fiyat hâlâ belirlenebilir, ancak kesintilerin çoğu AWS'nin kapasiteyi geri almasından kaynaklanır. AWS kesintiden 2 dakika önce bildirim gönderir.
-:::
 
 ### Dedicated Host
 

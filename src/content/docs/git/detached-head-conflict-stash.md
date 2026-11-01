@@ -8,11 +8,7 @@ order: 6
 
 ## Detached HEAD
 
-Bilgisayarımızda checkout olduğumuz dal main ile aynı değilse farklı bir committe isek buna Detached HEAD denir.
-
-:::caution[Düzeltme]
-Başka bir branch'e checkout olmak Detached HEAD değildir. Detached HEAD, HEAD'in bir branch'i değil doğrudan bir commit'i gösterdiği durumdur (ör. `git checkout commit_id` sonrası).
-:::
+Bilgisayarımızda bir dala değil doğrudan bir commit'e checkout olduysak buna Detached HEAD denir.
 
 Bilgisayarımıza çekmek istediğimiz spesifik bir commit varsa:
 
@@ -44,11 +40,7 @@ index 4b4f039..103b178 100644
  <body>
 ```
 
-`git diff` komutunu kullanarak dosyalar ve commit’ler arasındaki farklara bakabiliriz. Opsiyonsuz olarak sadece `git diff` komutunu girersek son commit’ten beri yapılan değişiklikleri görürüz. Branch’ler arası farka bakmak istersek `git diff branch_adi1 branch_adi2` komutunu kullanırız. Commitler arasındaki farkı görmek için de benzer şekilde `git diff commit_id1 commit_id2` komutunu kullanırız.
-
-:::caution[Düzeltme]
-Opsiyonsuz `git diff`, çalışma klasörünü hazırlık alanıyla (staging area) karşılaştırır; `git add` ile hazırlık alanına alınmış değişiklikleri göstermez. Son commit'ten bu yana yapılan tüm değişiklikler için `git diff HEAD`, yalnızca hazırlık alanındakiler için `git diff --staged` kullanılır.
-:::
+`git diff` komutunu kullanarak dosyalar ve commit’ler arasındaki farklara bakabiliriz. Opsiyonsuz olarak sadece `git diff` komutunu girersek henüz `git add` ile hazırlık alanına alınmamış değişiklikleri görürüz. Branch’ler arası farka bakmak istersek `git diff branch_adi1 branch_adi2` komutunu kullanırız. Commitler arasındaki farkı görmek için de benzer şekilde `git diff commit_id1 commit_id2` komutunu kullanırız.
 
 ## git rm
 

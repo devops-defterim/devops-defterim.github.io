@@ -132,11 +132,7 @@ Her oluşturulan kullanıcının ismi ile bir grup vardır ve varsayılan olarak
 
 Gruplara kullanıcı eklemek istersek `sudo usermod -a -G ec2-user useradı` komutunu kullanırız.
 
-Bir kullanıcıyı `wheel` grubuna eklersek otomatik olarak şifresiz `sudo` yetkilerine sahip olur.
-
-:::caution[Düzeltme]
-`wheel` grubu `sudo` yetkisi verir, ama varsayılan `sudoers` ayarında (`%wheel ALL=(ALL) ALL`) şifre sorulur. `ec2-user`'ın şifresiz `sudo` kullanabilmesi ayrı bir `sudoers` kuralından gelir.
-:::
+Bir kullanıcıyı `wheel` grubuna eklersek otomatik olarak `sudo` yetkilerine sahip olur.
 
 ![groups kullanıcıadı komutunun çıktısı](../../../assets/ekran/p031-3.webp)
 

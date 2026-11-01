@@ -16,11 +16,7 @@ Web sitemizi ve onu host edeceğimiz GitHub altyapısını oluşturarak devam ed
 
 > onepage klasörüne girin ve git initialization gerçekleştirin.
 
-Bu işlem için öncelikle sisteme kendimizi tanıtmamız gerekiyor bunun için `--global user.email "mail_adresi"` ve `--global user.name "kullanıcı_adınız"` komutlarını kullanıyoruz ardından sırasıyla `git init`, `git add .` ve `git commit -m "commit_satırı"` komutlarını çalıştırırız.
-
-:::caution[Düzeltme]
-Kullanıcı bilgileri `git config` komutuyla verilir: `git config --global user.email "mail_adresi"` ve `git config --global user.name "kullanıcı_adınız"`.
-:::
+Bu işlem için öncelikle sisteme kendimizi tanıtmamız gerekiyor bunun için `git config --global user.email "mail_adresi"` ve `git config --global user.name "kullanıcı_adınız"` komutlarını kullanıyoruz ardından sırasıyla `git init`, `git add .` ve `git commit -m "commit_satırı"` komutlarını çalıştırırız.
 
 ![git config, git init, git add ve git commit komutları](../../../assets/ekran/p113-2.webp)
 
@@ -154,10 +150,6 @@ Bilgiler güncelleniyor...
 Web sitesi yayına alınıyor...
 --- Site güncel haliyle yayında ---
 ```
-
-:::caution[Düzeltme]
-Bu script görevin bazı maddelerini karşılamaz: repoyu `/tmp` yerine `~/onepage` klasörüne indirir, klasörün varlığını kontrol edip `git pull` yapmak yerine her çalıştırmada klasörü silip baştan `git clone` yapar. Görevdeki davranış için örneğin `[ -d /tmp/onepage ] || git clone <repo_url> /tmp/onepage` ve ardından `cd /tmp/onepage && git pull` kullanılabilir. `git clone` adresi de kendi oluşturduğunuz onepage reposu olmalıdır.
-:::
 
 ### 1. Script dosyasını oluşturma
 

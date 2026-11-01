@@ -135,11 +135,7 @@ mdkwjcnec error 23
 error
 ```
 
-IFS, kabuk üzerinde yaptığımız işlemlerdir. While döngüsü içinde IFS kullanarak satırlar bitene kadar satırları okuyoruz ve line değişkenine atayarak echo ile ekrana yazdırmasını sağlıyoruz.
-
-:::caution[Düzeltme]
-IFS (Internal Field Separator), shell'in bir satırı kelimelere bölerken kullandığı ayraç karakterleridir (varsayılan: boşluk, tab, yeni satır). `IFS=` boş bırakılınca `read` satırın başındaki ve sonundaki boşlukları silmeden tüm satırı okur.
-:::
+IFS, kabuğun satırları kelimelere bölerken kullandığı ayraç karakterleridir. While döngüsü içinde IFS kullanarak satırlar bitene kadar satırları okuyoruz ve line değişkenine atayarak echo ile ekrana yazdırmasını sağlıyoruz.
 
 ![Klasördeki .t1 dosyalarında error satırı arayan genişletilmiş script ve çıktısı](../../../../assets/ekran/p063-2.webp)
 

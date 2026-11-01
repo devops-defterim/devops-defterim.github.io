@@ -70,7 +70,7 @@ Kalıcı veri ihtiyacımız olduğu için AWS üzerinde yaygın olarak kullandı
 - Özellikle yüksek giriş/çıkış (I/O) işlemi gerektiren NoSQL ve ilişkisel veritabanlarında (relational databases) kullanılır.
 - Sistemdeki API adı `io1`'dir.
 - Oluşturulabilecek disk boyutu 4 GB ile 16 TB arasında değişir.
-- Disk başına ulaşabildiği maksimum IOPS (saniyelik işlem) kapasitesi 32,000'dir.
+- Disk başına ulaşabildiği maksimum IOPS (saniyelik işlem) kapasitesi 64,000'dir.
 
 ### 2. General Purpose SSD (gp2)
 
@@ -78,14 +78,14 @@ Kalıcı veri ihtiyacımız olduğu için AWS üzerinde yaygın olarak kullandı
 - İşletim sistemi kurulan ana disklerde (boot volumes), düşük gecikmeli interaktif uygulamalarda ve geliştirme/test (dev & test) ortamlarında sıklıkla kullanılır.
 - Sistemdeki API adı `gp2`'dir.
 - Oluşturulabilecek disk boyutu 1 GB ile 16 TB arasında değişir.
-- Disk başına ulaşabildiği maksimum IOPS kapasitesi 10,000'dir.
+- Disk başına ulaşabildiği maksimum IOPS kapasitesi 16,000'dir.
 
 ### 3. Throughput Optimized HDD (st1)
 
 - Sık erişilen ve yüksek veri aktarımı (throughput) gerektiren yoğun iş yükleri için tasarlanmış düşük maliyetli HDD disk türüdür.
 - Büyük veri (big data) projelerinde, veri ambarlarında (data warehouses) ve log işleme görevlerinde kullanım için idealdir.
 - Sistemdeki API adı `st1`'dir.
-- Oluşturulabilecek disk boyutu 500 GB ile 16 TB arasında değişir.
+- Oluşturulabilecek disk boyutu 125 GB ile 16 TB arasında değişir.
 - Disk başına ulaşabildiği maksimum IOPS kapasitesi 500'dür.
 
 ### 4. Cold HDD (sc1)
@@ -93,9 +93,6 @@ Kalıcı veri ihtiyacımız olduğu için AWS üzerinde yaygın olarak kullandı
 - Çok nadir erişilen iş yükleri için tasarlanmış en düşük maliyetli HDD disk seçeneğidir.
 - Günlük olarak daha az tarama işlemi gerektiren "soğuk (colder)" verilerin depolanması ve arşivlenmesi için kullanılır.
 - Sistemdeki API adı `sc1`'dir.
-- Oluşturulabilecek disk boyutu 500 GB ile 16 TB arasında değişir.
+- Oluşturulabilecek disk boyutu 125 GB ile 16 TB arasında değişir.
 - Disk başına ulaşabildiği maksimum IOPS kapasitesi 250'dir.
 
-:::caution[Düzeltme]
-Bu değerler eski AWS dokümantasyonundan. Güncel sınırlar: `io1` için disk başına en fazla 64,000 IOPS, `gp2` için en fazla 16,000 IOPS; `st1` ve `sc1` için en küçük boyut 125 GiB. Bugün genel amaçlı varsayılan disk tipi `gp3`'tür (en fazla 16,000 IOPS).
-:::

@@ -87,7 +87,7 @@ Bilgisayarda konfigüre edilmiş repository'lerin adresi `cd /etc/yum.repos.d` d
 
 ## Sistemi güncelleme
 
-`yum` komutu paket indirmenin yanında sistemi güncellemek için de kullanılır. `yum upgrade` komutunu kullanırız. Sistemde update edilecek bir şey var mı diye bakmak için de `sudo yum update` komutunu kullanırız.
+`yum` komutu paket indirmenin yanında sistemi güncellemek için de kullanılır. `yum upgrade` komutunu kullanırız. Sistemde update edilecek bir şey var mı diye bakmak için de `sudo yum check-update` komutunu kullanırız.
 
 ```bash frame="terminal"
 yum upgrade
@@ -96,10 +96,6 @@ yum upgrade
 ```bash frame="terminal"
 sudo yum update
 ```
-
-:::caution[Düzeltme]
-`yum update` sadece kontrol etmez, bulunan güncellemeleri kurar (onay sorar). Yalnızca güncelleme var mı diye bakmak için `yum check-update` kullanılır. Güncel sistemlerde `yum upgrade` ile `yum update` aynı işi yapar. `/etc/yum.repos.d` bir dosya değil, içinde `.repo` dosyaları bulunan bir dizindir.
-:::
 
 ## Sık kullanılan dnf komutları
 

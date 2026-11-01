@@ -26,11 +26,7 @@ AWS, bilgi işlem gücü, veritabanı depolaması, içerik teslimi özelliklerin
 
 ## Region ve availability zone
 
-AWS üzerindeki bu servisleri kullanma hızımızın en yüksek seviyelere çıkması için kullandığımız sunucuların fiziksel olarak yakınımızda olması gerekir. Bu yüzden AWS, dünyanın geneline yayılmış birçok veri merkezine sahiptir ve bu veri merkezlerinin de birbirleriyle bağlanabilecekleri altyapısı vardır. AWS terminolojisinde bu altyapıların olduğu bölgelere **regions** (bölgeler) denir. Her region en az üç adet veri merkezinden oluşur. Veri merkezleri **availability zone** ismini alır.
-
-:::caution[Düzeltme]
-Bir region en az üç availability zone'dan oluşur. Her availability zone ise bir veya birden fazla veri merkezinden oluşur; yani availability zone tek bir veri merkezi olmak zorunda değildir.
-:::
+AWS üzerindeki bu servisleri kullanma hızımızın en yüksek seviyelere çıkması için kullandığımız sunucuların fiziksel olarak yakınımızda olması gerekir. Bu yüzden AWS, dünyanın geneline yayılmış birçok veri merkezine sahiptir ve bu veri merkezlerinin de birbirleriyle bağlanabilecekleri altyapısı vardır. AWS terminolojisinde bu altyapıların olduğu bölgelere **regions** (bölgeler) denir. Her region en az üç adet veri merkezi grubundan oluşur. Bir veya birden fazla veri merkezinden oluşan bu gruplar **availability zone** ismini alır.
 
 Bu veri merkezleri de birbirlerine çok hızlı bağlantılarla bağlanır. Hatta bu bağlantılar o kadar hızlı seviyelerde oluyor ki sanki üç merkez tek bir yerden yönetiliyormuş gibi aralarındaki gecikme çok az hale geliyor. Ayrıca fiziksel olarak birbirlerinden tamamen ayrı oldukları için de birinde yaşanan sorun diğerini etkilemiyor. Bu tüm duruma regions - availability zone denir.
 

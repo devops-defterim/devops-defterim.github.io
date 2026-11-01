@@ -34,11 +34,7 @@ Süreç şu şekilde, tamamen otomatik ve şifresiz ilerler:
 
 ## Root account
 
-User'lar içinde en önemli ve özel olan user **Root Account**'tur. Bir AWS hesabı ilk oluşturulduğunda otomatik olarak ortaya çıkan bu hesap, sistemdeki mutlak güce sahip, en yetkili kimliktir. Merkezi AWS hesap yönetim servisidir, tüm hesap ayarları bu servis aracılığıyla yönetilir.
-
-:::caution[Düzeltme]
-Root account bir servis değil, hesabın sahibi olan kullanıcı kimliğidir. Tüm hesap ayarları bu kimlikle yönetilebilir.
-:::
+User'lar içinde en önemli ve özel olan user **Root Account**'tur. Bir AWS hesabı ilk oluşturulduğunda otomatik olarak ortaya çıkan bu hesap, sistemdeki mutlak güce sahip, en yetkili kimliktir. Merkezi AWS hesap yönetim kimliğidir, tüm hesap ayarları bu kimlik aracılığıyla yönetilebilir.
 
 :::caution
 Ancak AWS dünyasında çok kritik bir güvenlik kuralı vardır: Kök hesap günlük operasyonlar için kullanılmaz. Pratik olarak; root hesapla sisteme ilk giriş yapıldığında tüm günlük işleri yürütecek yetkili bir 'Admin IAM User' oluşturulur, root hesabın güvenliği artırılır ve zorunlu haller (fatura ayarları, hesabı kapatmak vb.) dışında root hesap bir daha kullanılmamak üzere bir kenara bırakılır.

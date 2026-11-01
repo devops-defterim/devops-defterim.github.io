@@ -91,11 +91,7 @@ echo $osman
 bir
 ```
 
-Tanımladığımız değişkenin diğer session'larda geçerli olması için normal bir değişken olarak tanımladığımız değişkeni environment variable'a dönüştürmemiz gerekmektedir. Bunun için tanımlayacağımız değişken komutunun başına `export` yazmamız gerekir. Bu sayede oluşturduğumuz değişken farklı oturumlarda da geçerli olacaktır.
-
-:::caution[Düzeltme]
-`isim=deger` ile tanımlanan değişken sadece o shell içinde geçerli bir shell değişkenidir; diğer uygulamalar onu göremez. `export` onu environment variable yapar ve bu shell'den başlatılan alt process'lere (örnekteki yeni `bash` gibi) aktarır. Ayrı açılan başka bir oturumda (ör. yeni bir SSH bağlantısı) görünmez; kalıcı olması için `.bashrc` dosyasına yazılmalıdır.
-:::
+Tanımladığımız değişkenin diğer session'larda geçerli olması için normal bir değişken olarak tanımladığımız değişkeni environment variable'a dönüştürmemiz gerekmektedir. Bunun için tanımlayacağımız değişken komutunun başına `export` yazmamız gerekir. Bu sayede oluşturduğumuz değişken bu oturumdan başlatılan diğer process'lerde de geçerli olacaktır.
 
 ### printenv ve unset
 
@@ -173,11 +169,7 @@ echo $OSTYPE
 linux-gnu
 ```
 
-Geçmişte yazdığımız en son komutu tekrarlamak için `!!` komutunu, en son yazdığımız 10. komutu yazdırmak için ise `!10` komutunu kullanırız. Ünlem karakteri ile string aratırsak bu string ile kullanılan en son komutu bulur ve gösterir. Örneğin `!echo` komutuyla da en son kullandığımız echo komutunu verir.
-
-:::caution[Düzeltme]
-`!10`, sondan 10. komutu değil, `history` listesinde 10 numaralı komutu çalıştırır. Sondan 10. komut için `!-10` kullanılır.
-:::
+Geçmişte yazdığımız en son komutu tekrarlamak için `!!` komutunu, geçmiş listesindeki 10 numaralı komutu çalıştırmak için ise `!10` komutunu kullanırız. Ünlem karakteri ile string aratırsak bu string ile kullanılan en son komutu bulur ve gösterir. Örneğin `!echo` komutuyla da en son kullandığımız echo komutunu verir.
 
 ![history -c ile geçmişin temizlenmesi](../../../assets/ekran/p039-3.webp)
 
@@ -230,10 +222,6 @@ Bir terminale interactive login olarak bağlanırsak bash home directory'de dura
 
 Bir terminale interactive nonlogin olarak bağlanırsak bash home directory'de duran `.bashrc` isimli dosyanın içerisinde yazan komutları işler ve bu işlenen şeylerle o session'u açarız.
 
-İki durumda da ilk olarak `/etc/profile` işlenir.
-
-:::caution[Düzeltme]
-`/etc/profile` yalnızca login shell'de işlenir. Nonlogin shell'de `/etc/profile` okunmaz; `~/.bashrc` okunur (o da genellikle `/etc/bashrc` dosyasını yükler).
-:::
+Login shell'de ilk olarak `/etc/profile` işlenir.
 
 Her login olduğumuzda çalışmasını istediklerimizi `.bash_profile` dosyasına yazmamız gerekir. Ama artık `.bash_profile` dosyası da `.bashrc` dosyasına bağlı olduğu için her şeyi buraya yazıyoruz. Örneğin alias ve environment variable tanımlarımız.

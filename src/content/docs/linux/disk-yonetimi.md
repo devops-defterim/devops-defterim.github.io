@@ -94,7 +94,6 @@ Device          Start      End  Sectors Size Type
 
 Partition table entries are not in disk order.
 
-
 Disk /dev/xvdf: 10 GiB, 10737418240 bytes, 20971520 sectors
 Units: sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
@@ -148,11 +147,7 @@ Syncing disks.
 2. Oluşturacağımız partition’un primary veya extended olduğunu belirterek devam ederiz.
 3. Ardından partition numarasını vererek devam ederiz.
 4. Diskin yazacağı byte’ın neresi olduğunu yazarız.
-5. `w` ile kaydedip quit ile çıkarız.
-
-:::caution[Düzeltme]
-fdisk'te `w` değişiklikleri diske yazar ve fdisk'ten kendisi çıkar; ayrıca `q` yazmak gerekmez. `q` ise değişiklikleri kaydetmeden çıkar.
-:::
+5. `w` ile kaydedip çıkarız.
 
 ## Formatlama: dosya sistemi oluşturma
 

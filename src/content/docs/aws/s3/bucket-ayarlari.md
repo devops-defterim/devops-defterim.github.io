@@ -102,17 +102,9 @@ AWS üzerindeki verilerimizi dış dünyaya karşı nasıl koruma altına aldı�
 
 ![Default encryption bölümünde SSE-S3 seçili Encryption type seçenekleri](../../../../assets/ekran/p174-1.webp)
 
-Eğer kendimiz bir key oluşturmak istersek ikinci seçeneği aktif ederiz. Key oluşturmak için dilersek AWS KMS key üzerinden dilersek kendi key management sistemimizde oluşturduğumuz key'i kullanıyoruz. İkisi arasındaki temel fark oluşturduğumuz key için belli aralıklarla yapılması gereken bakımları (90 gün içinde değiştirilmesi, saklanması vb.) AWS'nin yönetiyor oluşudur.
+Eğer kendimiz bir key oluşturmak istersek ikinci seçeneği aktif ederiz. Key oluşturmak için dilersek AWS KMS key üzerinden dilersek kendi key management sistemimizde oluşturduğumuz key'i kullanıyoruz. İkisi arasındaki temel fark oluşturduğumuz key için belli aralıklarla yapılması gereken bakımları (belirli aralıklarla değiştirilmesi, saklanması vb.) AWS'nin yönetiyor oluşudur.
 
-:::caution[Düzeltme]
-AWS KMS'te key rotasyonu varsayılan olarak 90 günde bir yapılmaz: AWS managed key'ler yılda bir otomatik döndürülür; customer managed key'lerde otomatik rotasyon isteğe bağlıdır (varsayılan 365 gün, 90 ile 2560 gün arasında ayarlanabilir).
-:::
-
-Eğer bir tane AWS'nin sağladığı bir tane de kendi oluşturduğumuz key ile güvenliği artırmak istersek de üçüncü seçeneği seçebiliriz. (DSSE-KMS)
-
-:::caution[Düzeltme]
-DSSE-KMS, biri AWS'nin biri bizim olan iki ayrı key kullanmaz; veriye iki katman şifreleme uygular ve her iki katman da seçtiğimiz AWS KMS key'i üzerinden yönetilir.
-:::
+Eğer verimizi iki katman şifrelemeyle koruyarak güvenliği artırmak istersek de üçüncü seçeneği seçebiliriz. (DSSE-KMS)
 
 ![SSE-KMS seçildiğinde açılan AWS KMS key seçenekleri](../../../../assets/ekran/p175-1.webp)
 

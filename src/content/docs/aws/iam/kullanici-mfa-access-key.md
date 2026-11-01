@@ -88,11 +88,7 @@ Bu aşamada oluşturduğumuz user ile ilgili olan bilgileri dilersek bilgisayar�
 
 ## Access key oluşturma
 
-Oluşturulan bu kullanıcı aracılığıyla CLI veya konsol üzerinden işlem yapmak istiyorsak access key oluşturmamız gerekiyor.
-
-:::caution[Düzeltme]
-Access key yalnızca CLI, SDK ve API erişimi için gerekir. Konsola giriş kullanıcı adı ve şifreyle yapılır; bunun için access key gerekmez.
-:::
+Oluşturulan bu kullanıcı aracılığıyla CLI üzerinden işlem yapmak istiyorsak access key oluşturmamız gerekiyor.
 
 1. Yukarıdaki ekranda oluşturduğumuz user'a tıklayarak aşağıdaki **Create access key** yazan kısma tıklıyoruz.
 
@@ -106,11 +102,7 @@ Access key yalnızca CLI, SDK ve API erişimi için gerekir. Konsola giriş kull
 
    ![Set description tag adımında açıklama alanı ve Create access key butonu](../../../../assets/ekran/p143-1.webp)
 
-Oluşturulan access key ve secret access key değerlerini **Done** butonuna tıkladıktan sonra bir daha göremeyeceğimiz için bu bilgileri not etmeyi unutmayalım.
-
-:::caution[Düzeltme]
-Done'dan sonra tekrar görülemeyen değer yalnızca secret access key'dir. Access key ID kullanıcının sayfasında görünmeye devam eder.
-:::
+Oluşturulan secret access key değerini **Done** butonuna tıkladıktan sonra bir daha göremeyeceğimiz için bu bilgileri not etmeyi unutmayalım.
 
 ![Retrieve access keys ekranında access key ve secret access key değerleri](../../../../assets/ekran/p143-2.webp)
 

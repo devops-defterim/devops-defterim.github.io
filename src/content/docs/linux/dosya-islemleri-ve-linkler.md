@@ -232,11 +232,7 @@ lrwxrwxrwx. 1 ec2-user ec2-user 30 Nov 10 19:18 linkimiz.txt2 -> /home/ec2-user/
 -rw-r--r--. 2 ec2-user ec2-user 97 Nov 10 19:08 linkimiz3.txt
 ```
 
-İkinci link çeşidimiz olan hard linki oluşturmak için ise `ln linklemekistediğimizdosyayolu linkismi` komutunu kullanırız. Soft linkten farkı ana dosyayı sildiğimizde linkimiz de silinmiş olur. Hard link dosya oluşturur. Gösterimi de soft linkten farklı ve yukarıdaki gibidir.
-
-:::caution[Düzeltme]
-Ana dosya silindiğinde hard link silinmez. Hard link aynı veriye bağlı ikinci bir dosya adıdır, bu yüzden içeriği korumaya devam eder. Ana dosya silinince kırık kalan link soft linktir.
-:::
+İkinci link çeşidimiz olan hard linki oluşturmak için ise `ln linklemekistediğimizdosyayolu linkismi` komutunu kullanırız. Soft linkten farkı ana dosyayı sildiğimizde linkimiz silinmez, içeriği korunur. Hard link dosya oluşturur. Gösterimi de soft linkten farklı ve yukarıdaki gibidir.
 
 ### Linkleri kaldırma
 

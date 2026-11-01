@@ -8,11 +8,7 @@ order: 4
 
 ## User group oluşturma
 
-1. IAM servisi üzerinden sağdaki menüde bulunan **IAM user groups** yazan seçeneğe tıklıyoruz.
-
-   :::caution[Düzeltme]
-   **IAM user groups** seçeneği sol taraftaki menüde yer alır.
-   :::
+1. IAM servisi üzerinden soldaki menüde bulunan **IAM user groups** yazan seçeneğe tıklıyoruz.
 
    ![IAM user groups sayfası ve Create group butonu](../../../../assets/ekran/p145-1.webp)
 

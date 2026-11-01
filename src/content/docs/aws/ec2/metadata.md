@@ -51,11 +51,7 @@ echo $TOKEN
 
 ## Metadata listesi
 
-Şimdi `curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id` komutunu kullanarak metadata listesine ulaşabiliriz.
-
-:::caution[Düzeltme]
-Metadata listesini görmek için adres `/latest/meta-data/` ile bitmelidir (görüntüdeki ve aşağıdaki komut). Sonuna `instance-id` eklenirse liste değil, yalnızca makinenin ID'si döner.
-:::
+Şimdi `curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/` komutunu kullanarak metadata listesine ulaşabiliriz.
 
 ![Token ile meta-data adresine atılan curl isteği ve metadata başlıkları listesi](../../../../assets/ekran/p219-1.webp)
 

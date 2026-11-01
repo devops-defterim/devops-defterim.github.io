@@ -24,11 +24,7 @@ Bucket oluştururken yaptığımız tüm ayarlara **Properties** menüsü altın
 
 ### Intelligent-Tiering Archive configurations
 
-Daha önce [Intelligent-Tiering](/aws/s3/depolama-siniflari/) (Akıllı Katmanlandırma) özelliğinin nasıl çalıştığından ve dosyamızı kullanımımıza göre en uygun maliyetli katmana otomatik taşıdığından bahsetmiştik. Ancak bu otomatik taşıma işlemi varsayılan olarak Standard ve Standard-IA katmanları arasında gerçekleşir. Eğer dosyamızın belirli bir süre hiç kullanılmadığında en ucuz depolama seçenekleri olan Glacier katmanlarına da otomatik olarak inmesini istiyorsak, bu izni **Intelligent-Tiering Archive configurations** başlığı altından özel olarak konfigüre etmemiz gerekir.
-
-:::caution[Düzeltme]
-Intelligent-Tiering kendi erişim katmanlarını kullanır: varsayılan olarak Frequent Access, Infrequent Access ve Archive Instant Access katmanları arasında otomatik taşır. Yapılandırma gerektiren katmanlar Archive Access ve Deep Archive Access katmanlarıdır.
-:::
+Daha önce [Intelligent-Tiering](/aws/s3/depolama-siniflari/) (Akıllı Katmanlandırma) özelliğinin nasıl çalıştığından ve dosyamızı kullanımımıza göre en uygun maliyetli katmana otomatik taşıdığından bahsetmiştik. Ancak bu otomatik taşıma işlemi varsayılan olarak Frequent Access, Infrequent Access ve Archive Instant Access katmanları arasında gerçekleşir. Eğer dosyamızın belirli bir süre hiç kullanılmadığında en ucuz depolama seçenekleri olan Glacier katmanlarına da otomatik olarak inmesini istiyorsak, bu izni **Intelligent-Tiering Archive configurations** başlığı altından özel olarak konfigüre etmemiz gerekir.
 
 ![Properties sekmesinde Intelligent-Tiering Archive configurations bölümü](../../../../assets/ekran/p177-1.webp)
 

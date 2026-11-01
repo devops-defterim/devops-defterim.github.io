@@ -35,11 +35,7 @@ Bazı sistemler veriyi diske yazmak yerine anlık olarak devasa RAM kapasiteleri
 
 ### 4. Storage Optimized (Depolama Optimize Edilmiş - D, I, H Ailesi)
 
-Bu aile, yerel disklerde on binlerce saniyelik okuma ve yazma işlemi gerçekleştirmeniz gerektiğinde sahneye çıkar. Verilerinizi uzak bir ağ üzerinde değil, doğrudan makinenin içine gömülü ultra hızlı disklerde tutarak veri erişim gecikmelerini sıfıra indirir. Sürekli olarak diske devasa boyutlarda veri yazıp okuyan kayıt sistemleri veya dev veri ambarları için biçilmiş kaftandır. Kısacası, uygulamanızın performansı disk hızına takılıyorsa, bu makineler o sorunu kökünden çözer.
-
-:::caution[Düzeltme]
-Kastedilen, saniyede on binlerce (hatta yüz binlerce) okuma/yazma işlemidir, yani yüksek IOPS. Yerel diskler gecikmeyi çok azaltır ama sıfıra indirmez.
-:::
+Bu aile, yerel disklerde saniyede on binlerce okuma ve yazma işlemi gerçekleştirmeniz gerektiğinde sahneye çıkar. Verilerinizi uzak bir ağ üzerinde değil, doğrudan makinenin içine gömülü ultra hızlı disklerde tutarak veri erişim gecikmelerini en aza indirir. Sürekli olarak diske devasa boyutlarda veri yazıp okuyan kayıt sistemleri veya dev veri ambarları için biçilmiş kaftandır. Kısacası, uygulamanızın performansı disk hızına takılıyorsa, bu makineler o sorunu kökünden çözer.
 
 ### 5. Accelerated Computing (Hızlandırılmış İşlem - F, P, G Ailesi)
 

@@ -119,11 +119,7 @@ find /etc -size +20
 /etc/pki/tls/openssl.cnf
 ```
 
-Ya da mesela etc altındaki boyutu 20mb'dan büyük olan dosyaları `find /etc -size +20` komutuyla listeleriz.
-
-:::caution[Düzeltme]
-Birim yazılmadığında `find` 512 baytlık blok kullanır; `-size +20` 20 bloktan (yaklaşık 10 KB) büyük öğeleri listeler. 20 MB'tan büyük dosyalar için `find /etc -size +20M` yazılır.
-:::
+Ya da mesela etc altındaki boyutu 20mb'dan büyük olan dosyaları `find /etc -size +20M` komutuyla listeleriz.
 
 ![find . -type d komutunun çıktısı](../../../assets/ekran/p021-1.webp)
 
@@ -168,11 +164,7 @@ find: './ConFig': Permission denied
 find: './confİG': Permission denied
 ```
 
-`find` komutuyla bulduğumuz dosyalar üzerinde bir komut daha çalıştırmak istiyorsak bu opsiyonu `exec` komutuyla ekleriz ve kullanımı şekildedir: `find . -iname config -exec {} \;`
-
-:::caution[Düzeltme]
-`-exec` ile `{}` arasına çalıştırılacak komut yazılır: `find . -iname config -exec cat {} \;`. Komut yazılmazsa bulunan dosyanın kendisi çalıştırılmaya çalışılır; yukarıdaki `Permission denied` hataları bundan gelir.
-:::
+`find` komutuyla bulduğumuz dosyalar üzerinde bir komut daha çalıştırmak istiyorsak bu opsiyonu `exec` komutuyla ekleriz ve kullanımı şekildedir: `find . -iname config -exec cat {} \;`
 
 ## less
 
@@ -226,11 +218,7 @@ Linux'ta dosyaların içeriğini düzenlemek için kullanılan bazı araçlar va
 
 Dosya ilk açıldığında okuma moduna açılır bu moddayken dosyadan çıkmak için `:` + `x` + enter veya `:` + `q` + enter yaparız.
 
-Navigasyon yani okuma modunda aşağıdaki tuşları kullanırız. `H` tuşu ile sola, `L` tuşu ile sağa, `J` tuşu ile yukarı ve `K` tuşu ile aşağı doğru ilerleyebiliriz. Veya yön tuşlarını da kullanabiliriz.
-
-:::caution[Düzeltme]
-vim'de `j` aşağı, `k` yukarı hareket ettirir. Tuşlar küçük harfle kullanılır (`h`, `j`, `k`, `l`).
-:::
+Navigasyon yani okuma modunda aşağıdaki tuşları kullanırız. `h` tuşu ile sola, `l` tuşu ile sağa, `j` tuşu ile aşağı ve `k` tuşu ile yukarı doğru ilerleyebiliriz. Veya yön tuşlarını da kullanabiliriz.
 
 Yazma moduna geçebilmek için `i` harfine basmamız yeterli. `Esc` ile okuma moduna geri döneriz.
 

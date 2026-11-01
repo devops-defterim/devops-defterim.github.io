@@ -51,16 +51,6 @@ echo "var, var2'den kucuktur"
 fi
 ```
 
-:::caution[Düzeltme]
-`[` ile `]` karakterlerinin iç tarafında boşluk bırakılmalıdır. Notlardaki denemede `["$var" -gt "$var2"]` boşluksuz yazıldığı için script `[5: command not found` hatası verdi ve `else` dalına düştü:
-
-```text title="Çıktı"
-/Users/ornekkullanici/Desktop/ilk_scriptim.sh/scr.sh: line 6: [5: command not found
-/Users/ornekkullanici/Desktop/ilk_scriptim.sh/scr.sh: line 9: [5: command not found
-var, var2'den kucuktur
-```
-:::
-
 ## Dosya test operatörleri
 
 Sık kullanılan bazı operatörlerden bazılarının kullanımı aşağıdaki gibidir.

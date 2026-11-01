@@ -93,10 +93,6 @@ git version 2.50.1
 
 Yeni bir kullanıcı eklemek için öncelikle `sudo useradd kullanıcı_adı` komutunu kullanırız ve şifre belirlemek için `sudo passwd kullanıcı_adı` komutunu gireriz. Şifremizi girip, onaylamak için tekrar girdikten sonra şifre sorulmadan sudo yetkilerini vermek için `sudo usermod -a -G wheel kullanıcı_adı` komutunu kullanırız ve sistemdeki en yetkili gruplardan biri olan ve yönetici (root) yetkilerine erişim sağlayan "wheel" grubuna ikincil bir üye olarak güvenli bir şekilde dahil etmiş oluruz.
 
-:::caution[Düzeltme]
-`wheel` grubuna eklemek sudo yetkisi verir ama Amazon Linux'ta varsayılan kural (`%wheel ALL=(ALL) ALL`) şifre sorar. Şifre sormadan sudo için ayrıca bir sudoers kuralı gerekir, örneğin `sudo visudo -f /etc/sudoers.d/proje` ile dosyaya `proje ALL=(ALL) NOPASSWD: ALL` satırı eklenir.
-:::
-
 ![useradd ve passwd komutlarıyla proje kullanıcısını oluşturma](../../../assets/ekran/p106-1.webp)
 
 ![passwd ile şifre belirleme ve usermod ile wheel grubuna ekleme](../../../assets/ekran/p106-2.webp)
@@ -206,10 +202,6 @@ AWS arayüzündeki işlemlerimizi hallettikten sonra terminale dönerek `sudo ip
 ```bash frame="terminal"
 sudo ip address add 10.10.10.10/255.255.255.0 dev ens5
 ```
-
-:::caution[Düzeltme]
-`ens5` instance'ın ilk (birincil) interface'idir. Yeni attach edilen interface genellikle farklı bir adla görünür (ör. `ens6`); adı `ip link` ile kontrol edip komutta o adı kullanın. Aynı durum Görev 8'deki route komutu için de geçerlidir.
-:::
 
 ## Görev 8: Route tanımı
 

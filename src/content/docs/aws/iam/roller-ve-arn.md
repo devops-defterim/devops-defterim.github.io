@@ -113,11 +113,7 @@ Rolleri servislere, farklı hesaplara ve dış uygulamalara atayabildiğimiz gib
 
 Böylece IAM servisini burada noktalayarak bir sonraki servisimiz olan [S3](/aws/s3/giris-ve-ilk-bucket/)'e geçmeden önce kısaca Amazon Resource Names (ARNs) konusuna değinelim.
 
-Amazon servisleri altında yaptığımız işlemlerin tümünde esasında kaynaklar oluşturur ve onları yönetiriz. AWS dünyasında bu kaynakların hepsine ARN denir.
-
-:::caution[Düzeltme]
-ARN kaynağın kendisi değil, her kaynağı tekil olarak tanımlayan isimdir (adresidir).
-:::
+Amazon servisleri altında yaptığımız işlemlerin tümünde esasında kaynaklar oluşturur ve onları yönetiriz. AWS dünyasında bu kaynakların her birini tanımlayan isme ARN denir.
 
 ### Partition
 

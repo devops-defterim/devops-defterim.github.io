@@ -65,11 +65,7 @@ ip address show
        valid_lft forever preferred_lft forever
 ```
 
-Günümüzde `ifconfig` komutu yerine artık `ip address show` komutunu kullanıyoruz. `ifconfig` komutundan farklı olarak ip adresi eklememizi sağlar. Bunun için `sudo ip address add [IP_ADRESI]/[SUBNET_MASK] dev [ARAYUZ_ISMI]` komutunu kullanırız.
-
-:::caution[Düzeltme]
-`ifconfig` ile de bir arayüze IP adresi atanabilir (ör. `sudo ifconfig enX0 192.168.1.200 netmask 255.255.255.0`). `ip` komutunun farkı, `ifconfig`'in yerini alan güncel araç olması ve bir arayüze birden fazla adres eklemeyi doğrudan desteklemesidir.
-:::
+Günümüzde `ifconfig` komutu yerine artık `ip address show` komutunu kullanıyoruz. `ifconfig` komutu gibi ip adresi eklememizi de sağlar. Bunun için `sudo ip address add [IP_ADRESI]/[SUBNET_MASK] dev [ARAYUZ_ISMI]` komutunu kullanırız.
 
 ![sudo ip address add ile enX0 arayüzüne 192.168.1.200/24 adresinin eklenmesi](../../../assets/ekran/p075-1.webp)
 
@@ -135,11 +131,7 @@ ip-172-31-0-1.eu-west-1  ether   02:00:00:00:00:02   C                     enX0
 ip-172-31-0-1.eu-west-1  ether   02:00:00:00:00:02   C                     enX0
 ```
 
-arp tablosuna yeni bir kayıt eklemek istersek `sudo arp -s ipadresi -i networkadaptörü macadresi` komutunu kullanırız. Bu tablodan bir kaydı silmek istersek de `sudo arp -d ipadresi networkadaptörü` şeklinde komutu kullanırız.
-
-:::caution[Düzeltme]
-Silme komutunda da adaptör adı `-i` ile verilir: `sudo arp -d ipadresi -i networkadaptörü`.
-:::
+arp tablosuna yeni bir kayıt eklemek istersek `sudo arp -s ipadresi -i networkadaptörü macadresi` komutunu kullanırız. Bu tablodan bir kaydı silmek istersek de `sudo arp -d ipadresi -i networkadaptörü` şeklinde komutu kullanırız.
 
 ## Routing table
 

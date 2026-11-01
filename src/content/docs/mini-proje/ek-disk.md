@@ -31,11 +31,7 @@ Oluşturduğumuz volume'e bağlanıyoruz.
 
 ### Partition oluşturma ve xfs ile formatlama
 
-Şimdi bunun üzerinde tüm disk boyutunu kullanan tek bir partition oluşturalım bunun için `sudo fdisk cihaz_yolu` komutunu kullanırız ardından xfs dosya sistemiyle formatlamak için de `sudo xfs-f xfs cihaz_yolu` komutunu çalıştırıyoruz.
-
-:::caution[Düzeltme]
-Formatlama komutu `sudo mkfs.xfs -f cihaz_yolu` şeklindedir ve cihaz yolu olarak diskin kendisi değil, fdisk ile oluşturulan partition verilir (örnekte `/dev/nvme1n1p1`).
-:::
+Şimdi bunun üzerinde tüm disk boyutunu kullanan tek bir partition oluşturalım bunun için `sudo fdisk cihaz_yolu` komutunu kullanırız ardından xfs dosya sistemiyle formatlamak için de `sudo mkfs.xfs -f partition_yolu` komutunu çalıştırıyoruz.
 
 ![fdisk ile partition oluşturma ve mkfs.xfs ile formatlama çıktısı](../../../assets/ekran/p113-1.webp)
 

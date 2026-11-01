@@ -14,11 +14,7 @@ Biz bir S3 servisini kullandığımızda arka tarafta aslında şu olur: AWS'nin
 
 ## S3 Standard
 
-Bu sınıflardan ilki **S3 Standard**'dır. Değiştirilmediği sürece yüklediğimiz her dosya varsayılan olarak bu sınıfa yüklenir. Bunun anlamı şudur: Yüklediğimiz dosya, veri merkezindeki birden fazla makineye yedeklenir ki makinelerden biri bozulursa verimiz kaybolmasın. Aynı zamanda o bölgedeki diğer veri merkezlerine de kopyalanır. Bu sayede bir veri merkezine komple erişilemiyor olsa bile verimize her zaman ulaşabiliriz. AWS, S3 Standard seçeneğinde bizlere (%99.999999999) dayanıklılık sunarak, zaman içerisinde bir milyar dosyadan en fazla bir tanesini kaybedebileceğinin garantisini verir.
-
-:::caution[Düzeltme]
-%99.999999999 (11 dokuz) bir garanti değil, yıllık dayanıklılık için tasarım hedefidir (Designed for durability). AWS'nin ifadesiyle 10 milyon obje saklarsanız ortalama 10.000 yılda bir obje kaybı beklenir.
-:::
+Bu sınıflardan ilki **S3 Standard**'dır. Değiştirilmediği sürece yüklediğimiz her dosya varsayılan olarak bu sınıfa yüklenir. Bunun anlamı şudur: Yüklediğimiz dosya, veri merkezindeki birden fazla makineye yedeklenir ki makinelerden biri bozulursa verimiz kaybolmasın. Aynı zamanda o bölgedeki diğer veri merkezlerine de kopyalanır. Bu sayede bir veri merkezine komple erişilemiyor olsa bile verimize her zaman ulaşabiliriz. AWS, S3 Standard seçeneğinde bizlere (%99.999999999) dayanıklılık sunarak, 10 milyon dosyadan ortalama 10.000 yılda bir tanesini kaybedebileceğini hedefler.
 
 ![S3 depolama sınıflarının dayanıklılık, erişilebilirlik ve ücret karşılaştırma tablosu](../../../../assets/ekran/p165-1.webp)
 
@@ -35,11 +31,7 @@ Bu sınıflardan ilki **S3 Standard**'dır. Değiştirilmediği sürece yükledi
 | Storage type | Object | Object | Object | Object | Object | Object |
 | Lifecycle transitions | Yes | Yes | Yes | Yes | Yes | Yes |
 
-Diğer bir garanti ettiği özellik ise %99.99 oranında Availability SLA'idir. Bu, bir ay içerisinde en fazla 4 dakika 21 saniye erişim kesintisi yaşayabilirsin, diğer tüm zamanlarda dosyalarına kesintisiz erişirsin anlamına gelir. En sık ve sürekli erişmemiz gereken objeleri bu sınıfta tutarız. Depolama maliyeti en yüksek olan sınıf da burasıdır.
-
-:::caution[Düzeltme]
-Tablodaki gibi S3 Standard'ın %99.99 değeri tasarlanan erişilebilirliktir (Designed for availability); Availability SLA ise %99.9'dur. Ayda yaklaşık 4 dakika 21 saniyelik kesinti %99.99'a karşılık gelir.
-:::
+Diğer bir garanti ettiği özellik ise %99.99 oranında erişilebilirlik (designed for availability) değeridir. Bu, bir ay içerisinde en fazla 4 dakika 21 saniye erişim kesintisi yaşayabilirsin, diğer tüm zamanlarda dosyalarına kesintisiz erişirsin anlamına gelir. En sık ve sürekli erişmemiz gereken objeleri bu sınıfta tutarız. Depolama maliyeti en yüksek olan sınıf da burasıdır.
 
 ## Diğer sınıflar
 

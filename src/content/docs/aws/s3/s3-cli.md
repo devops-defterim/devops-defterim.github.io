@@ -111,11 +111,7 @@ aws s3 rm "s3://ornek-bucket-123/Ekran Resmi 2026-07-30 13.26.33.png"
 delete: s3://ornek-bucket-123/Ekran Resmi 2026-07-30 13.26.33.png
 ```
 
-Bucket içerisinde bulunan bir dosyanın yalnızca içeriğini silmek istersek `aws s3 rm s3://bucket_ismi/dosya_ismi --recursive` komutunu kullanırız.
-
-:::caution[Düzeltme]
-`--recursive`, verilen yolu bir klasör (prefix) gibi ele alır ve o yolun altındaki tüm objeleri siler. Bucket'ın tamamını boşaltmak için `aws s3 rm s3://bucket_ismi --recursive` kullanılır.
-:::
+Bucket içerisinde bulunan bir klasörün yalnızca içeriğini silmek istersek `aws s3 rm s3://bucket_ismi/klasor_ismi --recursive` komutunu kullanırız.
 
 ## Bucket'lar arasında dosya taşıma
 

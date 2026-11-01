@@ -89,11 +89,7 @@ printf 1234
 '
 ```
 
-Çoklu satırları yorum satırı olarak belirlemek istersek başına ve sonuna `: '` koyarız.
-
-:::caution[Düzeltme]
-`: '` sadece bloğun başına yazılır; bloğun sonuna yalnızca kapanış tırnağı `'` konur.
-:::
+Çoklu satırları yorum satırı olarak belirlemek istersek başına `: '`, sonuna `'` koyarız.
 
 ## Girilen değeri gizleme: `read -s`
 

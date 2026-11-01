@@ -51,15 +51,11 @@ Bir script çalışırken çıktılarını terminale göndermesini istemiyorsak 
 ls -al > /dev/null
 ```
 
-Bir komutun çıktısını dev null cihazına hata alırsa bunu da dev full cihazına gönder demek için `komut > /dev/null 2>&1` şeklinde yazabiliriz.
+Bir komutun çıktısını dev null cihazına hata alırsa bunu da dev null cihazına gönder demek için `komut > /dev/null 2>&1` şeklinde yazabiliriz.
 
 ```bash frame="terminal"
 komut > /dev/null 2>&1
 ```
-
-:::caution[Düzeltme]
-Bu komutlarda çıktı `/dev/null` cihazına gider. `/dev/full` ayrı bir cihazdır (yazmaya çalışınca "disk dolu" hatası verir). `2>&1`, stderr'i stdout'un gittiği yere, yani yine `/dev/null`'a yönlendirir.
-:::
 
 ## Girişi dosyadan almak: `<`
 
@@ -85,11 +81,7 @@ Dört
 ...
 ```
 
-Büyüktür karakterini kullanmak yerine aynı görevi gören küçüktür karakterini de şu şekilde kullanabiliriz. `sort < cat linuxsample.txt` bu komut `cat linuxsample.txt > sort` komutuyla aynı görevi üstlenecektir. Küçüktürün anlamı sağdakinin standart outputunu soldakinin standart inputuna attır. Ayrıca buradaki sort komutu verilen inputu sıralamaya yarar.
-
-:::caution[Düzeltme]
-Doğru yazım `sort < linuxsample.txt` şeklindedir (`<` sağına komut değil dosya alır). Bu komut `cat linuxsample.txt | sort` ile aynı işi yapar. `cat linuxsample.txt > sort` ise çıktıyı `sort` adında bir dosyaya yazar.
-:::
+Büyüktür karakterini kullanmak yerine aynı görevi gören küçüktür karakterini de şu şekilde kullanabiliriz. `sort < linuxsample.txt` bu komut `cat linuxsample.txt | sort` komutuyla aynı görevi üstlenecektir. Küçüktürün anlamı sağdaki dosyayı soldakinin standart inputuna at. Ayrıca buradaki sort komutu verilen inputu sıralamaya yarar.
 
 ## Pipe: `|`
 
@@ -104,11 +96,7 @@ cat linuxsample.txt | sort | head -2
 A small river named Duden flows by their place and supplies it with the necessary regelialia.
 ```
 
-`|` karakterini kullanarak en sağda yazdığımız processi çalıştır standart outputunu solundakine standart input olarak ver ve bunu da çalıştırarak standart outputunu solundakine standart input olarak ver demiş oluruz. Şu şekilde kullanırız: `cat linuxsample.txt | sort | head -2`
-
-:::caution[Düzeltme]
-Pipe soldan sağa çalışır: en soldaki komutun standart outputu sağındaki komutun standart inputu olur. Örnekte `cat` çıktısı `sort`'a, `sort` çıktısı da `head -2`'ye gider.
-:::
+`|` karakterini kullanarak en solda yazdığımız processi çalıştır standart outputunu sağındakine standart input olarak ver ve bunu da çalıştırarak standart outputunu sağındakine standart input olarak ver demiş oluruz. Şu şekilde kullanırız: `cat linuxsample.txt | sort | head -2`
 
 ## Komut zincirleme
 
