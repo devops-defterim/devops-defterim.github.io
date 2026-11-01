@@ -18,4 +18,4 @@ Notlar Linux, Git ve GitHub, bir mini proje, bulut bilişim temelleri ve AWS'nin
 Bunlar kişisel notlardır, eğitimin resmi materyali değildir. Eğitmen veya eğitimi düzenleyen kurumlar tarafından hazırlanmamış ya da onaylanmamıştır. Hatalar bana aittir.
 :::
 
-Sayfalardaki ekran görüntüleri ders sırasında alındı. Hesap numarası, erişim anahtarları, şifreler, token'lar ve e-posta adresleri görüntülerde bulanıklaştırıldı, metinlerde yıldızla (`************`) gösterildi. Komutları denerken bu yerlere kendi değerlerini yazmalısın.
+Hesap numarası, erişim anahtarları, şifreler, token'lar ve e-posta adresleri görüntülerde bulanıklaştırıldı, metinlerde yıldızla (`************`) gösterildi. Komutları denerken bu yerlere kendi değerlerini yazmalısın.
