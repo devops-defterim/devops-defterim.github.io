@@ -45,6 +45,13 @@ Kullanıcıya şunları sun ve onayını bekle; onaysız dosya yazma:
   - kapsam satırları: `pdf_sayfa<TAB>site_dosyası<TAB>not`
 - Gerekirse `src/config/modules.mjs` ve `src/config/lessons.mjs`'i güncelle.
 
+## 4b. Ekran görüntüleri
+
+- `python tools/screenshots/pipeline.py <pdf> work/<tarih>/ekran` çalıştır. Gereken araçlar: `pymupdf`, `pillow`, `swiftc`, `tesseract`.
+- Dosya adları PDF sayfa numarasına bağlıdır (`pNNN-k`). Tam sürüm PDF'te sayfa numaraları kaydıysa eski görüntüleri yeni numaralarla eşleyip sayfalardaki yolları güncelle.
+- Her yeni görüntüyü gözle kontrol et (alt ajanlara paylaştırılabilir). Kaçakları `private-notes/redact-manual.json`'a oransal kutu olarak ekleyip hattı yeniden çalıştır.
+- Görüntüleri ilgili sayfada, PDF'teki konumuna denk gelen metnin ardına anlamlı alt metinle ekle.
+
 ## 5. Güncelle ve doğrula
 
 - `private-notes/COVERAGE.md`: yeni PDF'in sayfa numaralarıyla yeniden üret. Her sayfa en az bir site sayfasına eşlenmeli.

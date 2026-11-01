@@ -13,6 +13,8 @@ src/components/                       Starlight override'ları (Header, Head, Pa
 src/styles/theme.css                  palet, tipografi
 scripts/                              build sonrası _headers, link ve hassas veri kontrolü
 tools/pdf-fingerprints.py             PDF sayfa parmak izleri
+tools/screenshots/                    ekran görüntüsü çıkarma, OCR ve karartma hattı
+src/assets/ekran/                     karartılmış ekran görüntüleri (WebP)
 .claude/skills/yeni-pdf-isle/         yeni PDF işleme akışı
 ```
 
@@ -50,16 +52,20 @@ Dosya ve klasör adları ASCII (ç→c, ğ→g, ı/İ→i, ö→o, ş→s, ü→
 ## İçerik dönüştürme kuralları
 
 - PDF'in her sayfası hem metin olarak (pdftotext) hem görsel olarak (pdftoppm, ~150 dpi) okunur. Ekran görüntülerindeki komutlar metin katmanında yoktur.
-- Ekran görüntüsü sayfaya konmaz:
+- Ekran görüntüsünün içeriği metne dökülür:
   - Terminal → kod bloğu. Prompt atılır. Komut `bash frame="terminal"` bloğunda, çıktı ayrı `text title="Çıktı"` bloğunda.
   - Konsol adımları → numaralı liste (**EC2 → Instances → Launch instance**).
-  - Tablo → Markdown tablo. Şema → tablo/metin, gerekirse statik SVG.
-  - Görsel zorunluysa: sadece ilgili kısım, webp/avif, anlamlı alt metin, gerekçesi review notlarına.
-- Sadakat: notlarda olmayan bilgi eklenmez. Dağınık notlar doküman diline getirilir ama anlam değişmez. Eksik görünen yer review notlarına yazılır.
-- Komutlar harfi harfine aktarılır. Emin olunamayan karakter tahmin edilmez, review notlarına sayfa numarasıyla yazılır. Açık hata sayfada düzeltilir, review'a "orijinal → düzeltilmiş" yazılır.
+  - Tablo → Markdown tablo. Şema → tablo/metin.
+- PDF'teki ekran görüntülerinin kendisi de, hassas alanları karartılmış olarak sayfaya eklenir:
+  - Üretim: `python tools/screenshots/pipeline.py <pdf> work/<tarih>/ekran` → `src/assets/ekran/<pNNN-k>.webp` (N: PDF sayfası, k: sayfadaki sıra).
+  - Kişisel desenler `private-notes/redact-names.txt`, elle kutular `private-notes/redact-manual.json` içindedir (oransal `[x0, y0, x1, y1]`).
+  - Karartma otomatiktir (dört OCR geçişi, AWS Console hesap menüsü ve GitHub avatar kuralları). Yayından önce karartılmış çıktı yeniden OCR'lanıp desenlerle taranır; Finder, ev dizini, tarayıcı, Teams gibi riskli görüntüler gözle kontrol edilir. Kaçaklar elle kutuyla kapatılıp hat yeniden çalıştırılır.
+  - Sayfada PDF'teki yerine eklenir: `![Anlamlı alt metin](../../../assets/ekran/p018-1.webp)`. O görüntüden aktarılan kod bloğu/tablo hemen altına gelir.
+- Metin, kullanıcının PDF'teki cümleleridir. Sadece yazım/noktalama düzeltilir, komut ve buton adları `kod`/**kalın** yapılır, metin `##` başlıklarla bölünür, konsol adımları aynı kelimelerle numaralı listeye çevrilir. Cümleler yeniden yazılmaz, özetlenmez; notta olmayan açıklama eklenmez.
+- Kullanıcının cümlesinde teknik hata varsa cümle kalır, altına `:::caution[Düzeltme]` kutusu eklenir ve review notlarına yazılır.
+- Komutlar harfi harfine aktarılır. Emin olunamayan karakter tahmin edilmez, review notlarına sayfa numarasıyla yazılır.
 - Hassas veri yer tutucuyla değişir, orijinal değer hiçbir yere yazılmaz: `<AWS_ACCOUNT_ID>`, `<AWS_ACCESS_KEY_ID>`, `<AWS_SECRET_ACCESS_KEY>`, `<GITHUB_TOKEN>`, `kullanici@example.com`, kişi adı → `Ad Soyad` / `ornek` / `ornekkullanici`, public IP → `203.0.113.x`, private IP → `172.31.0.x`, hostname → `ip-172-31-0-10`, kaynak ID'leri → `i-0123456789abcdef0` vb.
-- Dil: doğal Türkçe, teknik terimler çevrilmez. Dolgu cümle ("Bu bölümde şunları öğreneceğiz"), "Tebrikler", emoji yok.
-- Uyarı kutuları: `:::note`, `:::tip`, `:::caution`, `:::danger`.
+- Uyarı kutuları: `:::note`, `:::tip`, `:::caution`, `:::danger` (notta geçen uyarı cümleleri için, metin aynen).
 - İç bağlantılar `/modul/sayfa/` biçiminde ve sadece var olan sayfalara.
 
 ## Yeni PDF akışı

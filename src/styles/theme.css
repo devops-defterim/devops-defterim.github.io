@@ -118,3 +118,12 @@
 .bd-end starlight-theme-select select {
 	width: 8.5rem !important;
 }
+
+/* Ekran görüntüleri */
+.sl-markdown-content img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: 6px;
+}
