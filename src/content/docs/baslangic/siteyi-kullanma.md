@@ -9,7 +9,7 @@ next:
   label: Çalışma makinesini açma
 ---
 
-Notlar konulara göre gruplanmıştır: Linux, Git ve GitHub, mini proje, bulut bilişim temelleri ve AWS. Sıra, derslerin işlendiği sırayı büyük ölçüde izler. Derslere AWS'de bir çalışma makinesi açarak başlanır; ana sayfadaki **Başla** düğmesi oraya götürür.
+Notlar konulara göre gruplanmıştır: Linux, Git ve GitHub, mini proje, bulut bilişim temelleri ve AWS. Sıra, derslerin işlendiği sırayı büyük ölçüde izler. Derslere AWS'de bir çalışma makinesi açarak başlanır; ana sayfadaki **Öğrenmeye başla** düğmesi oraya götürür.
 
 ## Menü
 
