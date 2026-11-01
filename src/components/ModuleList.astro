@@ -12,6 +12,7 @@ const items = modules
 		return pages.length ? { ...m, href: `/${pages[0].id}/`, count: pages.length } : null;
 	})
 	.filter((m) => m !== null);
+items.push({ label: 'Hakkında', href: '/hakkinda/', summary: 'Notların hangi eğitimden tutulduğu, kaynaklar ve kapsam.' });
 ---
 
 <ul class="bd-module-list">

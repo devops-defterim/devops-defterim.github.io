@@ -25,10 +25,9 @@ export default defineConfig({
 			pagination: true,
 			tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 3 },
 			customCss: [
-				'@fontsource/ibm-plex-sans/400.css',
-				'@fontsource/ibm-plex-sans/400-italic.css',
-				'@fontsource/ibm-plex-sans/500.css',
-				'@fontsource/ibm-plex-sans/600.css',
+				'@fontsource-variable/plus-jakarta-sans/wght.css',
+				'@fontsource-variable/plus-jakarta-sans/wght-italic.css',
+				'@fontsource-variable/bricolage-grotesque/wght.css',
 				'@fontsource/jetbrains-mono/400.css',
 				'@fontsource/jetbrains-mono/600.css',
 				'./src/styles/theme.css',
@@ -40,7 +39,7 @@ export default defineConfig({
 					borderColor: 'var(--sl-color-hairline)',
 					codeFontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace",
 					codeFontSize: '0.875rem',
-					uiFontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+					uiFontFamily: "'Plus Jakarta Sans Variable', system-ui, sans-serif",
 					frames: {
 						shadowColor: 'transparent',
 						editorActiveTabIndicatorTopColor: 'var(--sl-color-accent)',

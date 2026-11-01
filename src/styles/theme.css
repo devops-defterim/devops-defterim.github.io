@@ -1,48 +1,78 @@
-/* DevOps Defterim teması: tek vurgu rengi (petrol yeşili) ve sıcak nötrler. */
+/* DevOps Defterim teması: tek vurgu rengi (açık mor) ve serin nötrler.
+   Başlıklar Bricolage Grotesque, gövde Plus Jakarta Sans, kod JetBrains Mono. */
 
 :root {
-	--sl-font: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--bd-font-heading: 'Bricolage Grotesque Variable', 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+	--sl-font: 'Plus Jakarta Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 	--sl-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-	--sl-content-width: 46rem;
-	--sl-line-height: 1.7;
-	--sl-text-h1: 2rem;
-	--sl-text-h2: 1.5rem;
-	--sl-text-h3: 1.2rem;
+
+	/* Daha geniş içerik alanı ve biraz daha büyük yazı */
+	--sl-content-width: 60rem;
+	--sl-line-height: 1.75;
+	--sl-text-base: 1.0625rem;
+	--sl-text-body: 1.0625rem;
+	--sl-text-h1: 2.5rem;
+	--sl-text-h2: 1.75rem;
+	--sl-text-h3: 1.35rem;
 
 	/* Koyu mod (Starlight varsayılanı) */
-	--sl-color-accent-low: #12312b;
-	--sl-color-accent: #2f9e88;
-	--sl-color-accent-high: #8fdcc9;
-	--sl-color-white: #eef0ee;
-	--sl-color-gray-1: #dde1de;
-	--sl-color-gray-2: #b9c0bc;
-	--sl-color-gray-3: #8e9792;
-	--sl-color-gray-4: #5d6662;
-	--sl-color-gray-5: #383f3c;
-	--sl-color-gray-6: #232826;
-	--sl-color-black: #151817;
+	--sl-color-accent-low: #2a2148;
+	--sl-color-accent: #9b85ec;
+	--sl-color-accent-high: #cbbcff;
+	--sl-color-white: #eeecf5;
+	--sl-color-gray-1: #dcd9e6;
+	--sl-color-gray-2: #b8b4c8;
+	--sl-color-gray-3: #9a96ad;
+	--sl-color-gray-4: #615d75;
+	--sl-color-gray-5: #3b3850;
+	--sl-color-gray-6: #24222f;
+	--sl-color-black: #16141f;
+
+	--bd-button-bg: #b9a6f4;
+	--bd-button-text: #211a3d;
+	--bd-button-border: #b9a6f4;
 }
 
 :root[data-theme='light'] {
-	--sl-color-accent-low: #d4ebe5;
-	--sl-color-accent: #0e6b5c;
-	--sl-color-accent-high: #094a40;
-	--sl-color-white: #161a19;
-	--sl-color-gray-1: #252b29;
-	--sl-color-gray-2: #3a423f;
-	--sl-color-gray-3: #59625e;
-	--sl-color-gray-4: #838d89;
-	--sl-color-gray-5: #c7cdc9;
-	--sl-color-gray-6: #e8ebe7;
-	--sl-color-gray-7: #f2f4f0;
-	--sl-color-black: #fbfbf8;
+	--sl-color-accent-low: #efe9ff;
+	--sl-color-accent: #6a4bc9;
+	--sl-color-accent-high: #3d2a85;
+	--sl-color-white: #1a1726;
+	--sl-color-gray-1: #272436;
+	--sl-color-gray-2: #3c3950;
+	--sl-color-gray-3: #5b5872;
+	--sl-color-gray-4: #8a87a0;
+	--sl-color-gray-5: #cdcadb;
+	--sl-color-gray-6: #ebe8f3;
+	--sl-color-gray-7: #f4f2f9;
+	--sl-color-black: #fbfaff;
+
+	--bd-button-bg: #b9a6f4;
+	--bd-button-text: #1f1442;
+	--bd-button-border: #8d74e0;
 }
 
 /* Başlıklar */
+h1,
+h2,
+h3,
+.site-title,
+.hero h1 {
+	font-family: var(--bd-font-heading);
+	letter-spacing: -0.015em;
+}
 .sl-markdown-content h2,
 .sl-markdown-content h3 {
-	letter-spacing: -0.01em;
-	font-weight: 600;
+	font-weight: 650;
+}
+.site-title {
+	font-size: 1.35rem;
+	font-weight: 700;
+}
+
+/* Gövde metni */
+.sl-markdown-content {
+	font-size: var(--sl-text-body);
 }
 
 /* Bağlantılar */
@@ -68,8 +98,39 @@
 	background: var(--sl-color-gray-6);
 }
 
-/* Menüde aktif sayfa */
-.sidebar-content a[aria-current='page'] {
+/* Ekran görüntüleri: ortalı, içerik genişliğine kadar büyür */
+.sl-markdown-content img {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	margin-inline: auto;
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: 8px;
+}
+.sl-markdown-content p:has(> img) {
+	text-align: center;
+}
+
+/* Düğmeler (ana sayfadaki Başla ve Siteyi kullanma) */
+.sl-link-button.primary,
+.hero .action.primary {
+	background: var(--bd-button-bg);
+	border-color: var(--bd-button-border);
+	color: var(--bd-button-text);
+	font-weight: 600;
+}
+.sl-link-button.primary:hover,
+.hero .action.primary:hover {
+	filter: brightness(1.05);
+}
+
+/* Menüde aktif sayfa: açık mor zemin, koyu yazı */
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+	background: var(--bd-button-bg);
+	color: var(--bd-button-text);
 	font-weight: 600;
 }
 
@@ -88,7 +149,32 @@
 	padding-inline-end: var(--sl-nav-pad-x);
 }
 
-/* Ana sayfa */
+/* "Bu sayfada" sol menüde; mobildeki üst şerit kullanılmıyor */
+:root[data-has-toc] {
+	--sl-mobile-toc-height: 0rem;
+}
+
+/* Ana sayfa: tek sütun, daha büyük ve geniş yazı */
+.hero {
+	grid-template-columns: 100% !important;
+	padding-block: clamp(2rem, 6vmin, 5rem) !important;
+}
+.hero .copy > * {
+	max-width: 46rem;
+}
+.hero h1 {
+	font-size: clamp(2.75rem, 1rem + 6vw, 5rem);
+	font-weight: 750;
+	line-height: 1.05;
+}
+.hero .tagline {
+	font-size: clamp(1.15rem, 0.9rem + 1.2vw, 1.6rem);
+	line-height: 1.5;
+}
+.hero .actions {
+	gap: 1rem;
+}
+
 .bd-module-list {
 	list-style: none;
 	padding: 0;
@@ -97,38 +183,26 @@
 }
 .bd-module-list li {
 	margin: 0;
-	padding: 1rem 0;
+	padding: 1.1rem 0;
 	border-bottom: 1px solid var(--sl-color-hairline);
 }
 .bd-module-list a {
-	font-weight: 600;
-	font-size: var(--sl-text-lg);
+	font-family: var(--bd-font-heading);
+	font-weight: 650;
+	font-size: 1.4rem;
 	text-decoration: none;
 	color: var(--sl-color-white);
 }
 .bd-module-list a:hover {
-	color: var(--sl-color-accent-high);
+	color: var(--sl-color-accent);
 }
 .bd-module-list p {
-	margin: 0.25rem 0 0;
+	margin: 0.3rem 0 0;
+	font-size: 1.05rem;
 	color: var(--sl-color-gray-3);
 }
 
 /* Tema seçici: "Otomatik" etiketi kırpılmasın */
 .bd-end starlight-theme-select select {
 	width: 8.5rem !important;
-}
-
-/* Ekran görüntüleri */
-.sl-markdown-content img {
-	display: block;
-	max-width: 100%;
-	height: auto;
-	border: 1px solid var(--sl-color-hairline);
-	border-radius: 6px;
-}
-
-/* "Bu sayfada" sol menüde; mobildeki üst şerit kullanılmıyor */
-:root[data-has-toc] {
-	--sl-mobile-toc-height: 0rem;
 }
