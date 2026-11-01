@@ -8,54 +8,59 @@ order: 3
 
 ## IAM konsoluna giriş
 
-AWS hesabına giriş yaptıktan sonra üstteki arama kutusuna `iam` yazıp ilk çıkan **IAM** servisine tıklıyoruz.
+Şimdi AWS konsolumuza bağlanarak IAM servisini daha yakından tanıyalım.
 
-IAM Dashboard'da şu bölümler görünür:
+AWS hesabımıza giriş yaptıktan sonra açılan ekrandan arama kısmına `iam` yazarak ilk çıkan seçeneğe tıklıyoruz.
 
-- **Security recommendations:** Örneğin "Add MFA for root user" uyarısı ve "Root user has no active access keys" bilgisi.
-- **IAM resources:** User groups, Users, Roles, Policies ve Identity providers sayıları.
-- **AWS Account:** Account ID, Account Alias ve IAM kullanıcıları için sign-in URL'i.
+![AWS konsolunun arama kutusuna iam yazılınca çıkan IAM servisi](../../../../assets/ekran/p134-1.webp)
+
+![IAM Dashboard ekranı](../../../../assets/ekran/p134-2.webp)
 
 ## IAM kullanıcısıyla giriş ve alias
 
-AWS hesabına root yerine oluşturduğumuz kullanıcılarla giriş yapıyoruz. Bu kullanıcılarla giriş için Dashboard'un sağındaki **AWS Account** kutusunda yer alan sign-in URL'ini kullanırız:
+AWS hesabımıza giriş yaparken root üzerinden değil de oluşturduğumuz kullanıcıları kullandığımızı söylemiştik. Bu kullanıcılarla giriş yapmak için aşağıdaki görüntüde bulunan ekranın sağındaki URL adresini kullanıyoruz.
+
+![IAM Dashboard'un sağındaki AWS Account kutusunda IAM kullanıcıları için sign-in URL'i](../../../../assets/ekran/p135-1.webp)
 
 ```text
 https://<AWS_ACCOUNT_ID>.signin.aws.amazon.com/console
 ```
 
-URL'deki 12 haneli hesap numarasını akılda tutmak zor olduğundan **Account Alias** altındaki **Create** bağlantısıyla bu numaraya bir alias atayabiliriz.
+Buradaki numarayı akılda tutmak zor olacağından **Create** diyerek bu numaraya bir alias atayabiliyoruz.
 
-Oluşturduğumuz alias (veya hesap ID'si) ile **IAM user sign in** ekranından giriş yapılır. Ekrandaki alanlar:
+![Account Alias altındaki Create bağlantısıyla hesap numarasına alias atama](../../../../assets/ekran/p135-2.webp)
 
-1. **Account ID or alias**
-2. **IAM username**
-3. **Password**
-4. **Sign in**
+Oluşturduğumuz alias'ı kullanarak aşağıdaki ekrandan giriş yapabiliriz.
 
-Aynı ekranda root kullanıcı için **Sign in using root user email** seçeneği de bulunur.
+![IAM user sign in ekranında Account ID or alias, IAM username ve Password alanları](../../../../assets/ekran/p136-1.webp)
 
 ## MFA ekleme
 
-Root user ile giriş yapacak olsak bile çift aşamalı kimlik doğrulama yöntemlerinden birini kullanmak güvenlik açısından iyi olur.
+Root user üzerinden giriş yapacaksak bile çift aşamalı kimlik doğrulama yöntemlerinden birini kullanmamız güvenlik açısından iyi olacaktır.
 
-1. IAM Dashboard'daki **Security recommendations** kutusunda **Add MFA** butonuna tıklayın.
-2. Açılan **Select MFA device** ekranında **Device name** alanına bir isim verin.
-3. **MFA device** altında seçeneklerden birini seçin:
-   - **Passkey or security key:** Parmak izi, yüz, ekran kilidi veya FIDO2 güvenlik anahtarı ile doğrulama. AWS, phishing gibi saldırılara karşı en iyi korumayı sağladığı için bunu önerir.
-   - **Authenticator app:** Mobil cihazda veya bilgisayarda kurulu bir uygulamanın ürettiği kodla doğrulama.
-   - **Hardware TOTP token:** Donanım TOTP token'ının ürettiği kodla doğrulama.
+![IAM Dashboard'daki Security recommendations kutusunda Add MFA butonu](../../../../assets/ekran/p137-1.webp)
+
+Bunun için yukarıdaki **Add MFA** butonuna tıklayarak açılan ekrandan alternatiflerden birini seçiyoruz.
+
+![Select MFA device ekranında MFA cihazı seçenekleri](../../../../assets/ekran/p137-2.webp)
 
 ## IAM kullanıcısı oluşturma
 
-1. Sol menüden **IAM users**'a tıklayın ve sağ üstteki **Create user** butonuna basın.
-2. **Specify user details** adımında **User name** alanına kullanıcı adını yazın (ör. `ornekkullanici`).
-3. Kullanıcının konsola bağlanmasını istiyorsanız **Provide user access to the AWS Management Console** kutusunu işaretleyin. Örnekte **Custom password** seçilip şifre elle girilmiştir.
-4. **Next** ile devam edin.
+Şimdi bahsettiğimiz user oluşturmayı birlikte yapalım.
+
+![IAM users sayfası ve sağ üstteki Create user butonu](../../../../assets/ekran/p138-1.webp)
+
+1. Sol tarafta bulunan menüden **IAM users**'a tıklayarak açılan ekranda sağ üstteki buton ile **Create user** diyelim ve kullanıcımıza bir isim verelim.
+2. Oluşturduğumuz kullanıcının konsola bağlanmasını istiyorsak alttaki butonu aktifleştirmeyi unutmayalım.
+3. **Next** diyerek devam ediyoruz.
+
+   ![Specify user details adımında kullanıcı adı ve konsol erişimi seçeneği](../../../../assets/ekran/p138-2.webp)
 
 ### Yetki verme
 
-[Teoride bahsettiğimiz gibi](/aws/iam/kavramlar/#policy) yeni oluşturulan user hiçbir yetkiye sahip değildir. **Set permissions** adımında policy atayarak yetkileri belirleriz. **Permissions options** altında üç yol vardır:
+[Teoride bahsettiğimiz gibi](/aws/iam/kavramlar/#policy) oluşturduğumuz bu user bir yetkiye sahip değil. İstediğimiz yetkileri açılan ekranda belirleyeceğiz. Bunun için bir policy oluşturup bu kullanıcıya atayacağız. Aşağıda bunu üç şekilde yapabileceğimizi söylüyor.
+
+![Set permissions adımında üç yetki verme seçeneği](../../../../assets/ekran/p139-1.webp)
 
 | Seçenek | Açıklama |
 | --- | --- |
@@ -63,35 +68,54 @@ Root user ile giriş yapacak olsak bile çift aşamalı kimlik doğrulama yönte
 | Copy permissions | Mevcut bir kullanıcının grup üyeliklerini, managed ve inline policy'lerini kopyalar. |
 | Attach policies directly | Managed policy'yi doğrudan kullanıcıya bağlar. |
 
-5. Üçüncü seçenek olan **Attach policies directly**'yi seçin ve listeden istediğiniz yetkileri işaretleyin. Örnekte **AdministratorAccess** (AWS managed - job function) seçilmiştir.
-6. İsterseniz biraz aşağıdaki **Set permissions boundary - optional** bölümünü açıp **Use a permissions boundary to control the maximum permissions** kutusunu işaretleyin. Burada seçilen policy, üstte işaretlediğiniz yetkilerin sınırını belirler; kullanıcı en fazla bu sınır içindeki yetkileri kullanabilir.
-7. **Next** ile **Review and create** ekranına geçin. User name, Console password type ve **Permissions summary** bilgilerini kontrol edip **Create user**'a tıklayın.
-8. **Retrieve password** ekranında console sign-in URL'i, kullanıcı adı ve şifre görünür. Bu bilgileri isterseniz **Download .csv file** ile bilgisayarınıza indirebilirsiniz.
-9. **Return to users list** ile kullanıcı listesine dönün. Yeni kullanıcı listede görünür.
+Üçüncü seçeneği seçerek istediğimiz yetkileri işaretleyerek devam ediyoruz.
+
+![Attach policies directly seçilip policy listesinden yetki işaretleme](../../../../assets/ekran/p139-2.webp)
+
+Biraz aşağı kaydırdığımızda görünen butonu aktif ettiğimiz takdirde üstte işaretlediğimiz yetkilerin sadece burada seçeceğimiz yerlerde geçerli olmasını sağlayan bir sınırlandırma koymuş oluyoruz.
+
+![Set permissions boundary bölümündeki permissions boundary seçeneği](../../../../assets/ekran/p140-1.webp)
+
+**Next** diyerek devam ettiğimizde aşağıdaki gibi açılan ekrandaki bilgileri kontrol ederek **Create user** butonuna tıklayarak yeni kullanıcımızı oluşturuyoruz.
+
+![Review and create ekranında kullanıcı bilgileri ve Create user butonu](../../../../assets/ekran/p140-2.webp)
+
+Bu aşamada oluşturduğumuz user ile ilgili olan bilgileri dilersek bilgisayarımıza indirebiliriz. Şimdi son olarak **Return to users list** diyoruz. Tebrikler yeni bir kullanıcı eklediniz.
+
+![Retrieve password ekranında giriş bilgileri ve Return to users list butonu](../../../../assets/ekran/p141-1.webp)
+
+![IAM users listesinde yeni oluşturulan kullanıcı](../../../../assets/ekran/p141-2.webp)
 
 ## Access key oluşturma
 
-Bu kullanıcıyla CLI üzerinden işlem yapmak istiyorsak access key oluşturmamız gerekir.
+Oluşturulan bu kullanıcı aracılığıyla CLI veya konsol üzerinden işlem yapmak istiyorsak access key oluşturmamız gerekiyor.
 
-1. **IAM users** listesinde kullanıcının adına tıklayın.
-2. **Summary** kutusundaki **Access key 1** altında **Create access key**'e tıklayın.
-3. **Access key best practices & alternatives** adımında kullanım amacını (**Use case**) seçin. Örnekte **Command Line Interface (CLI)** seçilmiştir. Sayfanın altındaki **Confirmation** kutusunu işaretleyip **Next** deyin.
-4. **Set description tag - optional** adımında anahtarın ne için oluşturulduğunu isteğe bağlı olarak yazın (örnekte `CLIbaglantisi`) ve **Create access key**'e tıklayın.
-5. **Retrieve access keys** ekranında **Access key** ve **Secret access key** değerleri görünür.
-
-:::caution
-Secret access key yalnızca bu ekranda görüntülenebilir veya indirilebilir. **Done** butonuna bastıktan sonra bir daha göremezsiniz; bu bilgileri not edin veya **Download .csv file** ile indirin. Kaybederseniz yeni bir access key oluşturup eskisini pasif hale getirmeniz gerekir.
+:::caution[Düzeltme]
+Access key yalnızca CLI, SDK ve API erişimi için gerekir. Konsola giriş kullanıcı adı ve şifreyle yapılır; bunun için access key gerekmez.
 :::
 
-Aynı ekrandaki **Access key best practices** listesi:
+1. Yukarıdaki ekranda oluşturduğumuz user'a tıklayarak aşağıdaki **Create access key** yazan kısma tıklıyoruz.
 
-- Access key'i düz metin olarak, bir kod deposunda veya kodun içinde saklamayın.
-- Artık gerekmeyen access key'leri devre dışı bırakın veya silin.
-- En az yetki (least-privilege) prensibini uygulayın.
-- Access key'leri düzenli olarak yenileyin (rotate).
+   ![Kullanıcının Summary kutusunda Create access key bağlantısı](../../../../assets/ekran/p142-1.webp)
 
-Bu access key'in CLI'da nasıl kullanıldığı [AWS CLI](/aws/cli/) sayfasında.
+2. Erişmek istediğimiz yerleri seçerek devam ediyoruz.
+
+   ![Access key best practices & alternatives adımında use case seçimi](../../../../assets/ekran/p142-2.webp)
+
+3. Bu anahtarı ne için oluşturduğumuz hakkında isteğe bağlı olarak aşağıdaki boşluğu doldurarak **Create access key** diyerek devam ediyoruz.
+
+   ![Set description tag adımında açıklama alanı ve Create access key butonu](../../../../assets/ekran/p143-1.webp)
+
+Oluşturulan access key ve secret access key değerlerini **Done** butonuna tıkladıktan sonra bir daha göremeyeceğimiz için bu bilgileri not etmeyi unutmayalım.
+
+:::caution[Düzeltme]
+Done'dan sonra tekrar görülemeyen değer yalnızca secret access key'dir. Access key ID kullanıcının sayfasında görünmeye devam eder.
+:::
+
+![Retrieve access keys ekranında access key ve secret access key değerleri](../../../../assets/ekran/p143-2.webp)
 
 ## Yeni kullanıcıyla giriş
 
-Oluşturduğumuz kullanıcıyla giriş yapmak için **IAM user sign in** ekranında **Account ID or alias** alanına hesap ID'sini (`<AWS_ACCOUNT_ID>`) veya alias'ı, **IAM username** alanına kullanıcı adını (`ornekkullanici`) ve şifreyi yazıp **Sign in**'e tıklıyoruz. Sıradaki obje [gruplar](/aws/iam/gruplar-parola-sts/).
+Şimdi gelin oluşturduğumuz bu kullanıcı ile giriş yapalım. Ve bir sonraki objemiz olan [gruplara](/aws/iam/gruplar-parola-sts/) göz atalım.
+
+![IAM user sign in ekranında yeni kullanıcının bilgileriyle giriş](../../../../assets/ekran/p144-1.webp)

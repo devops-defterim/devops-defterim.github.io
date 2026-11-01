@@ -6,11 +6,13 @@ lessons: [14]
 order: 3
 ---
 
-SSH ile bağlanılan sunucu üzerinde 3-9 numaralı görevlerin çözümleri. Görevlerin tam listesi için [Görevler](/mini-proje/gorevler/) sayfasına bakın.
-
 ## Görev 3: Sistemi güncelleme
 
 > 3-) Sistemi ve sistemde yüklü paketleri güncelleyin.
+
+Sistemi güncellemek için `sudo dnf update -y` komutunu kullanıyoruz.
+
+![sudo dnf update -y komutunun çıktısı](../../../assets/ekran/p105-1.webp)
 
 ```bash frame="terminal"
 sudo dnf update -y
@@ -38,11 +40,13 @@ Nothing to do.
 Complete!
 ```
 
-`dnf` ile ilgili ayrıntılar için [Paket yönetimi](/linux/paket-yonetimi/) sayfasına bakabilirsiniz.
-
 ## Görev 4: Git kurulumu
 
 > 4-) Git uygulamasını yükleyin.
+
+Sistemimize git uygulamasını yüklemek için kullanmamız gereken komut `sudo dnf install git -y` şeklinde olmalıdır. Ardından `git --version` yazarak aşağıdaki çıktıyı aldığımızdan emin olalım.
+
+![sudo dnf install git -y kurulum çıktısı ve git sürüm kontrolü](../../../assets/ekran/p105-2.webp)
 
 ```bash frame="terminal"
 sudo dnf install git -y
@@ -75,8 +79,6 @@ Downloading Packages:
 ...
 ```
 
-Kurulumun ardından `git --version` ile sürüm kontrol edilir. Ekran görüntüsünde aynı kontrol `git version` olarak çalıştırılmıştır:
-
 ```bash frame="terminal"
 git version
 ```
@@ -89,13 +91,17 @@ git version 2.50.1
 
 > 5-) Yeni bir kullanıcı ekleyin. Bu kullanıcının şifre sormadan sudo yapabilmesini sağlayın.
 
-Adımlar:
+Yeni bir kullanıcı eklemek için öncelikle `sudo useradd kullanıcı_adı` komutunu kullanırız ve şifre belirlemek için `sudo passwd kullanıcı_adı` komutunu gireriz. Şifremizi girip, onaylamak için tekrar girdikten sonra şifre sorulmadan sudo yetkilerini vermek için `sudo usermod -a -G wheel kullanıcı_adı` komutunu kullanırız ve sistemdeki en yetkili gruplardan biri olan ve yönetici (root) yetkilerine erişim sağlayan "wheel" grubuna ikincil bir üye olarak güvenli bir şekilde dahil etmiş oluruz.
 
-1. `sudo useradd kullanıcı_adı` ile kullanıcı oluşturulur.
-2. `sudo passwd kullanıcı_adı` ile şifre belirlenir. Şifre girilir ve onay için tekrar girilir.
-3. `sudo usermod -a -G wheel kullanıcı_adı` ile kullanıcı, sistemdeki en yetkili gruplardan biri olan ve yönetici (root) yetkilerine erişim sağlayan `wheel` grubuna ikincil grup olarak eklenir.
+:::caution[Düzeltme]
+`wheel` grubuna eklemek sudo yetkisi verir ama Amazon Linux'ta varsayılan kural (`%wheel ALL=(ALL) ALL`) şifre sorar. Şifre sormadan sudo için ayrıca bir sudoers kuralı gerekir, örneğin `sudo visudo -f /etc/sudoers.d/proje` ile dosyaya `proje ALL=(ALL) NOPASSWD: ALL` satırı eklenir.
+:::
 
-Örnekte kullanıcı adı `proje`:
+![useradd ve passwd komutlarıyla proje kullanıcısını oluşturma](../../../assets/ekran/p106-1.webp)
+
+![passwd ile şifre belirleme ve usermod ile wheel grubuna ekleme](../../../assets/ekran/p106-2.webp)
+
+![groups proje komutunun çıktısı](../../../assets/ekran/p106-3.webp)
 
 ```bash frame="terminal"
 sudo useradd proje
@@ -120,16 +126,13 @@ Password:
 proje : proje wheel
 ```
 
-Kullanıcı ve grup komutlarının ayrıntısı için [Kullanıcı ve grup yönetimi](/linux/kullanici-ve-grup/) sayfasına bakabilirsiniz.
-
 ## Görev 6: /evim klasörü ve home directory
 
 > 6-) Root'da /evim diye bir klasör oluşturun. Bu klasörün owner ve grup değerlerini bu yeni oluşturduğunuz kullanıcı ve bu kullanıcının ana grubu olarak değiştirin. Ardından bu kullanıcının home directory'sinin /evim klasörü olmasını sağlayacak işlemi yapın.
 
-1. `sudo mkdir /evim` ile root dizininde klasör oluşturulur.
-2. `sudo chown proje /evim` ile klasörün sahibi (owner) yeni kullanıcı yapılır.
-3. `sudo chgrp proje /evim` ile grup değeri kullanıcının ana grubuna atanır. Böylece klasör üzerindeki mülkiyet hakları root kullanıcısından alınıp yeni kullanıcıya ve grubuna aktarılır.
-4. `sudo usermod -d /evim proje` ile kullanıcının home directory değeri bu klasörle eşleştirilir.
+Root dizininde /evim adlı klasörü oluşturmak için öncelikle `sudo mkdir /evim` komutunu kullanırız. Klasörün owner (sahip) değerini yeni oluşturduğumuz kullanıcıya devretmek için `sudo chown proje /evim` komutunu, grup değerini o kullanıcının ana grubuna atamak için ise `sudo chgrp proje /evim` komutunu çalıştırırız. Bu işlemlerle klasör üzerindeki tüm mülkiyet haklarını root kullanıcısından alıp yeni kullanıcıya ve grubuna aktarmış oluruz. Son aşamada, kullanıcının home directory değerini bu yeni klasörle eşleştirmek için `sudo usermod -d /evim proje` komutunu uygulayarak işlemi tamamlarız.
+
+![mkdir, chown, chgrp komutları ve /etc/passwd içeriği](../../../assets/ekran/p107-1.webp)
 
 ```bash frame="terminal"
 sudo mkdir /evim
@@ -146,6 +149,8 @@ ec2-user:x:1000:1000:EC2 Default User:/home/ec2-user:/bin/bash
 proje:x:1001:1001::/home/proje:/bin/bash
 ```
 
+![usermod -d sonrası /etc/passwd içeriği ve proje kullanıcısının home dizini](../../../assets/ekran/p107-2.webp)
+
 ```bash frame="terminal"
 sudo usermod -d /evim proje
 cat /etc/passwd
@@ -159,8 +164,6 @@ ec2-user:x:1000:1000:EC2 Default User:/home/ec2-user:/bin/bash
 proje:x:1001:1001::/evim:/bin/bash
 ```
 
-`/etc/passwd` dosyasında `proje` kullanıcısının home directory değeri `/home/proje` yerine `/evim` olmuştur. Kullanıcıya geçip kontrol edilir:
-
 ```bash frame="terminal"
 su proje
 cd ~
@@ -172,42 +175,47 @@ Password:
 /evim
 ```
 
-Sahiplik ve izinler için [Dosya izinleri](/linux/izinler/) sayfasına bakabilirsiniz.
-
 ## Görev 7: Network interface ekleme
 
 > 7-) AWS üstünden yeni bir network interface ekleyin ve bunu makinenize attach edin. Sonra bu interface'e 10.10.10.10/255.255.255.0 ip adresini ekleyin.
 
 ### Interface oluşturma
 
-1. EC2 konsolunda soldaki menüden **Network & Security → Network Interfaces** seçeneğine tıklayın.
-2. Sağ üstteki `Create network interface` butonuna tıklayın.
-3. **Create network interface** ekranında gerekli alanları doldurun:
-   - **Description**: açıklayıcı bir isim (örnekte `miniprojem`)
-   - **Subnet**: instance ile aynı subnet (örnekte instance'ın bulunduğu `us-east-1c` subnet'i)
-   - **Interface type**: `ENA`
-   - **Private IPv4 address**: `Auto-assign`
-   - **Security groups**: instance oluşturulurken açılan security group (örnekte `launch-wizard-3`)
-4. Sayfanın altındaki `Create network interface` butonuyla işlemi tamamlayın.
+1. Bu işlemi gerçekleştirmek için soldaki menü üzerinden **Network & Security** altından **Network Interfaces** seçeneğine tıklıyoruz.
+
+   ![EC2 menüsünde Network & Security altındaki Network Interfaces](../../../assets/ekran/p108-1.webp)
+
+2. Açılan ekranda sağ üstte bulunan **Create network interface** diyerek devam ediyoruz.
+
+   ![Network interfaces ekranında Create network interface butonu](../../../assets/ekran/p108-2.webp)
+
+3. Gerekli boşlukları doldurup aşağıda bulunan **Create network interface** butonu ile işlemi tamamlıyoruz.
+
+   ![Create network interface formu](../../../assets/ekran/p108-3.webp)
 
 ### Instance'a bağlama
 
-1. Oluşturulan network interface'i listede seçin.
-2. **Actions → Attach** diyerek instance'a bağlayın.
+Oluşturduğumuz network'ü seçip **Actions** menüsü altından **Attach** diyerek bağlanıyoruz.
+
+![Actions menüsünden Attach ile network interface'i instance'a bağlama](../../../assets/ekran/p109-1.webp)
 
 ### IP adresini ekleme
 
-AWS arayüzündeki işlemlerden sonra terminale dönülerek IP adresi eklenir:
+AWS arayüzündeki işlemlerimizi hallettikten sonra terminale dönerek `sudo ip address add 10.10.10.10/255.255.255.0 dev ens5` komutuyla ip adresini eklemiş oluyoruz.
 
 ```bash frame="terminal"
 sudo ip address add 10.10.10.10/255.255.255.0 dev ens5
 ```
 
-`ip` komutları için [Network](/linux/network/) sayfasına bakabilirsiniz.
+:::caution[Düzeltme]
+`ens5` instance'ın ilk (birincil) interface'idir. Yeni attach edilen interface genellikle farklı bir adla görünür (ör. `ens6`); adı `ip link` ile kontrol edip komutta o adı kullanın. Aynı durum Görev 8'deki route komutu için de geçerlidir.
+:::
 
 ## Görev 8: Route tanımı
 
 > 8-) 199.199.199.0/24 adreslerine giderken bu yeni interface üstünden gitmesini sağlayacak route tanımı yapın.
+
+Bu işlem için kullanmamız gereken komut ise `sudo ip route add 199.199.199.0/24 dev ens5` olmalıdır.
 
 ```bash frame="terminal"
 sudo ip route add 199.199.199.0/24 dev ens5
@@ -218,6 +226,10 @@ sudo ip route add 199.199.199.0/24 dev ens5
 > 9-) Apache Web Server (httpd) servisini sisteme yükleyin. Bilgisayar yeniden başlatıldığında bu servisin de otomatik olarak çalışmasını sağlayacak ayarı da yapın.
 
 ### Kurulum
+
+Yüklemeyi yapmak için `sudo dnf install -y httpd` komutunu kullanıyoruz.
+
+![sudo dnf install -y httpd kurulum çıktısı](../../../assets/ekran/p110-1.webp)
 
 ```bash frame="terminal"
 sudo dnf install -y httpd
@@ -253,10 +265,9 @@ Install  13 Packages
 
 ### Servisi etkinleştirme ve başlatma
 
-- `sudo systemctl status httpd.service`: servisin o anki durumunu gösterir.
-- `sudo systemctl enable httpd.service`: bilgisayar yeniden açıldığında servisin otomatik çalışmasını sağlar.
-- `sudo systemctl start httpd.service`: web sunucusunu çalıştırır.
-- Son olarak tekrar `sudo systemctl status httpd.service` ile servisin çalıştığı kontrol edilir.
+Sistemin o anki durumuna aktif olup olmadığına bakmak için `sudo systemctl status httpd.service` komutunu ve bilgisayar yeniden açıldığında bu servisin de otomatik çalışmasını sağlamak için `sudo systemctl enable httpd.service` komutunu çalıştırırız. Ardından web sunucusunu çalıştırmak için `sudo systemctl start httpd.service` komutunu ve çalıştır komutumuzun yerine getirilip getirilmediğini kontrol etmek için de `sudo systemctl status httpd.service` komutunu kullanıyoruz.
+
+![systemctl status, enable ve start komutlarıyla httpd servisini çalıştırma](../../../assets/ekran/p110-2.webp)
 
 ```bash frame="terminal"
 sudo systemctl status httpd.service
@@ -304,9 +315,9 @@ Feb 06 13:05:13 ip-172-31-0-10.ec2.internal systemd[1]: Started httpd.service - 
 Feb 06 13:05:13 ip-172-31-0-10.ec2.internal httpd[3820]: Server configured, listening on: port 80
 ```
 
-`systemctl` ile servis yönetimi için [systemd ve boot](/linux/systemd-ve-boot/) sayfasına bakabilirsiniz.
-
 ### Yerel test
+
+![curl 127.0.0.1 komutunun çıktısında It works! sayfası](../../../assets/ekran/p111-1.webp)
 
 ```bash frame="terminal"
 curl 127.0.0.1
@@ -324,4 +335,4 @@ curl 127.0.0.1
 </html>
 ```
 
-`curl 127.0.0.1`, sunucu dış dünyaya açılmadan önce kendi üzerindeki web servisine bir istek gönderir ve sistemin doğru çalışıp çalışmadığını kontrol etmeyi sağlar. `127.0.0.1`, her bilgisayarın kendisini ifade eden özel localhost adresidir; `curl` ise bu adresteki web içeriğini terminale metin olarak döker.
+Son olarak `curl 127.0.0.1` komutu, sunucunun dış dünyaya açılmadan önce kendi üzerindeki web servisine bir istek göndererek sistemin doğru çalışıp çalışmadığını kontrol etmesini sağlar. Buradaki `127.0.0.1` adresi, her bilgisayarın "kendisini" ifade eden özel localhost adresidir; `curl` ise bu adresteki web içeriğini terminal ekranına metin olarak dökmemize yarayan bir araçtır.

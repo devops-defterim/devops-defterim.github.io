@@ -6,34 +6,50 @@ lessons: [24]
 order: 17
 ---
 
-Teori kısmından sonra AWS konsolunda EC2 ekranlarını tanıyalım. Üstteki arama kutusuna `EC2` yazıp ilk sıradaki **EC2 (Virtual Servers in the Cloud)** seçeneğine tıklıyoruz.
+Teori kısmını geride bırakıp AWS ekranlarımızdan EC2 öğrenmeye geçebiliriz. Arama kısmına `EC2` yazarak ilk sıradaki seçeneğe tıklayalım.
+
+![Konsol arama kutusunda EC2 araması ve ilk sıradaki EC2 servisi](../../../../assets/ekran/p201-1.webp)
 
 ## Dashboard
 
-İlk açılan sayfa **Dashboard**'dur.
+İlk öğreneceğimiz **Dashboard** sayfası. **Resources** kısmında tüm sanal makineleri ve ayrıca çalışmakta olan sanal makineleri, oluşturmuş olduğumuz volume'leri, kısaca oluşturduğumuz EC2 kaynaklarıyla ilgili temel bilgilere erişebiliriz. Hemen altında **Service health** menüsünden regionlar ile ilgili bir servis sıkıntısı varsa onlara ulaşabiliriz. Service health menüsünün solundan da yeni bir sanal makine oluşturmak için `Launch instances` butonuna tıklayabiliriz.
 
-- **Resources:** Tüm sanal makineler, çalışmakta olan sanal makineler (`Instances (running)`), oluşturulan volume'ler, security group'lar, key pair'ler, snapshot'lar gibi EC2 kaynaklarıyla ilgili temel bilgilere buradan ulaşılır.
-- **Service health:** Hemen altındaki bu bölümden, bölgelerle ilgili bir servis sorunu varsa görülebilir.
-- **Launch instance:** Service health bölümünün solundaki `Launch instance` butonuyla yeni bir sanal makine oluşturulabilir.
+![EC2 Dashboard ekranında Resources, Service health ve Launch instance bölümleri](../../../../assets/ekran/p201-2.webp)
 
 ## Bölge seçimi ve AWS Global View
 
-- Farklı bölgelerde oluşturduğumuz sanal makineleri görmek için sağ üstteki bölge menüsünden ilgili bölgeyi (ör. Europe (Frankfurt) `eu-central-1`, Europe (Ireland) `eu-west-1`) seçeriz. Dashboard'daki bilgiler seçilen bölgeye göre değişir.
-- Farklı bölgelerdeki tüm makineleri tek ekranda görmek için soldaki menüden **AWS Global View** seçeneğine tıklarız. Buradaki **Region explorer** tablosu, her bölgedeki instance, VPC, subnet, security group, volume gibi kaynak sayılarını listeler.
+Farklı bölgelerde oluşturduğumuz sanal makineleri görmek için sağ üstten seçerek görebiliriz.
+
+![Sağ üstteki bölge seçim menüsü](../../../../assets/ekran/p202-1.webp)
+
+![Farklı bir bölge seçildiğinde EC2 Dashboard ekranı](../../../../assets/ekran/p202-2.webp)
+
+Farklı bölgelerdeki tüm makineleri tek bir ekranda görmek için ise soldaki menüden **AWS Global View** seçeneğine tıklıyoruz.
+
+![AWS Global View ekranında bölgelere göre kaynak sayıları](../../../../assets/ekran/p203-1.webp)
 
 ## Instances
 
-En çok kullanacağımız menü **Instances** başlığıdır.
+Şimdi en çok kullanacağımız menü olan **Instances** başlığı altındakileri inceleyelim. Öncelikle Instances başlığına bakalım. Burada sanal makinelerimizi listelediğimiz ekran bulunur. Yanındaki kutucuktan seçerek aşağıdaki gibi sanal makinemiz hakkındaki tüm bilgilere erişebiliriz. AWS üzerindeki her EC2 makinenin unique bir **Instance ID**'si vardır.
 
-- **Instances** ekranında sanal makineler listelenir. Bir makineyi yanındaki kutucuktan seçince alt panelde (Details, Status and alarms, Monitoring, Security, Networking, Storage, Tags sekmeleri) makine hakkındaki tüm bilgilere ulaşılır: Instance ID, public/private IPv4 adresleri, public DNS, instance type, VPC ID, subnet ID, AMI ID vb.
-- AWS üzerindeki her EC2 makinesinin benzersiz bir **Instance ID**'si vardır (ör. `i-0123456789abcdef0`).
-- **Instance state** butonundan makineyi başlatma, durdurma gibi işlemler yapılır: `Stop instance`, `Start instance`, `Reboot instance`, `Hibernate instance`, `Terminate (delete) instance`.
-- Hemen yanındaki **Actions** butonundan makinenin değiştirilmesi gereken özellikleri ayarlanır. Menü altında `Instance diagnostics`, `Instance settings`, `Networking`, `Security`, `Image and templates`, `Storage`, `Monitor and troubleshoot` grupları bulunur. Örneğin `Instance settings` altında `Change stop protection`, `Change termination protection`, `Change shutdown behavior`, `Change instance type`, `Edit user data`, `Manage tags` gibi seçenekler yer alır.
+![Instances listesinde seçili makinenin alt paneldeki detayları](../../../../assets/ekran/p203-2.webp)
+
+Sanal makinemizin başlatma, durdurma gibi özelliklerini **Instance state** butonundan kontrol edebiliriz.
+
+![Instance state menüsündeki Stop, Start, Reboot, Hibernate ve Terminate seçenekleri](../../../../assets/ekran/p204-1.webp)
+
+Hemen yanında bulunan **Actions** butonundan ise sanal makinemizin değiştirilmesi gereken özellikler varsa onları ayarlayabiliriz.
+
+![Actions menüsü ve Instance settings alt seçenekleri](../../../../assets/ekran/p204-2.webp)
 
 ## Instance Types
 
-**Instance Types** başlığında sanal makine tipleri listelenir. Tabloda her tipin vCPU, mimari, bellek, depolama, ağ performansı ve On-Demand saatlik fiyatları görülür. Bir tipi seçince alt panelde detaylarına (Details, Compute, Networking, Storage, Accelerators, Pricing) ulaşılır. Tip adlarının nasıl okunduğu [Makine aileleri ve isimlendirme](/aws/ec2/makine-aileleri/) sayfasında anlatılıyor.
+**Instance Types** başlığından da anlaşılacağı üzere sanal makinelerimizin tiplerini listeleyebileceğimiz kısım vardır. İstediğimizi seçerek detaylarına aşağıdaki gibi ulaşabiliriz.
+
+![Instance Types listesi ve seçilen tipin detay paneli](../../../../assets/ekran/p205-1.webp)
 
 ## Launch Templates
 
-Sürekli aynı özelliklere sahip sanal makineler oluşturmanız gerekiyorsa ve bu süreci hızlandıracak bir kısayol arıyorsanız, **Launch Templates** başlığı altındaki `Create launch template` butonuyla kendi şablonlarınızı hazırlayabilirsiniz. Adımlar [Launch template](/aws/ec2/launch-template/) sayfasında.
+Sürekli aynı özelliklere sahip sanal makineler oluşturmanız gerekiyorsa ve bu süreci hızlandıracak bir kısayol arıyorsanız, [Launch Templates](/aws/ec2/launch-template/) başlığı altındaki `Create launch template` butonuna tıklayarak kendi şablonlarınızı hazırlayabilirsiniz.
+
+![Launch Templates ekranında Create launch template butonu](../../../../assets/ekran/p205-2.webp)

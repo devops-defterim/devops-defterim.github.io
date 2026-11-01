@@ -6,88 +6,70 @@ lessons: [16]
 order: 1
 ---
 
-AWS'nin teknik detaylarına girmeden önce bulut bilişimin tarihine, neden böyle bir alana ihtiyaç duyulduğuna ve konuyu anlamak için gereken bazı kavramlara bakmak faydalıdır.
-
 ## Sunucu ve istemci
 
-Bilgisayar dünyasında en temel anlamıyla iki çeşit bilgisayar vardır:
+Bilgisayar dünyasında en temel anlamıyla iki çeşit bilgisayar vardır. Bunlardan ilki sunucu - server ikincisi ise istemci - client bilgisayarlardır.
 
-| | Sunucu (server) | İstemci (client) |
-| --- | --- | --- |
-| Kapasite | Güçlü ve yüksek kapasiteli | Görece daha düşük kapasite ve işlem gücü |
-| Kullanım | Uzun süreli, kesintisiz çalışmak ve çoklu isteklere cevap vermek için tasarlanır | Tek bir kullanıcıya hizmet vermek için tasarlanır; uzun süreli ve kesintisiz çalışma önceliği yoktur |
-| Rol | Hizmeti sunar | Hizmeti kullanır |
+Sunucu bilgisayarlar güçlü ve yüksek kapasiteli, uzun süreli-kesintisiz ve çoklu isteklere cevap vermek için tasarlanmıştır. Hizmeti sunarlar.
 
-Farklı kullanıcıların kullanımına açmak istediğimiz uygulamayı, çoklu isteklere cevap verebilen yüksek kapasiteli sunucu bilgisayarlara yükleriz. Bu sunuculara bağlanarak hizmetin sonucunu görmemizi sağlayanlar istemci bilgisayarlardır. Bu çalışma mimarisi üzerine kurulan uygulamalara **sunucu-istemci mimarisindeki uygulamalar** denir.
+İstemci bilgisayarlar ise görece daha düşük kapasite işlem gücüne sahiptir. Tek bir kullanıcıya hizmet vermek için tasarlanmıştır. Uzun süreli ve kesintisiz çalışma öncelikleri yoktur. Hizmeti kullanırlar.
 
-DevOps süreci özetle bundan ibarettir: uygulamalarımızı sunucu denilen sistemlerin üzerinde en verimli, en az hatalı, en hızlı ve en uygun şekilde nasıl sunabiliriz?
+Farklı kullanıcılar tarafından kullanıma açmak, sunmak istediğimiz uygulamayı yüksek kapasiteli çoklu isteklere cevap verebilme özelliğine sahip olan sunucu bilgisayarlara yükleriz.
+
+Bu bilgisayarlara bağlanarak server bilgisayarlardaki hizmetin sonucunu görmemizi sağlayanlar ise istemci bilgisayarlarıdır.
+
+Bahsettiğimiz şekilde bir çalışma mimarisi üzerine uygulama kurma işlemine ise sunucu-istemci mimarisindeki uygulamalar diyoruz.
+
+Aslında devops süreci özetle bundan ibarettir. Uygulamalarımızı sunucu denilen sistemlerin üzerine en verimli, en az hataya sahip, en hızlı ve en uygun şekilde nasıl sunabiliriz.
 
 ## 2000'lerin başında sistem yönetimi
 
-2000'lerin başında bir sistem admini olduğumuzu ve bizden bir muhasebe uygulamasını çalıştırmamızın istendiğini düşünelim. Uygulamanın kurulacağı ortamı hazırlamak için:
+Sunucu-istemci mimarisinden bahsettiğimize göre gelin kısa bir tarih yolculuğu yapalım ve 2000'lerin başına dönerek sanallaştırma kavramının nasıl ortaya çıktığını anlamaya çalışalım.
 
-1. Bir sunucu bilgisayar sipariş edilir. Bilgisayarın gelmesi 6-8 hafta sürer.
-2. Sipariş geldikten sonra CPU, RAM, disk gibi fiziksel kurulumların tamamlanıp sunucunun çalışmaya hazır hale gelmesi 1-2 hafta sürer.
-3. Sunucuya uygun bir işletim sistemi kurulur ve muhasebe uygulaması yüklenir.
-
-En baştan beri harcanan zaman yaklaşık 3 ayı bulur.
+2000'lerin başında bir sistem admini olduğumuzu düşünelim ve yaşanılan sorunları anlamaya çalışalım. Bizden istenilen bir muhasebe uygulamasının çalıştırılması olsun. Bunun için uygulamayı üzerine kurmamız gereken ortamı hazırlamamız lazım. İlk olarak bir sunucu bilgisayarı sipariş vermemiz gerek, sipariş verdikten sonra bilgisayarımızın gelmesi 6-8 hafta gibi bir süre alacaktır. Sipariş elimize ulaştıktan sonra gerekli fiziksel kurulumlarını tamamlayıp (cpu, ram, disk gibi) çalışmaya hazır hale getirmemiz 1-2 hafta gibi bir zamanımıza mal olacaktır. Ardından tüm bu süreçler bittikten sonra sunucuya uygun bir işletim sistemini kurup muhasebe uygulamamızı yükleyecek duruma geldiğimizde görüldüğü gibi en başından beri harcanan zaman 3 ay gibi bir süreye tekabül ediyor.
 
 ### Her uygulamaya bir sunucu
 
-Sorun yalnızca zaman değildi. Her yeni uygulama için yeni bir sunucuya ihtiyaç vardı, çünkü uygulama izolasyonu gereği bir sunucuya birden fazla uygulama kurulmuyordu. Bunun sebepleri:
+Ancak bütün sorun zaman değil. Yaşanan bir diğer sorun her yeni uygulamada yeni bir sunucuya ihtiyacımız olması. Çünkü bir sunucu üzerine uygulama izolasyonundan dolayı birden fazla uygulama kuramıyorduk; bunun sebebi iki uygulamanın birbirine dependent yani bağımlı olmasıydı.
 
-- Uygulamaların birbirine bağımlı (dependent) olması
-- Bir uygulamada yaşanan sorunun diğerini de etkilemesi; örneğin hatayı çözmek için sunucu restart edildiğinde diğer uygulamanın da erişilemez hale gelmesi
-- Uygulamaların çalışması gereken zamanların farklı olması
-- Bir güvenlik açığında, önemli verileri barındıran diğer uygulamanın da risk altına girmesi
-
-Bu da her seferinde 3 aylık sürecin baştan yaşanması demekti.
+Uygulamaların birinde yaşanacak herhangi bir sorunun diğer uygulamayı da etkileyecek olması yani hata olduğunda çözmek için sunucuyu restart etmemiz gerektiğinde diğer uygulamanın da erişilmez hale gelmesi, uygulamaların çalışmaları gereken zamanlarının farklılığı, güvenlik açığı oluştuğunda önemli verilerimizin sunduğu uygulamanın risk altında olması gibi sebeplerden dolayı bir sunucuya birden fazla uygulama kurmuyorduk. Her uygulama için bir server bilgisayar gerekiyordu.
 
 ### Atıl kapasite
 
-İzolasyon için her sunucuya tek uygulama kurulması yeni bir sorun getiriyordu: **atıl kapasite**. Uygulamalar sunucunun tüm kapasitesini kullanmadığı için disk, RAM gibi kaynaklar boşta kalıyordu.
+Bunun anlamı her seferinde tüm bu 3 aylık sürecin baştan yaşanacak olması demekti. Bunun yanında uygulama izolasyonunu sağlamak için her sunucu üzerine kurduğumuz uygulamalar yeni bir sorunu da beraberinde getiriyordu. Atıl kapasite sorunu.
+
+Server bilgisayarlar üzerine kurduğumuz uygulamalar bu bilgisayarların tüm kapasitesini kullanmadığı için boşta kullanılmayan disk, ram gibi kaynaklar kalıyordu.
 
 ## Sanallaştırma
 
-Bu sorunları çözmek için sanallaştırma geliştirildi. Artık tek bir sunucu alınıp önce üzerine sanallaştırma yazılımı kuruluyordu. Bu sayede fiziksel makinenin üzerinde birbirinden tamamen izole, birbirinin kaynaklarına erişemeyen ama fiziksel donanım kaynaklarını ortak kullanan sanal makineler oluşturulabiliyordu.
+Bu yaşanan sorunları çözmek için sanallaştırma kavramı geliştirildi. Sanallaştırma ile uygulamaların izolasyonunu sağlayabilmek için makineleri ayrı ayrı tutma ihtiyacından kurtulduk. Artık tek bir tane server makine alıp öncelikle üzerine sanallaştırma yazılımını kuruyorduk. Bu sayede fiziksel makinenin üzerinde ayrı ayrı birbirlerinden tamamen izole, birbirlerinin kaynaklarına erişemeyen ama makinenin fiziksel donanım kaynaklarını ortak kullanan sanal makineler oluşturma imkanı sağlıyordu.
 
-Sanallaştırmanın çözdüğü sorunlar:
+Sanallaştırma bu sayede atıl kapasite sorununu çözmüş oldu. Ayrıca bir fiziksel makine üzerine kurduğumuz birden fazla sanal makine sayesinde çalıştırdığımız birden fazla uygulama ile her uygulama için bir server bilgisayara olan ihtiyacımız ortadan kalkmış, yaşadığımız zaman sorununa da çözüm getirmiş oldu.
 
-- **İzolasyon**: Uygulamaları izole etmek için makineleri ayrı ayrı tutma ihtiyacı ortadan kalktı.
-- **Atıl kapasite**: Tek fiziksel makinenin kaynakları birden fazla sanal makine arasında paylaşıldı.
-- **Zaman**: Bir fiziksel makinede birden fazla uygulama çalıştırılabildiği için her uygulamaya ayrı sunucu alma ihtiyacı ve bununla gelen bekleme süresi ortadan kalktı.
-- **Donanım arızası**: Eskiden fiziksel makinede bir parça bozulduğunda yenisi sipariş edilip beklenir, varsa boştaki bir sunucuya uygulama yüklenerek idare edilirdi. Sanallaştırma ile işletim sistemleri bir dosya haline geldi; fiziksel makine bozulsa bile bu dosya kesintisiz olarak başka makinelere taşınabilir hale geldi.
+Sanallaştırma ile çözülen bir diğer bahsetmemiz gereken sorun ise; eskiden fiziksel makine üzerinde yaşanan bir parça sorunu, parçanın yenisini sipariş edip gelmesini beklemek, o süreçte elimizde varsa boş bir server bilgisayar varsa uygulamamızı ona yükleyip çalıştırmakla çözülüyordu. Sanallaştırma ile fiziksel makineler üzerine kurduğumuz işletim sistemlerini bir dosya haline getirdik. Bu sayede kullandığımız fiziksel makine bozulsa bile elimizdeki dosyayı hiçbir kesinti olmadan diğer makinelere taşıyabilir hale geldik.
 
 ## On-premises veri merkezlerinin sorunları
 
-2000'li yıllarda bir şirketin kendi lokal (on-premises) veri merkezini kurması da birçok sorun getiriyordu:
-
-- Veri merkezinin bugünkü ihtiyaca göre mi yoksa gelecekteki ihtiyaçlar düşünülerek mi kurulacağı
-- İlk yatırım ve bakım maliyetlerinin yüksekliği
-- Planlamanın zorluğu
-- Esnek ve genişletilebilir olmaması
+Gelelim 2000'li yıllarda yaşanan diğer bir önemli soruna. Bir şirkette kurulacak lokal (on-premises) veri merkezinin şu anki ihtiyaca göre mi kurulacağı yoksa gelecekteki ihtiyaçlar göz önüne alınarak mı yapılandırılacağı, ilk yatırım maliyetinin ve bakım maliyetlerinin yüksekliği, planlamasının zorluğu, esnek ve genişletilebilir olmayışı gibi birçok sorunu da beraberinde getirdiğini biliyoruz.
 
 ## Colocation veri merkezleri
 
-2000'lerin ortalarına doğru yaygınlaşan bazı yöntemler bu sorunların birkaçına çözüm oldu. Bunlardan biri **colocation veri merkezleri**dir. Her şirketin kendi veri merkezine ihtiyacı olmadığı fikrinden yola çıkarak büyük veri merkezleri kurup bu hizmeti firmalara kiralayan şirketler ortaya çıktı.
+2000'lerin ortalarına doğru hayatımıza daha yoğun olarak giren bazı yöntemler bu sorunlardan birkaçına merhem olmuştu. Bunlardan bir tanesi colocation veri merkezleri. Her şirketin kendi veri merkezinin olmasına ihtiyaç olmadığını ve bundan yola çıkarak büyük veri merkezleri kurarak bu hizmeti firmalara kiralayan şirketler oluşmaya başladı. Böylece şirketler ilk yatırım maliyetinden kurtuldu, ve veri merkezleri büyük olduğu için birim başına düşen makine maliyeti az olduğundan daha uygun fiyata müşterilere satabilir hale geldiler. Ayrıca şirketler veri merkezlerinin bakım zahmetinden de kurtularak artık bunu bir hizmet şeklinde almaya başladılar.
 
-- Şirketler ilk yatırım maliyetinden kurtuldu.
-- Veri merkezleri büyük olduğu için birim başına düşen makine maliyeti azaldı ve hizmet daha uygun fiyata satılabildi.
-- Şirketler veri merkezinin bakım zahmetinden kurtulup bunu hizmet olarak almaya başladı.
-
-Bu senaryoda colocation firmaları veri merkezinden, müşteri firmalar ise kendi sunucu altyapılarından sorumluydu. Sunucuların fiziksel parçaları ve bunların sorunları yine müşteri firmanın sorumluluğundaydı.
+Bu senaryoda colocation firmaları veri merkezlerinden, firmalar ise kendi sunucu altyapılarından sorumluydular. Yani sunucular üzerindeki fiziksel olan parçalardan bunların sorunlarından yine firmalar sorumluydu.
 
 ## Infrastructure as a Service
 
-Sanallaştırma yaygınlaştıkça veri merkezi kiralayan firmalar sunucuları da kiralamayı düşündü ve bu hizmeti vermeye başlayanlar oldu. Sonraki aşamada çok sayıda sunucu alınarak sanal makinelerin firmalara kiralanması fikri hayata geçti. Colocation firmaları fiziksel makineler dahil tüm altyapıyı önceden kurup yöneterek müşterilere sanal makineler halinde sunmaya başladı. Altyapının bu şekilde servis olarak kullanılmasına **Infrastructure as a Service (IaaS)** denir.
+İlerleyen zamanlarda sanallaştırma daha çok hayatımıza girmeye başlarken veri merkezlerini kiralayan firmalar acaba sunucuları da veri merkezleri gibi kiralamaya başlasak mı diye düşündüler ve bunun hizmetini de vermeye başlayan firmalar oldu.
+
+Daha sonraki süreçte ise bu sunuculardan bir sürü alarak sanal makineleri firmalara kiralama fikri hayata geçmeye başladı. Böylece colocation firmaları fiziksel makineler dahil tüm altyapıyı kendileri önceden kurup yöneterek müşterilere sanal makineler halinde sunmaya başladılar. Bu şekilde altyapının servis olarak kullanılma işlemine Infrastructure as a Service denmektedir.
 
 ## Bulut bilişim
 
-**Bulut bilişim (cloud computing)**, bu şekilde başka firmalar tarafından yönetilen altyapılar üzerinden bilgisayar hizmetini satın alıp kullanmamıza verilen genel isimdir. Bizim lokasyonumuzda değil, başka bir firmanın farklı bir lokasyonda kurduğu altyapı üzerinden bilgisayar altyapılarının bize hizmet olarak kullandırılmasıdır.
+Şimdi ise buradan yola çıkarak bulut bilişim-cloud computing kavramını anlamaya çalışalım. Bulut bilişim bu colocation firmaları tarafından yönetilen altyapıların üzerinden bilgisayar hizmetini satın almamıza, o bilgisayar hizmetini kullanmamıza verilen genel isimdir.
 
-- Bulut bilişim bir ürün değil, hizmettir.
-- Yeni bir teknoloji değildir; esasında bir bilgisayar altyapısının bize hizmet olarak sunulmasıdır.
-- Gökyüzüne baktığımızda yalnızca bulutları görüp arkasındaki soyutlanmış (abstract) iklim sistemini görmememize benzetilebilir: hizmeti alırız ama arkasındaki teknolojiyle ilgilenmeyiz.
-- Bu konsept bilgisayarlar ortaya çıktığından beri vardı; internetin hızlanmasıyla yaygınlaştı.
+Bizim lokasyonumuzda değil de başka bir firma tarafından farklı bir lokasyonda oluşturmuş olduğu altyapı üzerinden bize hizmetler şeklinde bilgisayar altyapılarını kullandırılmasına genel adıyla bulut bilişim-cloud computing denir.
 
-Hizmeti satın alma şekli her zaman IaaS olarak kalmadı. Sonraki modeller [Servis modelleri](/bulut-temelleri/servis-modelleri/) sayfasında anlatılır.
+Bulut bilişim bir ürün değil hizmettir. Bu yeni bir teknoloji değildir. Esasında bir bilgisayar altyapısının bize hizmet olarak sunulmasıdır. Bu kavramı gökyüzüne baktığımızda yalnızca bulutları görüp arkasındaki abstract edilmiş iklim sistemini görmeyişimize benzetebiliriz. Biz hizmeti alıyoruz ancak arkasında bulunan teknoloji ile ilgilenmiyoruz.
+
+Aslında bu konsept bilgisayar ortaya çıktığından beri kullanılmasına karşın internetin hızlanmasıyla yaygınlaşıp uygulanmaya başlandı.

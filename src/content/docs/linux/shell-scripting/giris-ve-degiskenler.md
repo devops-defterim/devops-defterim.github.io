@@ -8,13 +8,17 @@ order: 12
 
 ## Neden bash script
 
-Bir DevOps mühendisi veya sistem yöneticisi için bir işi iki kez elle yapmak vakit kaybıdır. Bash scripting, her gün terminal başında aynı komutları yazmaktan kurtarır ve süreçleri otomasyona dökmemizi sağlar. Böylece hem zamandan tasarruf edilir hem de insan hatası ortadan kalkar. Karar verme yeteneği eklenen ve zamanlanmış görevlerle biz bilgisayar başında değilken bile çalışan scriptler, sunucu kurulumundan yedeklemeye kadar pek çok işi tek komutla yapılabilir hale getirir.
+Neden Bash Script kullanmalıyız? Çünkü bir DevOps mühendisi veya sistem yöneticisi için 'bir işi iki kez elle yapmak' vakit kaybıdır. Bash scripting, bizi terminal başında her gün aynı komutları yazma hamallığından kurtararak süreçleri tam otomasyona dökmemizi sağlar. Bu sayede sadece zamandan tasarruf etmekle kalmayız, aynı zamanda insan hatasını da denklemin dışına iterek operasyonların her zaman kusursuz çalışmasını sağlarız. Sistemlerimize karar verme yeteneği kazandıran ve zamanlanmış görevlerle biz bilgisayar başında değilken bile çalışan bu scriptler, sunucu kurulumlarından yedeklemeye kadar her işi tek tıkla halledilebilir hale getirir.
+
+Gelin şimdi bir bash script içeriğine temelden başlayarak göz atalım;
 
 ## Shebang: `#!/bin/bash`
 
-Her script dosyası `#!/bin/bash` satırıyla başlar. Bu satır dosyanın bir script olduğunu ve bash ile yazıldığını belirtir. Linux çekirdeğinden bir dosyayı çalıştırması istendiğinde dosyanın ilk satırına bakar; `#!` işaretini görünce bunun bir script olduğunu anlar. `/bin/bash` ise "bu dosyadaki kodlar bash ile yazıldı, bash yorumlayıcısını çağır ve dosyayı ona teslim et" anlamına gelir.
+Her script dosyası `#!/bin/bash` satırıyla başlar. Bu dosyanın bir script dosyası olduğunu ve bash dilinde yazıldığını gösterir. Linux çekirdeği bir dosyayı çalıştırması istendiğinde, dosyanın ilk satırına bakar. `#!` işaretini görünce bunun bir script dosyası olduğunu anlar. `/bin/bash` ise bu dosyadaki kodlar bash dilinde yazıldı, bash yorumlayıcısını çağır ve bu dosyayı ona teslim et anlamını taşır.
 
 ## Ekrana yazdırma: echo, heredoc ve printf
+
+![echo, cat << EOL ve printf kullanan scr.sh scripti ve çıktısı](../../../../assets/ekran/p050-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -41,13 +45,15 @@ bu yazı EOL komutunu görene dek devam edecek
 1234
 ```
 
-- **echo:** Ekrana yazdırmanın ilk yolu. `\n` ile alt satıra geçilmesi isteniyorsa `echo -e` kullanılır.
-- **`cat << EOL`:** `cat` dosya okuma/yazma için kullanılır. `<< EOL` ise cat'e, verilen girdiyi `EOL` kelimesini görene kadar almasını söyler. Buradaki girdi "bu yazı EOL komutunu görene dek devam edecek" cümlesidir; 8. satırdaki `EOL` görülünce sona erer.
-- **printf:** C dilinden de bilinen `printf` ile de ekrana çıktı yazdırılabilir.
+Ekrana bir şey yazdırmak istiyorsak bunun farklı yolları vardır. Bunlardan ilki `echo` komutudur. Kullanımı yukarıdaki gibidir. Eğer `\n` karakteri ile alt satıra geçmesini istiyorsak bunu kullanmak için `echo -e` parametresini ekleriz.
+
+Sonraki komutta gördüğümüz `cat << EOL`: cat, bir dosyayı okuma yazma için kullanılır, devamında yazan `<<EOL` ise cat komutuna sana verdiğim girdiyi EOL kelimesini görene kadar devam edecek. Buradaki girdimiz "bu yazı EOL komutunu görene dek devam edecek" cümlesidir. Sonra 8. satırda bulunan EOL komutunu gördüğünde sonlanacaktır.
+
+En son komut ise C dilinden de hatırlayacağımız `printf` komutu. Bu komutu kullanarak da ekrana istediğimiz çıktıyı yazdırabiliriz.
 
 ## Kullanıcıdan input alma: read
 
-Kullanıcıdan input almak için `read` komutu kullanılır. Kullanımı `read -p 'soru' degisken_adi` biçimindedir. `-p` parametresi soruyu yazar ve cevabı bekler; girilen değer `degisken_adi` değişkenine atanır. Bu değer `$degisken_adi` ile kullanılır.
+![read -p ile isim soran script ve çıktısı](../../../../assets/ekran/p051-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -62,9 +68,36 @@ isminiz nedir?ornek
 memnun oldum ornek
 ```
 
-### Girilen değeri gizleme: `read -s`
+Kullanıcıdan input almaya yönelik bir kod satırı yazmamız gerekirse kullanacağımız komut `read` olur. Kullanımı `read -p 'soru' degisken_adi` şeklindedir. `-p` parametresi soruyu sorar ve cevabı (input) bekler. Kullanıcının girdiği değer `degisken_adi` isimli değişkene atanır. Kullanıcıdan aldığımız bu değeri ekrana bastırmak için `$degisken_adi` şeklinde kullanırız.
 
-Kullanıcının yazdığı karakterlerin ekranda görünmemesi için `read -s` kullanılır:
+## Çok satırlı yorum
+
+![: ' ile yorum satırına alınmış kod bloğu](../../../../assets/ekran/p051-2.webp)
+
+```bash title="scr.sh"
+#!/bin/bash
+
+: '
+echo -e "selam\n" echo test
+
+cat << EOL
+asd
+EOL
+
+printf 1234
+
+'
+```
+
+Çoklu satırları yorum satırı olarak belirlemek istersek başına ve sonuna `: '` koyarız.
+
+:::caution[Düzeltme]
+`: '` sadece bloğun başına yazılır; bloğun sonuna yalnızca kapanış tırnağı `'` konur.
+:::
+
+## Girilen değeri gizleme: `read -s`
+
+![read -s ile şifrenin ekranda görünmeden alınması](../../../../assets/ekran/p051-3.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -84,28 +117,11 @@ username: ornek
 password:1234
 ```
 
-## Çok satırlı yorum
-
-Birden fazla satırı yorum olarak işaretlemek için bloğun başına `: '`, sonuna `'` konur. Aşağıdaki script çalıştırıldığında ekrana hiçbir şey yazmaz:
-
-```bash title="scr.sh"
-#!/bin/bash
-
-: '
-echo -e "selam\n" echo test
-
-cat << EOL
-asd
-EOL
-
-printf 1234
-
-'
-```
+Kullanıcının klavyeden yazdığı karakterlerin terminal ekranında görünmemesini sağlamak için `read -s` parametresini kullanırız.
 
 ## Pozisyonel parametreler
 
-Kullanıcıdan birden çok parametre almak gerektiğinde `read` yerine pozisyonel parametreler (`$1`, `$2`, `$3` ...) kullanılır. Değerler script çalıştırılırken komutun sonuna yazılır.
+![$1, $2 ve $3 pozisyonel parametrelerini kullanan script ve parametresiz/parametreli çalıştırma çıktıları](../../../../assets/ekran/p052-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -116,8 +132,6 @@ echo "Arabanın Rengi  : $3"
 
 echo "Kayıt başarıyla oluşturuldu: $3 renkli bir $1 $2 sisteme eklendi."
 ```
-
-Parametresiz çalıştırıldığında değerler boş kalır:
 
 ```bash frame="terminal"
 /bin/bash "/Users/ornekkullanici/Desktop/ilk_scriptim.sh/scr.sh"
@@ -130,8 +144,6 @@ Arabanın Rengi  :
 Kayıt başarıyla oluşturuldu:  renkli bir   sisteme eklendi.
 ```
 
-Parametrelerle çalıştırıldığında:
-
 ```bash frame="terminal"
 /bin/bash "/Users/ornekkullanici/Desktop/ilk_scriptim.sh/scr.sh" Toyota Corolla Beyaz
 ```
@@ -143,13 +155,11 @@ Arabanın Rengi  : Beyaz
 Kayıt başarıyla oluşturuldu: Beyaz renkli bir Toyota Corolla sisteme eklendi.
 ```
 
+Kullanıcıdan birden çok parametre almamız gereken durumlarda read yerine pozisyonel parametreler kullanırız.
+
 ## Özel değişkenler
 
-| Değişken | Verdiği değer |
-|---|---|
-| `$0` | Çalıştırılan dosyanın adı |
-| `$#` | Verilen pozisyonel parametre sayısı |
-| `$?` | Son komutun exit kodu |
+![$0, $# ve $? özel değişkenlerini yazdıran script ve çıktısı](../../../../assets/ekran/p052-2.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -170,7 +180,9 @@ echo $?
 127
 ```
 
-Ortamdan gelen bazı hazır değişkenler de vardır:
+Bazı özel değişkenler vardır. Mesela `$0` çalıştığımız dosyanın adını, `$#` kaç pozisyonel parametre yazdığımızın sayısını ve `$?` exit kodunu verir.
+
+![$HOME, $USER ve $SHELL değişkenlerini yazdıran script ve çıktısı](../../../../assets/ekran/p053-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -188,16 +200,18 @@ user: ornekkullanici
 shell: /bin/zsh
 ```
 
+Özel değişkenlerden bazıları yukarıdaki gibidir.
+
 ## Değişken tanımlama
 
-Değişken, eşittir işaretinin iki yanında boşluk olmadan `isim=ornek` biçiminde tanımlanır. Değerde birden fazla kelime ve boşluk olacaksa tırnak kullanılması gerekir: `isimler="ornek selin"`.
+![isim ve isimler değişkenlerinin tanımlanıp yazdırılması](../../../../assets/ekran/p053-2.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
 
 isim=ornek
 
-isimler="ornek,selin"
+isimler="ornek,ornek2"
 
 echo $isim
 echo $isimler
@@ -205,12 +219,14 @@ echo $isimler
 
 ```text title="Çıktı"
 ornek
-ornek,selin
+ornek,ornek2
 ```
+
+Bir değişken tanımlamak istersek arada boşluk olmayacak şekilde `isim=ornek` şeklinde tanımlanır. Eğer birden fazla kelime kullanıp arada boşluk bırakacaksan tırnak kullanmamız gerekir `isimler="ornek ornek2"` olduğu gibi.
 
 ## Komut çıktısını değişkene atama
 
-Bir komutun çıktısını değişkene atamak için `$( )` kullanılır. Aşağıda `date` çıktısı `time` değişkenine atanıp yazdırılıyor:
+![date çıktısının time değişkenine atanıp yazdırılması](../../../../assets/ekran/p054-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -227,7 +243,9 @@ date
 Sun Jan 11 18:03:12 +03 2026
 ```
 
-O anda terminali kullanan kullanıcının adını yazdırmak için `whoami` kullanılır:
+Bir komut çıktısını alıp başka bir değişkene yönlendirmek istersek yukarıdaki gibi `date` komutunun çıktısını `time` değişkenine atayıp `time` değişkenini kullanarak `date` komutunun çıktısını yazdırmış olduk.
+
+![whoami komutunu çalıştıran script ve çıktısı](../../../../assets/ekran/p054-2.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -239,9 +257,11 @@ whoami
 ornekkullanici
 ```
 
+O anda terminali aktif kullanan kullanıcının adını ekrana bastırmak istersek `whoami` komutunu kullanırız.
+
 ### who çıktısını filtreleme
 
-`who` komutu kullanıcı, tarih, saat gibi pek çok bilgi verir. Aşağıda önce ham çıktı `whoami` değişkenine atanıyor, ardından çıktı pipe ile filtrelerden geçirilerek sadece kullanıcı adları alınıyor:
+![who çıktısının değişkene atanması ve cut, sort, uniq ile filtrelenmesi](../../../../assets/ekran/p055-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -258,19 +278,21 @@ ornekkullanici console Dec 7 18:29
 ornekkullanici
 ```
 
-`|` (pipe) soldaki komutun sonucunu sağdaki komuta aktarır. Adımlar:
+`who` komutu tarih, IP, saat gibi pek çok bilgiyi verir. Bu çıktıları alıp `whoami` değişkenine atadık. Daha sonra bu çıktıyı üç filtreden geçirmek için `(who | cut -d ' ' -f1 | sort | uniq)` komut satırını yazarız. Burada;
 
-1. `who`: Ham listeyi getirir.
-2. `cut -d ' ' -f1`: Boşluğu ayraç kabul eder ve sadece ilk sütunu, yani kullanıcı adlarını alır (tarih ve saat kısmı atılır).
-3. `sort`: İsimleri alfabetik sıraya dizer.
-4. `uniq`: Listede aynı isimden birden fazla varsa (aynı kişi iki terminal açmışsa) teke indirir.
+Burada `|` (pipe) sembolü, soldaki komutun sonucunu sağdaki komuta atar. Adım adım işlemler şunlardır:
+
+- `who`: Ham listeyi getirir.
+- `cut -d ' ' -f1`: "Sadece ilk sütunu al" der. Boşlukları sınır kabul eder ve sadece kullanıcı isimlerini ayıklar (saat ve tarih kısmını çöpe atar).
+- `sort`: İsimleri alfabetik sıraya dizer.
+- `uniq`: Eğer listede aynı isimden iki tane varsa (aynı kişi iki terminal açmışsa), bunları teke indirir.
 
 ## JSON'dan değer alma: jq
 
-Binlerce satırlık bir JSON dosyasından tek bir değeri almak için `jq` ile nokta (`.`) operatörü kullanılır. Örneğin bir hava durumu verisinden sadece dereceyi almak için:
+Binlerce satırlık bir JSON dosyasının içinde sadece tek bir değeri almak istiyorsak nokta (`.`) operatörü ile o veriye ulaşabiliriz. Örneğin bir hava durumu verisi içinden sadece dereceyi almak istiyorsak `cat hava.json | jq '.derece'` komutunu kullanırız.
 
 ```bash frame="terminal"
 cat hava.json | jq '.derece'
 ```
 
-Normalde jq sonucu JSON formatına uygun olarak çift tırnak içinde verir. Bu değer bir değişkene atanıp kullanılacaksa tırnaklar sorun çıkarabilir. `jq -r` parametresi tırnakları kaldırıp metni olduğu gibi verir.
+Eğer bu çektiğimiz veriyi bir değişkene atayacaksak o zaman `jq -r` parametresini kullanırız. Normalde jq ile bir veriyi çektiğinde, sonuç JSON formatına sadık kalarak çift tırnak içerisinde verilir. Ancak bu veriyi bir değişkene atayıp kullanmak istediğinde o tırnaklar sıkıntı olabilir. `-r` parametresi, o tırnakları kaldırıp metni olduğu gibi temiz bir şekilde verir.

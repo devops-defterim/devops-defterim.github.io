@@ -8,7 +8,7 @@ order: 4
 
 ## find: dosya ve klasör arama
 
-Bir dosyanın nerede olduğunu bilmiyorsan ya da sistemde bir dosyayı bulmak istiyorsan `find` kullanılır. Yalnızca `find` yazıp Enter'a basarsan bulunduğun klasördeki bütün klasör ve dosyalar listelenir:
+![find komutunun bulunulan klasördeki çıktısı](../../../assets/ekran/p019-4.webp)
 
 ```bash frame="terminal"
 find
@@ -31,9 +31,13 @@ find
 ./linkimiz1.txt
 ```
 
+Bir dosyanın nerede olduğunu bilmiyorsak veya bu sistemin içinde bir dosyayı bulmak istiyorsak o dosyayı aramamız gerekir. Bunun için `find` komutunu kullanırız.
+
+`find` yazıp enter dersek şu anda bulunduğumuz klasörde bulunan bütün klasör ve dosyaları listeler.
+
 ### -name ve -iname
 
-`find` komutundan sonra aramanın yapılacağı yer yazılır. Örneğin `/etc` altında adı `conf` ile başlayıp devamı herhangi bir şey olan dosyaları listelemek için:
+![find /etc -name conf* komutunun çıktısı](../../../assets/ekran/p020-1.webp)
 
 ```bash frame="terminal"
 find /etc -name conf*
@@ -51,7 +55,9 @@ find: '/etc/sudoers.d': Permission denied
 find: '/etc/audit': Permission denied
 ```
 
-Linux büyük-küçük harf duyarlıdır. `conf` ile başlayan dosyalar aranırken harflerden biri büyük olan dosyalar gösterilmez. Büyük-küçük harf ayrımı yapmadan aramak için `-iname` kullanılır:
+`find` yazıp nerede arama yapmak istediğimizi yazarız. Eğer daha spesifik bir arama yapmak istiyorsak örneğin etc klasörü altında ilk dört harfi conf gerisi random olan bir dosyayı listelemek istediğimizde `find /etc -name conf*` komutunu kullanırız.
+
+![find . -iname conf* ile büyük-küçük harf duyarsız arama](../../../assets/ekran/p020-2.webp)
 
 ```bash frame="terminal"
 find . -iname conf*
@@ -62,7 +68,9 @@ find . -iname conf*
 ./confİG
 ```
 
-Bulunan dosyaların ayrıntılarını listelemek için sona `-ls` eklenir:
+Linux'ta kullanılan harflerin büyük küçük olmasına göre sonuç değişir. Eğer conf harfleriyle başlayan dosyaları listelersek herhangi bir harfi büyük olursa bunu bize göstermez. Bu durumu engellemek için `find . -iname conf*` komutunu girmemiz yeterli olur.
+
+![find -ls ile bulunan dosyaların ayrıntıları](../../../assets/ekran/p020-3.webp)
 
 ```bash frame="terminal"
 find . -iname conf* -ls
@@ -73,9 +81,11 @@ find . -iname conf* -ls
   8566151      4 -rw-r--r--   1 ec2-user ec2-user        8 Nov 10 20:21 ./conf\304\260G
 ```
 
+Eğer find aramasıyla bulunan dosyaların ayrıntılarını listelemek istersek `find . -iname conf* -ls` komutunu çalıştırırız.
+
 ### Zamana, boyuta ve tipe göre arama
 
-10 günden eski dosyaları bulmak için `-mtime +10` kullanılır:
+![find . -mtime +10 komutunun çıktısı](../../../assets/ekran/p020-4.webp)
 
 ```bash frame="terminal"
 find . -mtime +10
@@ -87,7 +97,9 @@ find . -mtime +10
 ./.bashrc
 ```
 
-`-size` ile boyuta göre arama yapılır. Aşağıdaki komut `/etc` altında boyutu 20 bloktan büyük dosya ve klasörleri listeler. Birim yazılmadığında `find` 512 baytlık blok kullanır; megabayt cinsinden aramak için birim eklenir, örneğin `-size +20M`.
+Bulunmasını istediğimiz dosyaların 10 günden eski olmasını istiyorsak `find . -mtime +10` komutunu kullanırız.
+
+![find /etc -size +20 komutunun çıktısı](../../../assets/ekran/p020-5.webp)
 
 ```bash frame="terminal"
 find /etc -size +20
@@ -107,7 +119,13 @@ find /etc -size +20
 /etc/pki/tls/openssl.cnf
 ```
 
-`-type` ile belirli tipteki öğeler aranır: `d` dizin, `l` link gibi.
+Ya da mesela etc altındaki boyutu 20mb'dan büyük olan dosyaları `find /etc -size +20` komutuyla listeleriz.
+
+:::caution[Düzeltme]
+Birim yazılmadığında `find` 512 baytlık blok kullanır; `-size +20` 20 bloktan (yaklaşık 10 KB) büyük öğeleri listeler. 20 MB'tan büyük dosyalar için `find /etc -size +20M` yazılır.
+:::
+
+![find . -type d komutunun çıktısı](../../../assets/ekran/p021-1.webp)
 
 ```bash frame="terminal"
 find . -type d
@@ -120,7 +138,9 @@ find . -type d
 ./ornek1/ornek1
 ```
 
-`find -newer dosyaadi`, verilen dosyadan daha yeni bir değiştirme zamanına (modification time) sahip tüm dosya ve dizinleri bulur. Yani o dosya oluşturulduktan ya da son değiştirildikten sonra değiştirilmiş her şeyi listeler:
+`find . -type istediğimizdosyatipi` komutuyla istediğimiz tipte dosyaları arayabiliriz. `d` dizin, `l` link gibi.
+
+![find -newer komutunun çıktısı](../../../assets/ekran/p021-2.webp)
 
 ```bash frame="terminal"
 find -newer confİG
@@ -133,9 +153,11 @@ find -newer confİG
 ./.wget-hsts
 ```
 
+`find -newer config` komutu, config adlı dosyadan daha yeni bir değiştirme zamanına (modification time) sahip olan tüm dosyaları ve dizinleri bulmaya yarar. Başka bir deyişle, bu komut, config dosyası oluşturulduktan veya son değiştirildikten sonra değiştirilmiş tüm öğeleri listeler.
+
 ### -exec
 
-`find` ile bulunan dosyalar üzerinde başka bir komut çalıştırmak için `-exec` seçeneği eklenir. Notlardaki kullanım:
+![find -exec komutunun çıktısı](../../../assets/ekran/p021-3.webp)
 
 ```bash frame="terminal"
 find . -iname config -exec {} \;
@@ -146,9 +168,19 @@ find: './ConFig': Permission denied
 find: './confİG': Permission denied
 ```
 
-## less, head ve tail
+`find` komutuyla bulduğumuz dosyalar üzerinde bir komut daha çalıştırmak istiyorsak bu opsiyonu `exec` komutuyla ekleriz ve kullanımı şekildedir: `find . -iname config -exec {} \;`
 
-Uzun bir dosyayı aşağı kaydırmak yerine sayfa sayfa okumak için `less dosyaadi` kullanılır:
+:::caution[Düzeltme]
+`-exec` ile `{}` arasına çalıştırılacak komut yazılır: `find . -iname config -exec cat {} \;`. Komut yazılmazsa bulunan dosyanın kendisi çalıştırılmaya çalışılır; yukarıdaki `Permission denied` hataları bundan gelir.
+:::
+
+## less
+
+![less ile açılan dosyanın ilk sayfası](../../../assets/ekran/p022-1.webp)
+
+![less ile dosyada sayfa sayfa ilerleme](../../../assets/ekran/p022-2.webp)
+
+![less ile dosyanın son sayfası](../../../assets/ekran/p022-3.webp)
 
 ```bash frame="terminal"
 less linuxsample.txt
@@ -163,13 +195,13 @@ Sekiz
 linuxsample.txt
 ```
 
-- Sonraki sayfaya geçmek için `Space`.
-- Satır satır ilerlemek için aşağı yön tuşu veya `Enter`.
-- Çıkmak için `q`.
+Açtığımız uzun bir dosyanın içeriğinin tümünü görmek için aşağı kaydırmak yerine sayfa değişerek bu verileri okumak için `less dosyaadı` komutunu kullanırız. Sayfa değişmek için `space` tuşunu kullanırız. Çıkmak için `q` tuşuna basmamız yeterlidir.
 
-Dosyanın sonuna gelindiğinde altta `(END)` görünür.
+Sayfa sayfa ilerletmek yerine satır satır okuma yapmak için `space` tuşu yerine aşağı yön tuşu veya `enter` tuşunu kullanabiliriz.
 
-Uzun bir dosyanın başını görmek için `head dosyaadi` kullanılır. Kaç satır görmek istediğin `head -2 dosyaadi` biçiminde belirtilir:
+## head ve tail
+
+![head -2 komutunun çıktısı](../../../assets/ekran/p023-1.webp)
 
 ```bash frame="terminal"
 head -2 linuxsample.txt
@@ -180,38 +212,37 @@ Bu birinci satır.
 Bu ikinci satır.
 ```
 
-Tersine, sondan belirli sayıda satır okumak için `tail -3 dosyaadi` kullanılır.
+Uzun bir dosyanın en başını görmek istersek kullanacağımız komut `head dosyaadı` olmalıdır. Kaç satırı görmek istiyorsak bunu `head -2 dosyaadı` komutuyla belirtiriz.
 
-`tail -f dosyaadi`, dosyaya yeni eklenen satırları anlık olarak ekranda takip etmeyi sağlar. Genellikle sistem günlük dosyalarını (log files) canlı izlemek ve çalışan bir uygulamanın ürettiği hataları veya durum güncellemelerini anında görmek için kullanılır. Takibi durdurmak için `Ctrl + C` ile komut sonlandırılır.
+![tail -3 komutunun çıktısı](../../../assets/ekran/p023-2.webp)
+
+Bunun tam tersi olarak sondan kaç satırı okumak istiyorsak `tail -3 dosyaadı` komutunu kullanırız.
+
+`tail -f dosyaadı` komutuyla dosyaya yeni eklenen satırları eş zamanlı olarak ekranda izlemeye (takip etmeye) yarar. Bu özellik, genellikle sistem günlük dosyalarını (log files) canlı olarak takip etmek ve bir uygulamanın çalışırken ürettiği hataları veya durum güncellemelerini anında görmek için kullanılır. İşlem bittiğinde veya takibi durdurmak istediğinizde, genellikle `ctrl + c` tuş kombinasyonu ile komutu sonlandırabilirsiniz.
 
 ## vim
 
-Linux'ta dosya içeriğini düzenlemek için çeşitli araçlar vardır. Bunlardan ilki **vim**'dir. Okuma ve yazma (edit) olmak üzere iki modu vardır.
+Linux'ta dosyaların içeriğini düzenlemek için kullanılan bazı araçlar vardır. Bunlardan ilki vim. Okuma ve edit olmak üzere iki modu vardır.
 
-Dosya ilk açıldığında okuma modunda açılır. Bu moddayken dosyadan çıkmak için `:x` + Enter veya `:q` + Enter kullanılır.
+Dosya ilk açıldığında okuma moduna açılır bu moddayken dosyadan çıkmak için `:` + `x` + enter veya `:` + `q` + enter yaparız.
 
-Okuma (navigasyon) modunda hareket tuşları:
+Navigasyon yani okuma modunda aşağıdaki tuşları kullanırız. `H` tuşu ile sola, `L` tuşu ile sağa, `J` tuşu ile yukarı ve `K` tuşu ile aşağı doğru ilerleyebiliriz. Veya yön tuşlarını da kullanabiliriz.
 
-| Tuş | Yön |
-| --- | --- |
-| `h` | Sola |
-| `l` | Sağa |
-| `j` | Aşağı |
-| `k` | Yukarı |
+:::caution[Düzeltme]
+vim'de `j` aşağı, `k` yukarı hareket ettirir. Tuşlar küçük harfle kullanılır (`h`, `j`, `k`, `l`).
+:::
 
-Yön tuşları da kullanılabilir.
+Yazma moduna geçebilmek için `i` harfine basmamız yeterli. `Esc` ile okuma moduna geri döneriz.
 
-- Yazma moduna geçmek için `i` tuşuna basılır; `Esc` ile okuma moduna dönülür.
-- Dosyayı kaydedip çıkmak için `Esc` ardından `:wq` + Enter.
-- `:set nu` satır numaralarını açar, `:set nonu` kapatır.
+Dosyayı kaydedip çıkmak için `esc` + `:wq` + enter yaparız. `:set nu` yazarsak satır numaralarını açar. `:set nonu` yazarsak kapatır.
 
 ## nano
 
-Diğer bir metin editörü **nano**'dur. `nano dosyaadi` biçiminde kullanılır. `Ctrl + X` ile dosya kaydedilip çıkılır.
+Diğer bir text editör aracımız nano. `nano dosyaadı` şeklinde kullanılır. `ctrl+x` ile dosyayı kaydedip çıkarız.
 
 ## diff, vimdiff ve sdiff
 
-Dosyalar arasındaki farkları bulmak için `diff dosyaadi1 dosyaadi2` kullanılır. Çıktıda birinci dosyadaki satırlar (`<`), değişim bilgisi ve ikinci dosyadaki satırlar (`>`) gösterilir:
+![diff komutuyla iki dosya arasındaki farklar](../../../assets/ekran/p024-1.webp)
 
 ```bash frame="terminal"
 diff ConFig confİG
@@ -226,13 +257,17 @@ diff ConFig confİG
 > merhaba
 ```
 
-`vimdiff dosyaadi1 dosyaadi2` iki dosyayı vim içinde yan yana açar ve farklı satırları renklendirir. Çıkmak için `Esc` ardından `:wq` kullanılır.
+Dosyaların arasındaki farkları bulmak için `diff` komutunu kullanırız. `diff dosyaadı1 dosyaadı2` şeklinde kullanılır. Çıktı olarak bize; birinci dosyada olan veriler, değişim olanlar ve ikinci dosyada olan verileri gösterir.
+
+![vimdiff ile iki dosyanın vim içinde yan yana açılması](../../../assets/ekran/p024-2.webp)
 
 ```bash frame="terminal"
 vimdiff ConFig confİG
 ```
 
-İki dosyayı komut satırında yan yana görmek için `sdiff dosyaadi1 dosyaadi2` kullanılır:
+Bir dosyayı `vimdiff dosyaadı1 dosyaadı2` komutunu kullanarak vim içerisinde iki dosyayı açabiliriz. Çıkmak için `esc` + `:` + `w` + `q` harflerini kullanıyoruz.
+
+![sdiff ile iki dosyanın komut satırında yan yana gösterimi](../../../assets/ekran/p024-3.webp)
 
 ```bash frame="terminal"
 sdiff ConFig confİG
@@ -244,9 +279,11 @@ bugün hava güzel                                      <
 iyi hissediyorum                                      <
 ```
 
+Aynı şekilde iki dosyayı yan yana komut satırında açmak istersek `sdiff dosyaadı1 dosyaadı2` şeklinde kullanıyoruz.
+
 ## grep: dosya içinde arama
 
-`grep` metin dosyalarının içinde arama yapar. `find` sistemde dosya ve klasör bulurken `grep` dosyanın içinde arar.
+![grep ile dosya içinde kelime arama](../../../assets/ekran/p025-1.webp)
 
 ```bash frame="terminal"
 grep Osman linuxsample.txt
@@ -256,14 +293,11 @@ grep Osman linuxsample.txt
 Osman
 ```
 
-Sık kullanılan seçenekler:
+`grep` text dosyaları içerisinde arama yapmamızı sağlar. `find` sistemde dosya ve klasörleri bulmamızı sağlarken `grep`le dosya içinde arama yaparız.
 
-| Seçenek | İşlevi |
-| --- | --- |
-| `-i` | Büyük-küçük harf ayrımı yapmadan arar: `grep -i kelime dosyaadi` |
-| `-c` | Kelimenin kaç satırda bulunduğunu verir |
-| `-n` | Kelimenin bulunduğu satır numarasını verir |
-| `-v` | Kelimenin bulunmadığı satırları gösterir |
+Büyük - küçük harf duyarlılığı olmadan bir arama yapmak istiyorsak `grep -i aranacakkelime aranacakdosyaismi` şeklinde komutu yazmalıyız.
+
+![grep -c komutunun çıktısı](../../../assets/ekran/p025-2.webp)
 
 ```bash frame="terminal"
 grep -c Osman linuxsample.txt
@@ -273,6 +307,10 @@ grep -c Osman linuxsample.txt
 1
 ```
 
+`grep -c` komutuyla kaç satırda aranan kelimeyi bulduğunu verir.
+
+![grep -n komutunun çıktısı](../../../assets/ekran/p025-3.webp)
+
 ```bash frame="terminal"
 grep -n Osman linuxsample.txt
 ```
@@ -280,3 +318,7 @@ grep -n Osman linuxsample.txt
 ```text title="Çıktı"
 31:Osman
 ```
+
+`grep -n` dersek kaç numaralı satırda aradığımız kelimeyi bulduğunu verir.
+
+`grep -v` dersek aradığımız kelimenin bulunmadığı satırları bize gösterir.

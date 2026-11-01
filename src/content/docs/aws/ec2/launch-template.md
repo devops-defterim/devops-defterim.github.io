@@ -6,23 +6,37 @@ lessons: [25]
 order: 21
 ---
 
-Instance oluşturmayı seçtiğimiz özelliklerle otomatikleştirmek istersek **Launch Templates** menüsünü kullanırız. Şablon bir kez hazırlandıktan sonra aynı özelliklerde makineleri her seferinde tüm adımları tekrarlamadan oluşturabiliriz.
+Instance oluşturmayı seçtiğimiz özelliklerde otomatize etmek istersek **Launch Templates** menüsünden ayarlayabiliriz.
 
 ## Şablon oluşturma
 
-1. **EC2 → Launch Templates** yolunu izleyin ve `Create launch template` butonuna tıklayın.
-2. **Launch template name and description** bölümünde bir isim (**Launch template name**, ör. `ornek-template`) ve açıklama (**Template version description**) girin.
-3. **Application and OS Images (Amazon Machine Image)** bölümünde sanal makinelerin oluşturulacağı AMI'yi seçin (örnekte Amazon Linux 2023).
-4. **Instance type** bölümünde sanal makine tipini seçin (örnekte `t3.micro`).
-5. **Key pair (login)** bölümünde kullanmak istediğiniz key pair'i seçin.
-6. Network settings, Storage (volumes), Resource tags ve Advanced details bölümlerini [Instance oluşturma](/aws/ec2/instance-olusturma/) sayfasında anlatılan ayarlara göre istediğiniz şekilde düzenleyin.
-7. `Create launch template` butonuna tıklayın.
+1. `Create launch template` butonuna tıklayarak başlayalım.
+
+   ![Launch Templates ekranında Create launch template butonu](../../../../assets/ekran/p220-1.webp)
+
+2. Bir isim ve açıklama ekleyerek devam edelim.
+
+   ![Launch template name and description alanları](../../../../assets/ekran/p220-2.webp)
+
+3. Sanal makinelerimizi oluşturacağımız AMI ile devam ediyoruz.
+
+   ![Launch template için Application and OS Images bölümü](../../../../assets/ekran/p220-3.webp)
+
+   ![Launch template için seçilen Amazon Linux AMI](../../../../assets/ekran/p221-1.webp)
+
+4. Sanal makine tipini seçiyoruz.
+
+   ![Launch template için Instance type seçimi](../../../../assets/ekran/p221-2.webp)
+
+5. Kullanmak istediğimiz key pair'i seçiyoruz.
+6. Sanal makine oluştururken öğrendiğimiz tüm ayarları istediğimiz şekilde düzenleyerek `Create launch template` diyoruz.
 
 ## Şablondan instance başlatma
 
-1. **Launch Templates** listesinde oluşturduğunuz şablonu seçin.
-2. **Actions → Launch instance from template** seçeneğine tıklayın.
-3. Açılan **Launch instance from template** ekranında **Source template** ve sürüm (`1 (Default)`) seçili gelir; şablondaki ayarlar doldurulmuş olarak görünür.
-4. `Launch instance` butonuna tıklamanız yeterlidir.
+Ve oluşturduğumuz launch template'i seçerek **Actions** menüsü altından **Launch instance from template** seçeneğine tıklıyoruz.
 
-Böylece belirlediğimiz özellikleri bir şablon olarak kullanıp daha hızlı sanal makineler oluşturabiliriz.
+![Launch Templates listesinde Actions menüsünden Launch instance from template](../../../../assets/ekran/p221-3.webp)
+
+Artık belirlediğimiz özellikleri bir şablon olarak kullanıp daha hızlı sanal makineler oluşturabiliriz. Bunun için yalnızca `Launch instances` butonuna tıklamamız yeterli.
+
+![Launch instance from template ekranında şablon ayarları ve Launch instance butonu](../../../../assets/ekran/p221-4.webp)

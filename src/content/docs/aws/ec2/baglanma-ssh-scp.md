@@ -8,45 +8,48 @@ order: 19
 
 ## Instance detayları
 
-Instances listesinde makinenin **Instance ID**'sine tıklayarak hakkındaki detaylı bilgilere ulaşabiliriz. Detay sayfasında public/private IP, public DNS, VPC, subnet gibi bilgilerin yanında **Monitoring** sekmesinde CPU utilization, Network in/out, CPU credit usage/balance gibi grafikler de görülür.
+Sanal makinemizin **Instance ID**'sine tıklayarak hakkındaki detaylı bilgilere ulaşabiliriz.
+
+![Instance ID'ye tıklanınca açılan instance detay sayfası](../../../../assets/ekran/p214-1.webp)
 
 ## IAM rolü bağlama
 
-Daha önce oluşturduğumuz IAM rolünü (bkz. [IAM rolleri ve ARN](/aws/iam/roller-ve-arn/)) sanal makineye bağlamak için:
+Daha önce oluşturduğumuz [IAM role](/aws/iam/roller-ve-arn/) sanal makinemize bağlamak için:
 
-1. Makineyi seçin, **Actions → Security → Modify IAM role** yolunu izleyin.
-2. **IAM role** listesinden oluşturduğunuz rolü seçin.
-3. `Update IAM role` butonuna tıklayın.
+1. **Actions** menüsü altından **Security** diyerek **Modify IAM role** seçeneğine tıklıyoruz.
+
+   ![Actions, Security, Modify IAM role menü yolu](../../../../assets/ekran/p214-2.webp)
+
+2. Oluşturduğumuz role seçerek `Update IAM role` butonuna tıklıyoruz.
+
+   ![Modify IAM role ekranında rol seçimi ve Update IAM role butonu](../../../../assets/ekran/p214-3.webp)
 
 ## Connect seçenekleri
 
-Sanal makineye bağlanmak için `Connect` butonuna tıklıyoruz. **In web browser** sekmesinde dört yöntem bulunur:
+Sanal makinemize bağlanmak için `Connect` butonuna tıklıyoruz.
 
-| Yöntem | Açıklama |
-|---|---|
-| **EC2 Instance Connect** | Ekstra bir programa veya anahtar dosyasına ihtiyaç duymadan, doğrudan web tarayıcısı üzerinden AWS'nin sağladığı geçici anahtarlarla herkese açık makinenize saniyeler içinde bağlanmanızı sağlayan en pratik yöntemdir. |
-| **EC2 Instance Connect Endpoint** | İnternete doğrudan açık olmayan (özel ağ içindeki) makinelere, trafiği AWS içindeki güvenli bir köprüden (endpoint) geçirerek web üzerinden erişmeyi sağlar. |
-| **SSM Session Manager** | SSH anahtarlarına veya dışarıya açık portlara ihtiyaç bırakmadan, erişimi tamamen AWS kimlik ve yetki sistemiyle (IAM) yöneterek sunucuya en yüksek güvenlik seviyesinde bağlanmayı sağlar. |
-| **EC2 Serial Console** | Makinenin internet bağlantısı tamamen kopsa veya işletim sistemi çökse bile doğrudan donanım seviyesinden (seri port üzerinden) sisteme bağlanıp sorunları gidermeyi sağlayan acil durum yöntemidir. |
+![Instance detay sayfasında Connect butonu](../../../../assets/ekran/p215-1.webp)
 
-EC2 Instance Connect ekranında public IPv4 adresi ve kullanıcı adı (`ec2-user`) seçili gelir.
+- **EC2 Instance Connect:** Herhangi bir ekstra programa veya anahtar dosyasına ihtiyaç duymadan, doğrudan web tarayıcınız üzerinden AWS'nin sağladığı geçici anahtarlarla herkese açık makinenize saniyeler içinde bağlanmanızı sağlayan en pratik yöntemdir.
+- **EC2 Instance Connect Endpoint:** İnternete doğrudan açık olmayan (özel ağ içindeki) makinelerinize, trafiği AWS içindeki güvenli bir köprüden (endpoint) geçirerek web üzerinden erişmenizi sağlar.
+- **SSM Session Manager:** SSH anahtarlarına veya dışarıya açık portlara ihtiyaç bırakmayan, erişimi tamamen AWS kimlik ve yetki sistemiyle (IAM) yöneterek sunucunuza en yüksek güvenlik seviyesinde bağlanmanızı sağlayan profesyonel yöntemdir.
+- **EC2 Serial Console:** Makinenizin internet bağlantısı tamamen kopsa veya işletim sistemi çökse de doğrudan donanım seviyesinden (seri port üzerinden) sisteme sızıp sorunları gidermenizi sağlayan acil durum müdahale yöntemidir.
+
+![Connect to instance ekranında In web browser sekmesindeki bağlantı yöntemleri](../../../../assets/ekran/p215-2.webp)
 
 ## SSH ile bağlanma
 
-**In SSH client** sekmesi, kendi terminalimizden bağlanmak için gereken adımları gösterir:
+**In SSH client** seçeneğiyle birlikte kendi terminal ekranlarımızdan bu sanal makineye bağlanmak için ekrandaki adımları uyguluyoruz.
 
-1. Bir SSH istemcisi açın.
-2. Private key dosyanızı bulun.
-3. Anahtarın herkes tarafından okunabilir olmadığından emin olun.
-4. Makineye public DNS adıyla bağlanın.
+![In SSH client sekmesindeki bağlantı adımları ve örnek ssh komutu](../../../../assets/ekran/p216-1.webp)
+
+![Terminalde chmod 400 ve ssh komutlarıyla makineye bağlanma](../../../../assets/ekran/p216-2.webp)
 
 ```bash frame="terminal"
 cd ~/Downloads
 chmod 400 "ornek-key.pem"
 ssh -i "ornek-key.pem" ec2-user@ec2-203-0-113-10.compute-1.amazonaws.com
 ```
-
-İlk bağlantıda sunucunun parmak izini onaylamak için `yes` yazılır:
 
 ```text title="Çıktı"
 The authenticity of host 'ec2-203-0-113-10.compute-1.amazonaws.com (203.0.113.10)' can't be established.
@@ -67,29 +70,25 @@ Warning: Permanently added 'ec2-203-0-113-10.compute-1.amazonaws.com' (ED25519) 
        _/m/'
 ```
 
-Bağlandıktan sonra prompt `[ec2-user@ip-172-31-0-10 ~]$` şeklinde değişir.
-
-:::note
-SSH bağlantısı arka planda **TCP 22** portu üzerinden gerçekleşir. Bu yüzden sanal makinenin güvenlik ayarlarında (security group) 22 numaralı portun size açık olduğundan emin olmalısınız.
-:::
+Bir sunucuya SSH ile bağlanmak istediğimizde işlemlerimiz arka planda TCP 22. port üzerinden gerçekleşir. Bu yüzden sanal makinemizin güvenlik ayarlarında 22 numaralı portun bize açık olduğundan emin olmalıyız. SSH sadece sunucuyu yönetmemizi sağlamaz; çeşitli uygulamalar yardımıyla makinemize çok pratik ve güvenli bir şekilde dosya transferi yapmamıza da imkân verir.
 
 ## scp ile dosya transferi
 
-SSH sadece sunucuyu yönetmeyi sağlamaz; makineye pratik ve güvenli şekilde dosya transferi yapmaya da imkan verir.
-
-Bağlandığımız sunucuya dosya **göndermek** için:
+Bağlandığımız sunucuya dosya göndermek için kullanacağımız komut:
 
 ```bash frame="terminal"
 scp -i "anahtar_dosyasi.pem" gonderilecek_dosya.uzanti kullanici_adi@sunucu_ip_adresi:/hedef/klasor/yolu
 ```
 
-Sunucudan kendi bilgisayarımıza dosya **çekmek** için:
+![Terminalde scp ile sunucudaki sil.png dosyasını bilgisayara çekme komutu](../../../../assets/ekran/p216-3.webp)
+
+Kendi bilgisayarımıza bir dosyayı çekmek istediğimizde ise şu komutu kullanırız:
 
 ```bash frame="terminal"
 scp -i "anahtar_dosyasi.pem" kullanici_adi@sunucu_ip_adresi:/sunucudaki/dosyanin/tam/yolu /bilgisayarimizdaki/hedef/klasor
 ```
 
-Örnek: sunucudaki `sil.png` dosyasını bilgisayardaki mevcut klasöre (`.`) çekmek:
+![Sunucudaki sil.png dosyasını scp ile bilgisayara çekme](../../../../assets/ekran/p217-1.webp)
 
 ```bash frame="terminal"
 scp -i "ornek-key.pem" ec2-user@ec2-203-0-113-10.compute-1.amazonaws.com:/home/ec2-user/sil.png .
@@ -102,53 +101,51 @@ sil.png                                       100%  322KB  89.8KB/s   00:03
 
 ## SFTP
 
-SFTP, dosya transferinin daha gelişmiş bir yoludur. SCP gibi arka planda SSH altyapısını ve 22 numaralı portu kullanarak bilgisayar ile sunucu arasında güvenli dosya transferi yapmayı sağlayan bir protokoldür.
+Dosya göndermenin daha gelişmiş bir yolu olan SFTP, tıpkı SCP gibi arka planda SSH altyapısını ve 22 numaralı portu kullanarak bilgisayarınla sunucu arasında güvenli dosya transferi yapmanı sağlayan bir protokoldür.
 
-### SFTP ve SCP farkı
+### SFTP ve SCP arasındaki fark nedir?
 
-En basit tabirle **SCP bir "kurye", SFTP ise bir "dosya yöneticisi" (şube) gibidir.**
+En basit tabirle; SCP bir "kurye", SFTP ise bir "dosya yöneticisi" (şube) gibidir.
 
-- **SCP:** Tek seferlik, "at ve unut" tarzı bir işlemdir. Dosyayı verir, tam adresi yazarsınız; kurye dosyayı karşıya bırakıp bağlantıyı anında kapatır. Gönderilecek dosyanın ve hedefin tam yolunu bilmeniz gerekir.
-- **SFTP:** Etkileşimli bir tünel açar. Sunucuya bağlandıktan sonra bağlantı açık kalır ve terminal bir FTP programına dönüşür. Kendi bilgisayarınızdaymış gibi sunucudaki klasörlere girip çıkabilir, dosyaları listeleyebilir, silebilir ve istediğiniz zaman dosya çekip gönderebilirsiniz. İş bitince bağlantıyı siz kapatırsınız. Ayrıca büyük dosyalarda bağlantı koparsa SFTP daha esnektir.
+- **SCP:** Tek seferlik, "at ve unut" tarzı bir işlemdir. Paketi (dosyayı) verirsin, tam adresi yazarsın, kurye dosyayı karşıya bırakıp bağlantıyı anında kapatır. Göndereceğin dosyanın ve hedefin tam yolunu ezbere bilmen gerekir.
+- **SFTP:** Etkileşimli bir tünel açar. Sunucuya bağlandıktan sonra bağlantı açık kalır ve terminalin bir FTP programına dönüşür. Tıpkı kendi bilgisayarındaymışsın gibi sunucudaki klasörlerin içine girip çıkabilir, dosyaları listeleyip görebilir, silebilir ve istediğin zaman dosya çekip gönderebilirsin. İşin bitince bağlantıyı sen kapatırsın. (Ayrıca büyük dosyalarda bağlantı koparsa SFTP daha esnektir).
 
-### 1. SFTP ile sunucuya bağlanma
+### 1. SFTP ile sunucuya bağlanma iskeleti
 
-Önce SFTP oturumunu başlatıp sunucuyla güvenli köprüyü kurarız. Mantık SSH'a benzer:
+Önce komut satırından SFTP oturumunu başlatıp sunucuyla o güvenli köprüyü kurmamız gerekir. Mantık tamamen SSH'a benzer:
 
 ```bash frame="terminal"
 sftp -i "anahtar_dosyasi.pem" kullanici_adi@sunucu_ip_adresi
 ```
 
-Enter'a basınca terminalin başındaki yazı `sftp>` olarak değişir. Bu, bağlantının kurulduğunu ve SFTP komutlarını dinlemeye hazır olduğunu gösterir.
+Bu komutu yazıp Enter'a bastığında, terminalinin başındaki yazı `sftp>` olarak değişir. Bu, bağlantının başarıyla kurulduğu ve artık SFTP komutlarını dinlemeye hazır olduğu anlamına gelir.
 
-### 2. Sunucuya dosya gönderme (upload)
+### 2. Sunucuya dosya gönderme (upload) iskeleti
 
-`sftp>` ekranındayken kendi bilgisayarınızdan sunucuya dosya göndermek için `put` kullanılır:
+SFTP bağlantısının (yani `sftp>` ekranının) içindeyken, kendi bilgisayarından sunucuya dosya göndermek için `put` komutunu kullanırız.
 
 ```text
 sftp> put /bilgisayarimdaki/dosyanin/yolu.uzanti /sunucudaki/hedef/klasor
 ```
 
-Örnek: terminali masaüstünde açtığınızı varsayarsak, masaüstündeki resmi sunucuya yollamak için `sftp> put sil.png` yeterlidir.
+Pratik Örnek: Terminali masaüstünde açtığını varsayalım. Sadece şu komutla masaüstündeki resmi sunucuya yollayabilirsin: `sftp> put sil.png`
 
-### 3. Sunucudan dosya çekme (download)
+### 3. Sunucudan dosya çekme (download) iskeleti
 
-Sunucudaki bir dosyayı kendi bilgisayarınıza indirmek için `get` kullanılır:
+Sunucudaki bir dosyayı alıp kendi bilgisayarına indirmek için ise `get` komutunu kullanırız.
 
 ```text
 sftp> get /sunucudaki/dosyanin/tam/yolu.uzanti /bilgisayarimizdaki/hedef/klasor
 ```
 
-Örnek: sunucudaki bir dosyayı masaüstüne indirmek için `sftp> get rapor.txt`.
+Pratik Örnek: Sunucunun içindeyken gördüğün bir dosyayı hemen kendi bilgisayarına (masaüstüne) indirmek için: `sftp> get rapor.txt`
 
-### Gezinme komutları
+### SFTP'de hayat kurtaran "gezinme" komutları
 
-SFTP'nin en büyük avantajı sunucuda gezinebilmektir. Sık kullanılan komutlar:
+SFTP'nin en büyük avantajı sunucuda gezinebilmektir. Aşağıdaki komutlar sık kullanılır:
 
-| Komut | Açıklama |
-|---|---|
-| `ls` | Sunucudaki dosyaları listeler. |
-| `lls` | Kendi bilgisayarımızdaki dosyaları listeler (başa gelen `l` harfi Local anlamındadır). |
-| `cd klasor_adi` | Sunucuda başka bir klasöre geçer. |
-| `lcd klasor_adi` | Kendi bilgisayarımızda başka bir klasöre geçer. |
-| `exit` | İş bitince güvenli bağlantıyı kapatıp normal terminale döner. |
+- `ls`: Sunucunun içindeki dosyaları listeler. Görmeden işlem yapmamış oluruz.
+- `lls`: Kendi bilgisayarımızdaki dosyaları listeler. (Başına L harfi gelince Local anlamına gelir).
+- `cd klasor_adi`: Sunucunun içinde başka bir klasöre girmemizi sağlar.
+- `lcd klasor_adi`: Kendi bilgisayarımızda başka bir klasöre geçmeyi sağlar.
+- `exit`: Dosya transferleriyle işimiz bittiğinde güvenli bağlantıyı kapatıp normal Mac terminaline dönmeyi sağlar.

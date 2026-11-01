@@ -6,34 +6,25 @@ lessons: [8]
 order: 16
 ---
 
+Bir Linux sistemini yönetip ayakta tutmak için bilmemiz gerekenlere göz atacak olursak;
+
 ## Monitoring kavramı
 
-Yönettiğimiz bir sunucunun yapılandırdığımız şekilde çalışıp çalışmadığını kontrol etmemiz gerekir: sunucu ayakta mı, kaynak kullanımı ne durumda, üzerinde çalışan uygulama düzgün çalışıyor mu? Bu durumları izlemeye **monitoring** denir.
+Yönettiğimiz bir sunucunun konfigüre ettiğimiz şekilde çalışıp çalışmadığını kontrol etmeliyiz yani sunucunun ayakta olup olmadığını, kaynak kullanımının ne durumda olduğunu, üzerinde çalışan uygulama düzgün şekilde çalışıyor mu gibi durumları izliyor olmamız gerekir. Bu kavrama monitoring denir.
 
-Monitoring altında bilinmesi gereken iki temel kavram vardır:
-
-- **Metrik (metric):** Bir sistemin ya da uygulamanın belirli bir zaman diliminde, o anki durumuyla ilgili sağladığı ve sayısal olarak ifade edilebilen veri değeridir. Sistemdeki disk, CPU, memory gibi kaynakları ve bu kaynakların ne kadarının kullanıldığını gösterir.
-- **Log:** Bir sistemde uygulamalar tarafından üretilen, text tabanlı, gerçekleşen işlemlerin kayıtlarıdır. Bu kayıtlar bir dosyaya yazılabilir ya da stdout çıkışına verilebilir.
+Monitoring kavramı altında bilmemiz gereken ilk kavram metring. Bir sistemin, uygulamanın o anki bir durumla ilgili belirli bir zaman diliminde sağladığı sayısal olarak represent edilebilen veri değerine metring denir. Yani sistemde bulunan mevcut disk, cpu, memory gibi kaynakları ve bu kaynakların ne kadarının kullanıldığı bilgisini vermektedir. İkinci kavram ise kayıt anlamına gelen log. Bir sistemde uygulamalar tarafından üretilen, text tabanlı, gerçekleşen işlemlerin tutulan kayıtlarına log denir. Bu kayıtlar bir dosyaya yazılıyor da olabilir stdout çıkışına veriliyor da olabilir.
 
 ## systemd-journald ve journalctl
 
-Uygulamalar log kayıtlarını `systemd-journald.service` aracılığıyla iletir. Bu servis systemd tarafından yönetilir ve sistemin varsayılan log toplama merkezidir. Logları, yüksek performanslı arama yapılabilmesi için binary (ikili) formatta saklar. Bu yüzden log dosyalarına doğrudan erişmek yerine `journalctl` aracıyla çeşitli filtreler uygulayarak verileri çekeriz.
+Uygulamalar log kayıtlarını `systemd-journald.service` aracılığı ile iletir. Varsayılan log toplama platformumuzdur. Systemd tarafından yönetilir. Bu servis, sistemin varsayılan log toplama merkezidir ve logları yüksek performanslı arama yapılabilmesi için binary (ikili) formatta saklar. Artık log dosyalarına direkt erişmiyoruz, bunun yerine `journalctl` aracılığıyla çeşitli filtrelemeler yaparak verileri log dosyalarından çekebiliyoruz.
 
-Şu ana kadar oluşturulmuş tüm loglar:
+Terminal ekranına `journalctl` komutuyla şu ana kadar oluşturulmuş tüm loglara ulaşırız.
 
-```bash frame="terminal"
-journalctl
-```
+`journalctl -f` komutuyla log kayıtlarının sonuna yapışırız ve son yapılan işlemleri anlık olarak görürüz.
 
-Log kayıtlarının sonuna bağlanıp yeni kayıtları anlık izlemek için:
+### Son kayıtlar ve UTC
 
-```bash frame="terminal"
-journalctl -f
-```
-
-### Son n kayıt
-
-Sondan itibaren görmek istediğimiz kayıt sayısını verebiliriz. Son 10 log kaydı:
+![journalctl -n 10 komutunun çıktısında son 10 log kaydı](../../../assets/ekran/p065-1.webp)
 
 ```bash frame="terminal"
 journalctl -n 10
@@ -53,26 +44,21 @@ Sep 13 17:30:26 ip-172-31-0-10.eu-west-1.compute.internal systemd[1]: Finished r
 lines 1-10/10 (END)
 ```
 
-### Filtreleme seçenekleri
+Sondan itibaren görmek istediğimiz log kayıt sayısını belirterek verilere ulaşabiliriz. `journalctl -n 10` ile son 10 log kaydını görürüz. `journalctl --utc` komutu log kayıtlarının zaman damgalarını yerel saat dilimine göre değil, Koordinatlı Evrensel Zaman (UTC) dilimine göre görüntülemenizi sağlar. Eğer dünyanın farklı yerlerinde sunucularınız varsa, hepsindeki olayları aynı zaman ölçeğinde karşılaştırmak analiz yapmayı kolaylaştırır. Sistemlerimizin saat dilimleri farklılık gösterse de, analiz aşamasında ortak bir dil konuşmak gerekir.
 
-| Komut | Ne gösterir |
-| --- | --- |
-| `journalctl --utc` | Zaman damgalarını yerel saat dilimi yerine UTC'ye göre gösterir |
-| `journalctl -u crond` | Yalnızca belirli bir servisin (burada crond) logları; genel biçim `journalctl -u <servisin_kisa_adi>` |
-| `journalctl -k` | Yalnızca çekirdeğin (kernel) logları |
-| `journalctl --since <tarih> --until <tarih>` | Belirli bir tarih ve saat aralığındaki loglar |
-| `journalctl _PID=2090` | Belirli bir process'in logları (PID değeriyle) |
-| `journalctl -p 3` | Öncelik değerine göre loglar; `-p 3` yalnızca hataları (error) gösterir |
+### Filtreleme
 
-`--utc` seçeneği, dünyanın farklı yerlerinde sunucularımız olduğunda işe yarar. Sistemlerin saat dilimleri farklı olsa da analiz aşamasında tüm olayları aynı zaman ölçeğinde karşılaştırabilmek gerekir.
+Yalnızca belli bir servis tarafından oluşturulan log kayıtlarına ulaşmak için `journalctl -u servisinkısaadı` şeklinde komutu yazabiliriz. crond tarafından oluşturulan log dosyalarını görmek istersek `journalctl -u crond` komutunu kullanırız.
+
+Yalnızca çekirdeğin loglarına erişmek istersek onun ismini yazmak yerine `journalctl -k` opsiyonunu kullanırız.
+
+Belli bir tarih ve saat aralığındaki loglara ulaşmak istersek `journalctl --since tarih --until tarih` komutunu kullanırız.
+
+Belli bir prosesin loglarını görüntülemek istersek `journalctl _PID=2090` şeklinde PID değerini kullanırız. `journalctl -p` opsiyonu ile öncelik verdiğimiz değerlerin loglarını çekebiliriz. Mesela `journalctl -p 3` komutuyla yalnızca sistemdeki errorları görebiliriz.
 
 ### Seçenekleri birleştirme
 
-Seçenekler bir arada kullanılarak filtre daraltılabilir:
-
-- `journalctl -p 3 -k`: yalnızca çekirdekteki hatalar
-- `journalctl -p 3 -k -x`: çekirdekteki hatalar, çözüm açıklamalarıyla birlikte
-- `journalctl -p 3 -k -x -b`: son önyüklemeden (boot) bu yana çekirdekteki hatalar, çözüm açıklamalarıyla birlikte
+![journalctl -p 3 ile -k, -u, -x ve -b seçeneklerinin birlikte kullanımı](../../../assets/ekran/p066-1.webp)
 
 ```bash frame="terminal"
 journalctl -p 3 -k
@@ -91,39 +77,23 @@ Sep 12 18:19:29 localhost kernel: Cannot get hvm parameter CONSOLE_EVTCHN (18): 
 Sep 12 18:19:29 localhost kernel: Cannot get hvm parameter CONSOLE_EVTCHN (18): -22!
 ```
 
-`journalctl -p 3 -u crond` komutu crond için hata kaydı bulamadığından `-- No entries --` döndü.
+Aynı zamanda farklı opsiyonlarla filtrelemeyi artırabiliriz. Sadece çekirdekte olan hataları görmek için `journalctl -p 3 -k` komutunu, çekirdekte olan hataları çözüm açıklamalarıyla görmek istiyorsak `journalctl -p 3 -k -x` komutunu ve son önyüklemeden itibaren çekirdekte olan hataları çözüm açıklamalarıyla birlikte `journalctl -p 3 -k -x -b` komutuyla görüntüleyebiliriz.
 
 ## sed ile metin değiştirme
 
-Bir dosya içinde bir kelimeyi arayıp başka bir kelimeyle değiştirmek için `sed` kullanılır:
-
-```bash frame="terminal"
-sed 's/aranankelime/yenikelime/' dosyaadi
-```
-
-Varsayılan olarak `sed` her satırda aradığı kelimenin yalnızca ilk eşleşmesini değiştirir, sonra sonraki satıra geçer. Bir satırda aranan kelime birden fazla geçiyorsa yalnızca biri değişir.
-
-| Komut | Etkisi |
-| --- | --- |
-| `sed 's/aranankelime/yenikelime/' dosyaadi` | Her satırdaki ilk eşleşmeyi değiştirir |
-| `sed 's/aranankelime/yenikelime/g' dosyaadi` | Satırdaki tüm eşleşmeleri değiştirir |
-| `sed 's/aranankelime/yenikelime/2' dosyaadi` | Satırdaki yalnızca ikinci eşleşmeyi değiştirir |
-| `sed -i 's/aranankelime/yenikelime/' dosyaadi` | Değişikliği dosyaya kalıcı olarak yazar |
-
-:::note
-`-i` olmadan `sed` asıl dosyayı değiştirmez, sonucu yalnızca terminale yazdırır.
-:::
+Ayrıca Linux’ta bir dosya içinde string araması yapıp stringin değerini değiştirmek istiyorsak `sed 's/aranankelime/yenikelime/' dosyaadi` komutunu kullanırız. Bu komut ile dosya içinde aranan kelime olan tüm kelimeleri bulup istediğimiz yeni kelime ile değiştirmiş oluruz. Bir satırda birden fazla aranan kelimeden varsa yalnızca biri yeni kelime ile değiştirilir. Çünkü varsayılan olarak sed komutu aradığı kelimeyi her satırda bir tane bulacak şekilde arar ilk bulduğunu değiştirir sonra sonraki satıra geçer. Eğer tüm kelimelerin değişmesini istiyorsak `sed 's/aranankelime/yenikelime/g' dosyaadi` komutunu kullanırız. Bulunan satırda örneğin sadece ikinci kelimenin değişmesini istiyorsak `sed 's/aranankelime/yenikelime/2' dosyaadi` komutunu kullanırız. Ancak bunu asıl dosyadaki değerleri değiştirmez `sed 's/aranankelime/yenikelime/' dosyaadi` komutu kullanımı sonucunu sadece terminale yazdırır. Değişikliğin dosyaya kalıcı olarak işlenmesi için `-i` parametresini kullanırız ve komutu `sed -i 's/aranankelime/yenikelime/' dosyaadi` şeklinde yazarız.
 
 ## Metrikleri görüntüleme
 
-Her metrik türü için ayrı bir komut vardır.
+Tanımını yapmış olduğumuz metring değerlerini görmek istersek her biri için farklı komut olduğunu görürüz.
 
-- **`top`**: CPU kullanımını, process'lerin ne kadar CPU kullandığını, sistemdeki toplam memory'yi ve ne kadarının kullanıldığını gösterir. Swap değerini de verir.
-- **`free -w -h`**: Memory'de ne kadar boş alan olduğunu gösterir.
-- **`vmstat 1`**: Bu değerleri saniyede bir gösterir.
-- **`df -h`**: Disk ile ilgili metrikleri gösterir.
-- **`ss`**: Makinedeki tüm açık soketleri listeler.
-- **`ss -autp`**: Açık olan tüm TCP ve UDP soketlerini ve bu soketi hangi process'in kullandığını listeler.
+CPU metringlerini alabilmemiz için iki aracımız var. Bunlardan ilki `top` aracıdır. Cpu kullanımını, process’lerin ne kadarlık cpu kullandığını, toplam memory değerini, bu sistemde ne kadar memory olduğunu ve ne kadarını kullandığımız gibi değerleri verir. Aynı zamanda swap değerini de gösterir. Swap, memory tamamen dolduğunda diskte memory olarak kullanabileceğimiz bir alan atanması işlemidir. Ancak diskten bir veriyi okumak memoryden okumaya kıyasla oldukça yavaş olduğundan tercih edilmemesi gereken bir işlemdir.
+
+Memoryde ne kadar boş alanımız olduğuna bakmak için `free -w -h` komutunu kullanırız. Bu değeri saniyede bir görmek istiyorsak `vmstat 1` komutunu kullanabiliriz.
+
+`df -h` komutuyla disk ile ilgili metringlere ulaşabiliriz.
+
+Makinemizdeki tüm açık soketleri listelemek için `ss` komutunu, açık olan tüm tcp ve udp’leri ve hangi prosesin bu soketi kullandığını listelemek için `ss -autp` komutunu kullanırız.
 
 ```bash frame="terminal"
 top
@@ -133,17 +103,6 @@ df -h
 ss -autp
 ```
 
-:::note[Swap]
-Swap, memory tamamen dolduğunda diskte memory gibi kullanılabilecek bir alan ayrılmasıdır. Diskten veri okumak memory'den okumaya göre çok daha yavaş olduğundan tercih edilmemesi gereken bir durumdur.
-:::
-
-Disk komutlarının ayrıntısı [Disk yönetimi](/linux/disk-yonetimi/), soket komutlarının ayrıntısı [Network](/linux/network/) sayfasındadır.
-
 ## Merkezi izleme araçları
 
-Bu komutlar, bir makineye bağlıyken anlık durumu analiz etmek için kullanılır. Production ortamında uygulamalar bu şekilde izlenmez. Gerçek hayatta metriklerin 7/24 düzenli toplanması, geçmişe dönük saklanması ve analiz edilmesi gerekir.
-
-Bu yüzden metrikleri otomatik toplayan, saklayan ve belirli eşik değerleri aşıldığında alarm gönderen Prometheus, Grafana, Datadog veya Zabbix gibi merkezi izleme araçları kullanılır. Bu araçlar:
-
-- Toplanan ham verileri karmaşık tablolar yerine anlamlı grafikler ve paneller olarak sunar; sistemin geçmişteki ve anlık durumu bir bakışta analiz edilebilir.
-- Önceden belirlenen kritik eşikler aşıldığında Slack, e-posta veya PagerDuty gibi kanallarla doğrudan sorumlu ekiplere bildirim gönderir ve anında müdahale şansı tanır.
+Bu gördüğümüz monitoring komutlarını bir makineye bağlı olduğumuz zaman anlık durumu analiz etmek istediğimizde kullanırız. Ancak profesyonel bir üretim (production) ortamında uygulamalarımızı bu şekilde izleyemeyiz. Gerçek hayatta metriklerin (metring) 7/24 düzenli olarak toplanması, geçmişe dönük kaydedilmesi ve analiz edilmesi gerekir. İşte bu yüzden metrikleri otomatik toplayan, saklayan ve belirli eşik değerleri aşıldığında bize alarm gönderen Prometheus, Grafana, Datadog veya Zabbix gibi merkezi izleme araçlarını kullanırız. Bu araçlar sayesinde toplanılan veri grafikler şeklinde bize gösterilir ve yönlendirdiğimiz yere iletilir. Bu araçlar sayesinde toplanan ham veriler, karmaşık tablolar yerine anlamlı grafikler ve paneller şeklinde sunulur; böylece sistemin geçmişteki ve anlık durumu bir bakışta analiz edilebilir. Daha da önemlisi, bu veriler sadece izlenmekle kalmaz; önceden belirlenen kritik eşikler aşıldığında Slack, E-posta veya PagerDuty gibi kanallar aracılığıyla doğrudan sorumlu ekiplere iletilerek anında müdahale şansı tanır.

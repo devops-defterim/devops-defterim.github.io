@@ -8,18 +8,17 @@ order: 6
 
 ## root, normal kullanıcılar ve sudo
 
-Linux'ta birden fazla kullanıcı aynı anda bağlanıp sistemi kullanabilir.
+Linux üzerinde birden çok kullanıcı aynı anda bağlanabilir ve sistemi kullanabilir. Bu kullanıcılarla olan işlemlere bakacak olursak;
 
-Bir Linux sistemi kurulduğunda başlangıçta her zaman iki tür kullanıcı bulunur:
+Bir linux sistem kurulduğunda ilk başta her zaman iki tane user olur. Bunlardan biri root user olarak adlandırılır ve en yetkili kullanıcıdır. Diğeri ise normal kullanıcılardır.
 
-- **root user**: en yetkili kullanıcı.
-- **Normal kullanıcılar**.
+Normal kullanıcılarda girdiğimiz komutları root yetkisiyle yapabilmek için `sudo` kullanırız.
 
-Normal bir kullanıcıyla girilen komutları root yetkisiyle çalıştırmak için `sudo` kullanılır. Bir kullanıcının `sudo` kullanabilmesi için root kullanıcının onu `sudoers` adlı dosyaya eklemiş olması gerekir; yani `sudo` kullanacak kullanıcıları root belirler.
+`sudo` komutunu kullanabilmemiz için sistemin root user'ının `sudoers` adlı dosyaya eklemiş olması gerekir. Yani `sudo` komutunu kullanacak user'ların root user tarafından belirlenmiş olması gerekir.
 
 ## Kullanıcıları listeleme
 
-Sistemdeki kullanıcıları listelemek için `/etc/passwd` dosyasına bakılır:
+![cat /etc/passwd komutunun çıktısı](../../../assets/ekran/p029-1.webp)
 
 ```bash frame="terminal"
 cat /etc/passwd
@@ -42,9 +41,17 @@ rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
 tcpdump:x:72:72::/:/sbin/nologin
 ```
 
+Sistemde bulunan user'ları listelemek için `cat /etc/passwd` komutunu kullanırız.
+
+Yeni bir user oluşturmak için `useradd kullanıcıadı` komutunu kullanırız ama bu komutun çalışması için root user olmamız gerekir ya da komutun başında `sudo` yazmalıyız.
+
 ## useradd ile kullanıcı oluşturma
 
-Yeni bir kullanıcı `useradd kullaniciadi` ile oluşturulur. Bu komutun çalışması için root olmak ya da başına `sudo` yazmak gerekir:
+![sudo useradd ile yeni kullanıcı oluşturma](../../../assets/ekran/p030-1.webp)
+
+![useradd sonrası cat /etc/passwd çıktısının başı](../../../assets/ekran/p030-2.webp)
+
+![cat /etc/passwd çıktısının sonunda yeni kullanıcı](../../../assets/ekran/p030-3.webp)
 
 ```bash frame="terminal"
 sudo useradd ornekkullanici
@@ -58,11 +65,11 @@ ec2-user:x:1000:1000:EC2 Default User:/home/ec2-user:/bin/bash
 ornekkullanici:x:1001:1001::/home/ornekkullanici:/bin/bash
 ```
 
-Yeni kullanıcı listenin sonuna eklenir.
+Yeni bir user oluşturmak için `useradd kullanıcıadı` komutunu kullanırız ama bu komutun çalışması için root user olmamız gerekir ya da komutun başında `sudo` yazmalıyız.
 
-## passwd ile parola atama
+## passwd ile şifre atama
 
-Yeni kullanıcıyla giriş yapabilmek için ona parola atamak gerekir. Bunun için `sudo passwd kullaniciadi` kullanılır:
+![sudo passwd ile yeni kullanıcıya şifre atama](../../../assets/ekran/p030-4.webp)
 
 ```bash frame="terminal"
 sudo passwd ornekkullanici
@@ -76,11 +83,11 @@ Retype new password:
 passwd: all authentication tokens updated successfully.
 ```
 
-Örnekte parola 8 karakterden kısa olduğu için uyarı veriliyor, ancak parola tekrar girildiğinde yine de güncelleniyor.
+Bu kullanıcıyla giriş yapmak için şifre atamamız gerekir. Şifre atamak için `sudo passwd useradı` komutunu kullanırız.
 
 ## su ile kullanıcı değiştirme
 
-Kullanıcılar arasında geçiş yapmak için `su kullaniciadi` kullanılır ve o kullanıcının parolası girilir:
+![su ile yeni kullanıcıya geçiş](../../../assets/ekran/p030-5.webp)
 
 ```bash frame="terminal"
 su ornekkullanici
@@ -93,7 +100,9 @@ Password:
 /home/ornekkullanici
 ```
 
-Bu durumdayken `exit` yazınca önceki kullanıcıya dönülür; tekrar `exit` yazınca oturum kapanır (logout):
+Kullanıcılar arasında geçiş yapmak için `su useradı` komutunu kullanırız. Şifremizi girerek giriş yaparız.
+
+![exit ile önceki kullanıcıya dönüş ve logout](../../../assets/ekran/p031-1.webp)
 
 ```bash frame="terminal"
 exit
@@ -105,9 +114,11 @@ exit
 logout
 ```
 
+Bu konumdayken bir geri gelmek için `exit` yazarız ardından tekrar `exit` yazdığımızda logout oluruz.
+
 ## Gruplar
 
-Oluşturulan her kullanıcının adıyla bir grup vardır ve kullanıcı varsayılan olarak bu gruba dahildir. Bunun dışında Linux'ta başka gruplar da bulunur. Hangi gruplara üye olduğunu görmek için `groups` kullanılır:
+![groups komutunun çıktısı](../../../assets/ekran/p031-2.webp)
 
 ```bash frame="terminal"
 groups
@@ -117,7 +128,17 @@ groups
 ec2-user adm wheel systemd-journal
 ```
 
-Bir kullanıcının hangi gruplara dahil olduğunu görmek için `groups kullaniciadi` yazılır. Kullanıcı yoksa hata verir:
+Her oluşturulan kullanıcının ismi ile bir grup vardır ve varsayılan olarak bu gruba dahil edilmiştir. Bunun dışında da Linux'ta birden fazla grup vardır. Sistemde bulunan bu diğer gruplardan hangilerine üye olduğumuzu görmek için `groups` komutunu kullanırız.
+
+Gruplara kullanıcı eklemek istersek `sudo usermod -a -G ec2-user useradı` komutunu kullanırız.
+
+Bir kullanıcıyı `wheel` grubuna eklersek otomatik olarak şifresiz `sudo` yetkilerine sahip olur.
+
+:::caution[Düzeltme]
+`wheel` grubu `sudo` yetkisi verir, ama varsayılan `sudoers` ayarında (`%wheel ALL=(ALL) ALL`) şifre sorulur. `ec2-user`'ın şifresiz `sudo` kullanabilmesi ayrı bir `sudoers` kuralından gelir.
+:::
+
+![groups kullanıcıadı komutunun çıktısı](../../../assets/ekran/p031-3.webp)
 
 ```bash frame="terminal"
 groups ornek1
@@ -127,13 +148,13 @@ groups ornek1
 groups: 'ornek1': no such user
 ```
 
-:::note
-Bir kullanıcı `wheel` grubuna eklenirse otomatik olarak parolasız `sudo` yetkisine sahip olur.
-:::
+Bir kullanıcının hangi gruplara dahil olduğunu görmek istersek `groups kullanıcıadı` şeklinde komutu yazarız.
 
 ### Grupları listeleme
 
-Sistemde oluşturulmuş grupları listelemek için `/etc/group` dosyasına bakılır:
+Sistemde şu ana kadar oluşturulmuş grupları listelemek istersek `cat /etc/group` komutunu kullanırız.
+
+![cat /etc/group komutunun çıktısı](../../../assets/ekran/p032-1.webp)
 
 ```bash frame="terminal"
 cat /etc/group
@@ -168,7 +189,11 @@ users:x:100:
 
 ### groupadd ile grup oluşturma
 
-Yeni bir grup `sudo groupadd grupadi` ile eklenir:
+Yeni bir grup eklemek istersek `sudo groupadd grupismi` şeklinde yazarız.
+
+![sudo groupadd selam komutu](../../../assets/ekran/p032-2.webp)
+
+![cat /etc/group çıktısının sonunda selam grubu](../../../assets/ekran/p032-3.webp)
 
 ```bash frame="terminal"
 sudo groupadd selam
@@ -185,7 +210,9 @@ selam:x:1002:
 
 ### usermod ile kullanıcıyı gruba ekleme
 
-Bir kullanıcıyı gruba eklemek için `sudo usermod -a -G grupadi kullaniciadi` kullanılır:
+Kullanıcıyı bir gruba eklemek için `sudo usermod -a -G grupadı kullanıcıadı` komutunu kullanırız.
+
+![usermod ile ec2-user'ı selam grubuna ekleme](../../../assets/ekran/p032-4.webp)
 
 ```bash frame="terminal"
 sudo usermod -a -G selam ec2-user
@@ -198,7 +225,7 @@ ec2-user : ec2-user adm wheel systemd-journal selam
 
 ## chgrp ve chown
 
-Bir dosyanın veya klasörün grubunu değiştirmek için `sudo chgrp grupadi dosyaadi` kullanılır:
+![sudo chgrp ile dosyanın grubunu değiştirme](../../../assets/ekran/p033-1.webp)
 
 ```bash frame="terminal"
 ls -l
@@ -219,7 +246,9 @@ dr-xr-xr-x. 3 ec2-user ec2-user   36 Nov 10 19:43 ornek1
 -rwxrwxrwx. 1 ec2-user ec2-user 1713 Nov 13 14:15 linuxsample.txt
 ```
 
-Bir dosyanın sahibini değiştirmek için `chown` kullanılır. Örneğin dosyanın sahibini root yapmak için:
+Bir dosyanın veya klasörün mevcut grubunu değiştirmek istersek `sudo chgrp grupadı dosyaadı` komutunu kullanırız.
+
+![sudo chown ile dosyanın sahibini root yapma](../../../assets/ekran/p033-2.webp)
 
 ```bash frame="terminal"
 sudo chown root deneme2.txt
@@ -234,4 +263,4 @@ dr-xr-xr-x. 3 ec2-user ec2-user   36 Nov 10 19:43 ornek1
 -rwxrwxrwx. 1 ec2-user ec2-user 1713 Nov 13 14:15 linuxsample.txt
 ```
 
-Dosya izinleri için [Dosya izinleri](/linux/izinler/) sayfasına bak.
+Bir dosyayı root kullanıcı olarak atamak istiyorsak `sudo chown root deneme2.txt` komutunu kullanırız.

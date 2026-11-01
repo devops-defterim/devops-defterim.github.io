@@ -6,16 +6,23 @@ lessons: [23]
 order: 14
 ---
 
-S3 servisi [AWS CLI](/aws/cli/) üzerinden de kullanılabilir. CLI'da S3 için iki alt komut grubu var:
+## s3 ve s3api
 
-| Alt komut | Kullanım alanı |
-| --- | --- |
-| `aws s3` | Standart işlemler: bucket oluşturma, silme, dosya çekme, yükleme |
-| `aws s3api` | Kalan diğer işlemler (ör. bucket policy) |
+S3 üzerinden anlatacağımız son konu [CLI](/aws/cli/) üzerinden S3 servisini nasıl kullanacağımıza dair bilgileri öğrenmek olacak.
 
-Aşağıdaki örneklerde `ornek-bucket-123` mevcut bucket'ı, `ornek-hedef-bucket` ikinci bir bucket'ı temsil ediyor.
+İlk öğrenmemiz gereken `s3` ve `s3api` olmak üzere iki CLI salt commandleri ile kullanabileceğimiz.
+
+Obje üzerinde standart işlemleri (bucket oluşturma, silme, dosya çekme, yükleme) `s3` ile
+
+Diğer kalan işlemleri (bucket policy) ise `s3api` ile gerçekleştiriyoruz.
+
+Şimdi gelin terminal ekranlarımızı açalım ve komutları öğrenmeye başlayalım.
 
 ## Bucket'ları listeleme
+
+Öncelikle S3 bucketlarını görelim. Bunun için `aws s3 ls` komutunu kullanmamız yeterli olacaktır.
+
+![aws s3 ls komutunun çıktısı](../../../../assets/ekran/p194-1.webp)
 
 ```bash frame="terminal"
 aws s3 ls
@@ -27,7 +34,9 @@ aws s3 ls
 
 ## Bucket oluşturma
 
-Genel biçim: `aws s3 mb s3://bucket_ismi`
+Yeni bir bucket oluşturmak istersek `aws s3 mb s3://bucket_ismi` komutunu kullanırız.
+
+![aws s3 mb ile bucket oluşturma ve aws s3 ls çıktısı](../../../../assets/ekran/p194-2.webp)
 
 ```bash frame="terminal"
 aws s3 mb s3://ornek-yeni-bucket
@@ -48,7 +57,9 @@ aws s3 ls
 
 ## Bucket içeriğini listeleme
 
-Genel biçim: `aws s3 ls s3://bucket_ismi`
+Bir bucket içerisinde yer alan dosyaları listelemek için de `aws s3 ls s3://bucket_ismi` komutunu kullanıyoruz.
+
+![aws s3 ls ile bucket içindeki dosyaların listesi](../../../../assets/ekran/p194-3.webp)
 
 ```bash frame="terminal"
 aws s3 ls s3://ornek-bucket-123
@@ -72,11 +83,11 @@ aws s3 ls s3://ornek-bucket-123
 2026-07-31 23:31:04         41 readme first.txt
 ```
 
-`PRE` ile başlayan satırlar klasörleri (prefix) gösterir.
-
 ## Bucket silme
 
-Genel biçim: `aws s3 rb s3://bucket_ismi`
+Bir bucket silmek istersek `aws s3 rb s3://bucket_ismi` komutunu kullanırız. Ancak içi dolu olan bir bucket silmek mümkün değildir. Öncelikle içini temizlememiz gerekir.
+
+![aws s3 rb ile bucket silme](../../../../assets/ekran/p195-1.webp)
 
 ```bash frame="terminal"
 aws s3 rb s3://ornek-yeni-bucket
@@ -86,15 +97,11 @@ aws s3 rb s3://ornek-yeni-bucket
 remove_bucket: ornek-yeni-bucket
 ```
 
-:::caution
-İçi dolu bir bucket silinemez. Önce içini temizlemek gerekir.
-:::
-
 ## Bucket'tan dosya silme
 
-Genel biçim: `aws s3 rm s3://bucket_adi/silinecek_dosya_adi`
+Bucket içerisinden bir dosya silmek istersek kullanacağımız komut `aws s3 rm s3://bucket_adı/silinecek_dosya_adi` olmalıdır.
 
-Dosya adında boşluk varsa yolu tırnak içine alın:
+![aws s3 rm ile bucket içinden dosya silme](../../../../assets/ekran/p195-2.webp)
 
 ```bash frame="terminal"
 aws s3 rm "s3://ornek-bucket-123/Ekran Resmi 2026-07-30 13.26.33.png"
@@ -104,17 +111,17 @@ aws s3 rm "s3://ornek-bucket-123/Ekran Resmi 2026-07-30 13.26.33.png"
 delete: s3://ornek-bucket-123/Ekran Resmi 2026-07-30 13.26.33.png
 ```
 
-Ardından `aws s3 ls s3://ornek-bucket-123` ile bakıldığında dosyanın listeden çıktığı görülür.
+Bucket içerisinde bulunan bir dosyanın yalnızca içeriğini silmek istersek `aws s3 rm s3://bucket_ismi/dosya_ismi --recursive` komutunu kullanırız.
 
-Bucket içindeki bir dosyanın yalnızca içeriğini silmek için `--recursive` parametresi kullanılır:
-
-```bash frame="terminal"
-aws s3 rm s3://bucket_ismi/dosya_ismi --recursive
-```
+:::caution[Düzeltme]
+`--recursive`, verilen yolu bir klasör (prefix) gibi ele alır ve o yolun altındaki tüm objeleri siler. Bucket'ın tamamını boşaltmak için `aws s3 rm s3://bucket_ismi --recursive` kullanılır.
+:::
 
 ## Bucket'lar arasında dosya taşıma
 
-Genel biçim: `aws s3 mv s3://kaynak_bucket_ismi/dosya_adi s3://hedef_bucket_ismi/`
+Bir dosyayı bucketlar arasında taşımak için `aws s3 mv s3://kaynak_bucket_ismi/dosya_adi s3://hedef_bucket_ismi/` komutunu kullanırız.
+
+![aws s3 mv ile dosyayı başka bucket'a taşıma](../../../../assets/ekran/p196-1.webp)
 
 ```bash frame="terminal"
 aws s3 mv s3://ornek-bucket-123/deneme.txt s3://ornek-hedef-bucket
@@ -124,7 +131,7 @@ aws s3 mv s3://ornek-bucket-123/deneme.txt s3://ornek-hedef-bucket
 move: s3://ornek-bucket-123/deneme.txt to s3://ornek-hedef-bucket/deneme.txt
 ```
 
-Taşımadan sonra `deneme.txt` kaynak bucket'ın listesinde görünmez, hedef bucket'ta görünür:
+![Taşınan dosyanın hedef bucket listesinde görünmesi](../../../../assets/ekran/p196-2.webp)
 
 ```bash frame="terminal"
 aws s3 ls s3://ornek-hedef-bucket
@@ -134,9 +141,11 @@ aws s3 ls s3://ornek-hedef-bucket
 2026-08-03 18:12:42         39 deneme.txt
 ```
 
-## Lokalden bucket'a kopyalama
+## Dosya kopyalama (cp)
 
-Genel biçim: `aws s3 cp kopyalanacak_dosya_ismi s3://kopyalanacak_bucket_ismi`
+Lokalde bulunan bir dosyayı bucket'a `aws s3 cp kopyalanacak_dosya_ismi s3://kopyalanacak_bucket_ismi` komutuyla
+
+![aws s3 cp ile lokaldeki dosyayı bucket'a yükleme](../../../../assets/ekran/p196-3.webp)
 
 ```bash frame="terminal"
 aws s3 cp "Ekran Resmi 2026-08-01 00.11.17.png" s3://ornek-bucket-123
@@ -146,11 +155,11 @@ aws s3 cp "Ekran Resmi 2026-08-01 00.11.17.png" s3://ornek-bucket-123
 upload: ./Ekran Resmi 2026-08-01 00.11.17.png to s3://ornek-bucket-123/Ekran Resmi 2026-08-01 00.11.17.png
 ```
 
-## Bucket'tan lokale kopyalama
+![Kopyalanan dosyanın bucket'ta görünmesi](../../../../assets/ekran/p196-4.webp)
 
-Genel biçim: `aws s3 cp s3://kopyalanacak_bucket_ismi/kopyalanacak_dosya_ismi .`
+bucket içerisindeki bir dosyayı locale kopyalamak istersek de `aws s3 cp s3://kopyalanacak_bucket_ismi/kopyalanacak_dosya_ismi .` komutuyla işlemimizi gerçekleştirebiliriz.
 
-Sondaki `.` dosyanın bulunduğumuz klasöre kopyalanacağını belirtir.
+![aws s3 cp ile bucket'taki dosyayı lokale indirme](../../../../assets/ekran/p197-1.webp)
 
 ```bash frame="terminal"
 aws s3 cp s3://ornek-hedef-bucket/deneme.txt .
@@ -160,19 +169,11 @@ aws s3 cp s3://ornek-hedef-bucket/deneme.txt .
 download: s3://ornek-hedef-bucket/deneme.txt to ./deneme.txt
 ```
 
-:::caution
-Komutu metinden kopyalarken başına bir tırnak işareti (“) gelirse shell komutu tanımaz:
-
-```text
-zsh: command not found: “aws
-```
-:::
-
 ## Klasörü bucket ile eşitleme (sync)
 
-Bulunduğumuz klasörü ve altındaki her şeyi karşıdaki klasöre göndermek için:
+Bulunduğumuz klasör ve altında bulunan her şeyi karşı folder'a yollamamızı sağlayan komut `aws s3 sync . s3://bucket_ismi/hedef_klasor_ismi/`
 
-Genel biçim: `aws s3 sync . s3://bucket_ismi/hedef_klasor_ismi/`
+![aws s3 sync ile klasörü bucket'a gönderme](../../../../assets/ekran/p197-2.webp)
 
 ```bash frame="terminal"
 cd ekranresimleri
@@ -197,9 +198,9 @@ aws s3 ls s3://ornek-hedef-bucket
 
 ## Dosya bilgilerini görüntüleme (head-object)
 
-Bir dosyayı indirmeye gerek kalmadan boyutu, oluşturulma tarihi, içerik türü ve etiketleri gibi arka plan bilgilerini görmek için `s3api` altındaki `head-object` kullanılır.
+Bir dosyayı bilgisayarımıza indirmeye gerek kalmadan, sadece o dosyanın boyutu, oluşturulma tarihi, içerik türü ve etiketleri gibi arka plan kimlik bilgilerini detaylıca görüntülemek için `aws s3api head-object --bucket bucket_ismi --key dosya_adi`
 
-Genel biçim: `aws s3api head-object --bucket bucket_ismi --key dosya_adi`
+![aws s3api head-object komutunun JSON çıktısı](../../../../assets/ekran/p197-3.webp)
 
 ```bash frame="terminal"
 aws s3api head-object --bucket ornek-bucket-123 --key ajax-email.php

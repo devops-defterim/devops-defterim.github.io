@@ -6,7 +6,7 @@ lessons: [14]
 order: 2
 ---
 
-Projenin ilk adımı bir sunucu kurmak ve ona kendi bilgisayarımızdan bağlanmaktır. Görevlerin tam listesi için [Görevler](/mini-proje/gorevler/) sayfasına bakın.
+Gelin ilk olarak bir sunucu kuralım ve bunun üstünde gerekli ayarları yapalım. Bunun için ilk olarak [https://aws.amazon.com/tr/console/](https://aws.amazon.com/tr/console/) adresinden oturum açalım ve bizden istenilen ilk talimata göz atalım.
 
 ## Görev 1: EC2 instance oluşturma
 
@@ -14,30 +14,31 @@ Projenin ilk adımı bir sunucu kurmak ve ona kendi bilgisayarımızdan bağlanm
 
 ### Instances ekranına gitme
 
-1. https://aws.amazon.com/tr/console/ adresinden oturum açın.
-2. **Console Home** sayfasında **EC2** servisine tıklayın.
-3. Soldaki menüden **Instances → Instances** seçeneğine tıklayın. Bu ekranda var olan sanal makinelerin durumunu görebilir, yeni bir sanal makine oluşturabilirsiniz.
-4. Sağ üstteki `Launch instances` butonuna tıklayın.
+1. Hesabımıza log in olduktan sonra açılan sayfada **EC2** butonuna tıklayalım.
+
+   ![AWS Console Home sayfasında EC2 servisi](../../../assets/ekran/p099-1.webp)
+
+   ![EC2 konsolu ve soldaki menü](../../../assets/ekran/p100-1.webp)
+
+2. Ardından soldaki menüden **Instances** yazan yere tıklayalım.
+
+   ![EC2 Instances ekranı ve Launch instances butonu](../../../assets/ekran/p100-2.webp)
+
+3. Burada var olan sanal makinelerimizin durumunu görebilir yeni bir sanal makine oluşturabiliriz. Sağ üstte bulunan **Launch instances** butonuna tıklayarak yeni bir sanal makine oluşturma adımlarına geçelim.
+
+   ![Launch an instance ekranında isim ve AMI ayarları](../../../assets/ekran/p101-1.webp)
 
 ### Launch an instance ayarları
 
-1. **Name and tags** bölümünde sanal makineye bir isim verin (örnekte `miniprojem`).
-2. **Application and OS Images (Amazon Machine Image)** bölümünde varsayılan seçim olan **Amazon Linux** / **Amazon Linux 2023 kernel-6.1 AMI** (Free tier eligible, Architecture `64-bit (x86)`) kalsın. Ekrandaki diğer ayarlara dokunmayın.
-3. **Instance type** bölümünde `t3.micro` seçin.
-4. **Key pair (login)** bölümünde `Create new key pair` seçeneğine tıklayarak yeni bir key pair oluşturun ve isim verin (örnekte `miniprojemkeypair`). Oluşturulan `.pem` dosyası bilgisayarınıza indirilir.
-5. **Network settings** bölümünde:
-   - **Firewall (security groups)** için `Create security group` seçili kalsın.
-   - `Allow SSH traffic from` kutusu işaretli olsun, kaynak `Anywhere 0.0.0.0/0`.
-   - `Allow HTTPS traffic from the internet` kutusunu işaretleyin.
-   - `Allow HTTP traffic from the internet` kutusunu işaretleyin.
-6. **Configure storage** varsayılan değerde kalır: `1x 8 GiB gp3` root volume.
-7. Sağdaki **Summary** panelinden `Launch instance` butonuna tıklayarak sanal makineyi ayağa kaldırın.
+1. Sanal makinemize isim verelim. Ekranda görülen diğer ayarlara dokunmayalım.
 
-:::caution
-Konsol, kaynağı `0.0.0.0/0` olan kurallar için uyarı gösterir: bu kurallar tüm IP adreslerinin instance'a erişmesine izin verir ve erişimin yalnızca bilinen IP adreslerine açılması önerilir.
-:::
+   ![Instance type ve Key pair (login) bölümleri](../../../assets/ekran/p101-2.webp)
 
-Instance oluşturulduktan sonra listede `miniprojem` makinesi **Running** durumunda ve `3/3 checks passed` olarak görünür.
+2. Makinemizin tipini `t3.micro` olarak seçelim ve **Create key pair** seçeneğine tıklayarak yeni bir key pair oluşturup isim verelim.
+
+   ![Network settings bölümü ve Launch instance butonu](../../../assets/ekran/p102-1.webp)
+
+3. Son olarak network menüsünden görünen seçenekleri seçip sağdaki **Launch instance** butonundan sanal makinemizi ayağa kaldıralım.
 
 ## Görev 2: SSH ile bağlanma
 
@@ -45,19 +46,23 @@ Instance oluşturulduktan sonra listede `miniprojem` makinesi **Running** durumu
 
 ### Connect ekranı
 
-1. **Instances** listesinde sanal makinenize tıklayın. Açılan **Instance summary** ekranında Public IPv4 adresi, Public DNS, Private IPv4 adresi ve atanmış key pair gibi bilgiler görünür.
-2. Sağ üstteki `Connect` butonuna tıklayın.
-3. **SSH client** sekmesini açın. Burada şu adımlar listelenir:
-   1. Bir SSH client açın.
-   2. Private key dosyanızı bulun (instance'ı başlatırken kullanılan anahtar `miniprojemkeypair.pem`).
-   3. Gerekirse anahtarın herkese açık okunabilir olmaması için `chmod 400 "miniprojemkeypair.pem"` komutunu çalıştırın.
-   4. Instance'a Public DNS adresi üzerinden bağlanın.
+1. Bunun için ilk olarak sanal makinemize tıklıyoruz.
 
-Bu adımlar kendi bilgisayarınızın terminalinde uygulanır.
+   ![Instances listesinde çalışan miniprojem makinesi](../../../assets/ekran/p102-2.webp)
+
+   ![Instance summary ekranı ve Connect butonu](../../../assets/ekran/p103-1.webp)
+
+2. Açılan ekranda sağ üstte bulunan **Connect** butonuna tıklıyoruz.
+
+   ![Connect to instance ekranında SSH client sekmesi](../../../assets/ekran/p103-2.webp)
+
+3. Burada **SSH client** menüsünü açıyoruz ve buradaki adımları takip ederek bilgisayarımızdaki terminalde komutları uyguluyoruz.
 
 ### Anahtar dosyasının izinleri
 
-Key pair oluşturulduğunda bilgisayara indirilen `.pem` dosyası, çalışılan proje klasörünün içine taşınır. `ls` ile dosyanın orada olduğu kontrol edildikten sonra izinleri kısıtlanır:
+Öncelikle key pair oluşturduğumuzda bilgisayarımıza indirilen dosyayı çalıştığımız proje klasörünün içine masaüstünden sürüklüyoruz. `ls` ile dosyanın burada olduğundan emin olduktan sonra `chmod 400 "miniprojemkeypair.pem"` komutunu kullanıyoruz çünkü SSH protokolü, anahtar dosyanızın başkaları tarafından okunabilir olmasını büyük bir güvenlik açığı olarak gördüğü için kısıtlanmamış anahtarlarla bağlantı kurmanıza izin vermez. Bu nedenle `chmod 400` komutunu kullanarak, kritik anahtar dosyanızı bilgisayardaki diğer tüm kullanıcı ve gruplara kapatıp sadece kendi erişiminize özel (salt okunur) hale getirirsiniz. Bu işlemi yapmak sisteme "bu dijital anahtar güvenli bir şekilde korunuyor" onayı verir.
+
+![Yerel terminalde ls ve chmod 400 komutları](../../../assets/ekran/p104-1.webp)
 
 ```bash frame="terminal"
 ls
@@ -71,11 +76,11 @@ ornek.txt             index.html            miniprojemkeypair.pem   README.md
 chmod 400 "miniprojemkeypair.pem"
 ```
 
-SSH protokolü, anahtar dosyasının başkaları tarafından okunabilir olmasını büyük bir güvenlik açığı olarak görür ve kısıtlanmamış anahtarlarla bağlantı kurulmasına izin vermez. `chmod 400` ile anahtar dosyası bilgisayardaki diğer tüm kullanıcı ve gruplara kapatılır, yalnızca sahibine özel ve salt okunur hale gelir. Böylece sisteme "bu anahtar güvenli şekilde korunuyor" onayı verilmiş olur. İzin değerleri için [Dosya izinleri](/linux/izinler/) sayfasına bakabilirsiniz.
-
 ### Bağlantı
 
-Yerel bilgisayardaki anahtar dosyası bir kimlik kartı gibi kullanılarak buluttaki sunucuyla şifreli ve güvenli bir iletişim tüneli kurulur:
+Sıradaki komutla ise yerel bilgisayarımızdaki dijital anahtar dosyasını (`miniprojemkeypair.pem`) bir kimlik kartı gibi kullanarak buluttaki sunucuyla aramızda şifreli ve güvenli bir iletişim tüneli kurduk. İşlem sonucunda kendi bilgisayarımızın terminalinden çıkıp, kilometrelerce uzaktaki sanal makinemizin komut satırına (CLI) doğrudan bağlanarak onu kontrol etme yetkisi kazandık.
+
+![ssh -i komutuyla instance'a bağlanma ve Amazon Linux 2023 karşılama ekranı](../../../assets/ekran/p104-2.webp)
 
 ```bash frame="terminal"
 ssh -i "miniprojemkeypair.pem" ec2-user@ec2-203-0-113-10.compute-1.amazonaws.com
@@ -99,5 +104,3 @@ Warning: Permanently added 'ec2-203-0-113-10.compute-1.amazonaws.com' (ED25519) 
          _/ _/
        _/m/'
 ```
-
-İlk bağlantıda sunucunun kimliği sorulur; `yes` yazılarak devam edilir. Sonuçta kendi bilgisayarımızın terminalinden çıkıp uzaktaki sanal makinenin komut satırına (`[ec2-user@ip-172-31-0-10 ~]$`) bağlanmış ve onu yönetme yetkisi kazanmış oluruz.

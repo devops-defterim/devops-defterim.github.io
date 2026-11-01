@@ -8,7 +8,7 @@ order: 2
 
 ## git status
 
-Yapılan işlemlerin durumunu bir rapor halinde görmek için `git status` kullanılır. Aşağıdaki örnekte bir dosya VS Code ile açılıp değiştiriliyor, ardından adım adım hazırlık alanına alınıp commit ediliyor:
+![ornek.txt dosyasının değiştirilip git add ve git commit ile kaydedilmesi sırasında git status çıktıları](../../../assets/ekran/p084-1.webp)
 
 ```bash frame="terminal"
 code ornek.txt
@@ -49,9 +49,11 @@ On branch main
 nothing to commit, working tree clean
 ```
 
+Yaptığımız bu işlemlerin durumunu yukarıda gördüğümüz gibi bir rapor halinde görmek için `git status` komutunu kullanırız.
+
 ## git log
 
-`git log`, projenin başlangıcından bugüne atılan tüm adımların dökümüdür. Kimin, ne zaman, hangi amaçla değişiklik yaptığını takip etmeyi sağlar. Bir hata oluştuğunda geçmişe dönmek veya bir özelliğin ne zaman eklendiğini bulmak için kullanılır.
+![git log çıktısında üç commit'in yazar, tarih ve mesaj bilgileri](../../../assets/ekran/p084-2.webp)
 
 ```bash frame="terminal"
 git log
@@ -77,19 +79,11 @@ Date:   Sun Jan 25 15:52:32 2026 +0300
     yeni dosyalar olusturuldu
 ```
 
-Daha ayrıntılı çıktı için:
-
-```bash frame="terminal"
-git log -p
-```
-
-Bir dosya üzerinde çalışıp commit ettikten sonra tekrar değişiklik yapıp bir kez daha commit edildiğinde, iki kayıt arasındaki tüm değişiklikler ve projenin o anki hali saklanır. Bu geçmişe istendiği zaman `git log` ile ulaşılır.
-
-Tek satırlık log biçimi için [cherry-pick, tag ve log biçimleri](/git/cherry-pick-tag-log/) sayfasına bakılabilir.
+`git log`, projenin başlangıcından bugüne kadar atılan tüm adımların dökümüdür. Kimin, ne zaman, hangi amaçla değişiklik yaptığını takip etmemizi sağlar. Bir hata oluştuğunda geçmişe dönmek veya bir özelliğin ne zaman eklendiğini bulmak için bu komut kullanılır. Daha detaylı halini görmek istersek `git log -p` opsiyonunu kullanırız.
 
 ## Dosyayı VS Code ile açma
 
-Bir dosya oluşturup Visual Studio Code editörüyle açmak için `code dosyaadı` kullanılır:
+![code README.md komutuyla dosyanın VS Code'da açılması](../../../assets/ekran/p084-3.webp)
 
 ```bash frame="terminal"
 code README.md
@@ -100,20 +94,20 @@ ls
 README.md
 ```
 
+Git üzerinde bir dosya oluşturup bu dosyayı Visual Studio Code editörü ile açmak istesek kullanmamız gereken komut `code dosyaadı` olmalıdır.
+
+Yani bir dosya üzerinde çalışıp commit ile kaydettiğimizde ve daha sonra tekrar değişiklik yapıp bir kez daha commitlediğimizde bu iki kayıt arasında yapılan tüm değişiklikleri ve projenin o anki tüm halini saklamış oluruz. Log komutuyla bu geçmişe istediğimiz zaman ulaşırız.
+
 ## Akışın özeti
 
-1. **`git init`**: Bir klasörde Git kullanmaya karar verildiğinde ilk iş budur. Klasörü Git'in denetimine sokar ve arka planda bir takip sistemi kurar. Artık klasörde yapılan her işlem Git tarafından fark edilir.
-2. **`git add`**: Git, yapılan değişiklikleri habersiz kaydetmez. Bir dosyada değişiklik yapıldıktan sonra bu değişiklik onay sırasına alınır, yani dosya **hazırlık alanına (staging area)** eklenir. Bu alan, hangi dosyaların kalıcı olarak kaydedileceğinin seçildiği bir bekleme odasıdır.
-3. **`git commit`**: Hazırlık alanındaki tüm dosyalar Git'in kendi veritabanına kalıcı kayıt olarak işlenir. Böylece yapılan işler versiyonlanır ve projenin o anki hali kaybolmamak üzere kaydedilir.
+Anlattığımız Git işlemlerini toparlayacak olursak; bir klasörde Git kullanmaya karar verdiğimizde ilk işimiz `git init` komutunu yazmaktır. Bu komut, o klasörü Git’in denetimine sokar ve arka planda bir takip sistemi kurar. Artık bu klasörde yaptığımız her işlem Git tarafından fark edilir hale gelir.
+
+Ancak Git, yaptığımız her değişikliği bizden habersiz kaydetmez. Bir dosyada değişiklik yaptıktan sonra, bu değişikliği onay sırasına sokmamız gerekir. İşte bu aşamada `git add` komutunu kullanırız. Bu komutla dosyayı "hazırlık alanına" (staging area) almış oluruz. Bu alan, hangi dosyaların kalıcı olarak kaydedileceğini seçtiğimiz bir bekleme odasıdır.
+
+Son aşamada ise sıraya aldığımız bu dosyaları `git commit` komutuyla onaylarız. Bu işlem, hazırlık alanındaki tüm dosyaları alıp Git’in kendi veri tabanına kalıcı birer kayıt olarak işler. Böylece yaptığımız işler versiyonlanmış olur ve projenin o anki hali bir daha kaybolmamak üzere sisteme kaydedilir.
 
 ## Sunucu tarafı ve repository
 
-Git dağıtık yapıdadır: proje yalnızca merkezi bir sunucuda değil, projeye dahil olan herkesin bilgisayarında bulunur. Süreç şöyle işler:
+Şimdi gelin Git’in sunucu tarafına bakalım. Daha önce bahsettiğimiz gibi Git decentralized yani dağıtık yapıdadır. Bu projenin sadece merkez bir sunucuda değil, projeye dahil olan herkesin bilgisayarında bir kopyasının bulunması anlamına gelir. Süreç şu şekilde işler: Geliştirici projenin son halini kendi makinesine indirir (clone), istediği değişiklikleri yapar ve bu değişiklikleri önce kendi yerel veri tabanına kaydeder (commit). Ancak bu kayıt henüz sunucuya gitmemiştir. Yereldeki bu kayıtları sunucuya aktarılır ve eğer geliştiricinin yetkisi varsa, gönderdiği değişiklikler merkezi projenin üzerine eklenmiş olur.
 
-1. Geliştirici projenin son halini kendi makinesine indirir (clone).
-2. İstediği değişiklikleri yapar ve önce kendi yerel veritabanına kaydeder (commit). Bu kayıt henüz sunucuya gitmemiştir.
-3. Yereldeki kayıtlar sunucuya aktarılır. Geliştiricinin yetkisi varsa gönderdiği değişiklikler merkezi projeye eklenir.
-
-Projelerin ve kayıt geçmişinin bulunduğu dijital depolara **repository (depo)** denir. Bu depolar kendi bilgisayarımızda tutulabildiği gibi, dünya çapında erişilebilir hale getirmek ve diğer geliştiricilerle ortak çalışmak için GitHub gibi bulut tabanlı platformlar merkezi depo sunucusu olarak kullanılır. GitHub'da repository oluşturmak, yerelde yeni bir proje açıp `git init` ile başlatmanın GitHub'daki karşılığıdır.
-
-GitHub ile çalışma adımları [GitHub: clone, token ve push](/git/github/) sayfasında.
+İşte bu noktada, projelerimizin ve bu kayıt geçmişimizin bulunduğu dijital depolara Repository (Depo) adını veriyoruz. Bu depoları kendi bilgisayarımızda tutabildiğimiz gibi, dünya çapında erişilebilir hale getirmek ve diğer geliştiricilerle ortak çalışabilmek için [GitHub](/git/github/) gibi bulut tabanlı platformları birer 'merkezi depo sunucusu' olarak kullanıyoruz. Repository oluşturmak aslında yeni bir proje açarak `git init` ile initialize etme işleminin GitHub’daki karşılığıdır.

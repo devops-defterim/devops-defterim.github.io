@@ -8,31 +8,41 @@ order: 4
 
 ## User group oluşturma
 
-1. IAM servisinde sol menüdeki **IAM user groups** seçeneğine tıklayın.
-2. Sağ üstteki **Create group** butonuna basın.
-3. **Name the group** bölümünde **User group name** alanına grubun adını yazın (örnekte `adminler`).
-4. **Add users to the group - Optional** bölümünde gruba eklenecek kullanıcıları işaretleyin.
-5. **Attach permissions policies - Optional** bölümünde grubun yetkilerini seçin (örnekte **AdministratorAccess**). Bir gruba en fazla 10 policy bağlanabilir; gruptaki tüm kullanıcılar seçilen policy'lerdeki yetkilere sahip olur.
-6. Sağ alttaki **Create user group** ile grubu oluşturun. Grup, **IAM user groups** listesinde kullanıcı sayısı ve tanımlı yetkileriyle görünür.
+1. IAM servisi üzerinden sağdaki menüde bulunan **IAM user groups** yazan seçeneğe tıklıyoruz.
+
+   :::caution[Düzeltme]
+   **IAM user groups** seçeneği sol taraftaki menüde yer alır.
+   :::
+
+   ![IAM user groups sayfası ve Create group butonu](../../../../assets/ekran/p145-1.webp)
+
+2. Sağ üstte bulunan **Create group** diyerek devam ediyoruz. Grubumuza isim vererek hangi kullanıcıları ekleyeceğimizi ve yetkilerini belirliyoruz.
+
+   ![Create user group ekranında grup adı, kullanıcılar ve policy seçimi](../../../../assets/ekran/p145-2.webp)
+
+3. Sağ altta bulunan **Create user group** diyerek grubumuzu oluşturuyoruz.
+
+   ![Create user group ekranının altındaki Create user group butonu](../../../../assets/ekran/p146-1.webp)
+
+   ![IAM user groups listesinde oluşturulan grup](../../../../assets/ekran/p146-2.webp)
 
 :::note
-Bir kullanıcıya doğrudan verilen yetkiler eklendiği gruptaki yetkilerden farklıysa, kullanıcının sonuçta sahip olduğu yetkiler hem kendisine verilmiş olanların hem de grubundakilerin birleşimidir.
+Oluşturulan bir user'ın yetkisi eklendiği gruptaki yetkilerden farklı olursa neticede bu user'ın yetkileri hem kendisine verilmiş olan hem de eklendiği grupta bulunan yetkilerin birleşimi olacaktır.
 :::
 
 ## Policy listesi
 
-İstediğimiz yetkilere uygun policy'leri sol menüdeki **Policies** sayfasında bulabiliriz. Liste, AWS'nin hazır sunduğu **AWS managed** policy'leri (ör. `AdministratorAccess`) içerir ve her policy'nin nerede kullanıldığını (**Used as**) gösterir. Hazır policy'ler ihtiyacı karşılamıyorsa sağ üstteki **Create policy** ile kendi policy'mizi oluşturabiliriz.
+İstediğimiz yetkilere uygun policy'yi aşağıdaki menüden bulabiliriz. Veya kendimiz bir policy oluşturabiliriz.
+
+![Policies sayfasında AWS managed policy listesi ve Create policy butonu](../../../../assets/ekran/p147-1.webp)
 
 ## Parola politikası
 
-IAM altında yönetilen hesap ayarlarından biri, **Account settings** menüsündeki **Password policy**'dir. Varsayılan politika şöyledir:
+![Account settings sayfasında Password policy kutusu ve Edit butonu](../../../../assets/ekran/p148-1.webp)
 
-- Minimum şifre uzunluğu 8 karakter.
-- Büyük harf, küçük harf, rakam ve alfanümerik olmayan karakterlerden en az üç türün kullanılması.
-- Şifrenin süresi hiç dolmaz.
-- Şifre, AWS hesap adı veya e-posta adresiyle aynı olmamalıdır.
+IAM altında yönetebileceğimiz hesap ayarlarından biri de **Account settings** menüsünden yapacağımız şifre ayarıdır. Aşağıdaki gibi **Edit** diyerek kullanıcılarımızın şifrelerini en az kaç karakterli oluşturabileceğini, hangi özel karakterleri kullanması gerektiğini, şifrenin kaç günde bir değiştirileceği ve kullanıcıların kendi şifrelerini değiştirmesine izin verip verilmeyeceğini, son kaç şifresini kullanmasına izin verilmeyeceği gibi kuralları belirleyebiliyoruz.
 
-Kuralları değiştirmek için **Password policy** kutusunda **Edit**'e tıklayıp özelleştirilmiş politikayı seçiyoruz. Burada şunları belirleyebiliriz:
+![Özelleştirilmiş parola politikası ayarları](../../../../assets/ekran/p148-2.webp)
 
 | Ayar | Örnekteki değer |
 | --- | --- |
@@ -46,20 +56,12 @@ Kuralları değiştirmek için **Password policy** kutusunda **Edit**'e tıklay�
 | Kullanıcıların kendi şifrelerini değiştirebilmesi | İşaretli |
 | Eski şifrelerin tekrar kullanılmasını engelleme (1-24) | Son 3 şifre |
 
-Ayarları **Save changes** ile kaydediyoruz.
-
 ## Security Token Service (STS)
 
-Account settings sayfasında **Security Token Service (STS)** bölümü de bulunur. STS esasında bir API hizmetidir: API'ye bir çağrı göndeririz ve çağrıya göre bir cevap alırız.
+Aynı menü altında bir de **Security Token Service (STS)** servisi vardır. Bu servis esasında bir API hizmetidir. API'ye bir çağrı göndeririz ve gönderdiğimiz çağrıya göre bir cevap alırız. Peki ne tür çağrılarda bulunabiliriz? Bir kullanıcıya varsayılan olarak çok az hakkı olan bir policy atayalım ama bu kullanıcı atadığımız policy dışında da başka policy'leri assume edebilsin. Yani başlangıçta en az yetkiyi verip sonrasında talebe göre kullanıcılara farklı izinleri geçici olarak örneğin 30 dakikalığına verebiliyoruz. İleride bu konuyu daha detaylı ele alacağız.
 
-Örneğin bir kullanıcıya varsayılan olarak çok az hakkı olan bir policy atayalım, ama bu kullanıcı atadığımız policy dışında başka policy'leri de assume edebilsin. Yani başlangıçta en az yetkiyi verip, talebe göre kullanıcılara farklı izinleri geçici olarak, örneğin 30 dakikalığına verebiliriz. Bu konu ileride daha detaylı ele alınacak.
+![Account settings sayfasındaki Security Token Service (STS) bölümü](../../../../assets/ekran/p149-1.webp)
 
 ## Identity Providers
 
-IAM altındaki bir diğer hizmet **Identity Providers**'dır. Amacı, AWS içinde tek tek kullanıcı oluşturmak yerine şirketinizde mevcut olan kullanıcıları AWS'ye entegre etmektir.
-
-1. Kullanıcılar AWS için yeni bir şifre ezberlemek yerine kendi şirket veya dış hesaplarıyla giriş yapar.
-2. Girişin ardından Identity Provider, AWS'ye "Bu kişi onaylıdır" der.
-3. AWS bu dış kullanıcıya arka planda geçici bir Role giydirir.
-
-Böylece yüzlerce çalışana ayrı ayrı AWS hesabı açmak yerine, mevcut sisteminiz üzerinden onlara güvenli ve geçici erişim yetkisi vermiş olursunuz. Konsolda bu servis sol menüdeki **Identity providers** sayfasından yönetilir; yeni sağlayıcı **Add provider** ile eklenir. Rol tarafındaki karşılığı için [IAM rolleri ve ARN](/aws/iam/roller-ve-arn/#web-identity-ve-saml-20-federation) sayfasına bakın.
+IAM altında kullanılan bir diğer hizmet **Identity Providers** hizmetidir. Bu servisin kullanım amacı AWS içinde tek tek kullanıcı oluşturmak yerine, dışarıdaki şirketinizde mevcut kullanıcıları AWS'ye entegre etmektir. Kullanıcılar AWS için yeni bir şifre ezberlemek yerine, kendi şirket veya dış hesaplarıyla giriş yaparlar. Girişin ardından Identity Provider, AWS'ye "Bu kişi onaylıdır" der ve AWS de bu dış kullanıcıya arka planda geçici bir Rol (Role) giydirir. Böylece yüzlerce çalışana ayrı ayrı AWS hesabı açmak yerine, mevcut sisteminiz üzerinden onlara güvenli ve geçici erişim yetkisi vermiş olursunuz.

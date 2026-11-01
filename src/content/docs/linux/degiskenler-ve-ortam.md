@@ -8,7 +8,7 @@ order: 8
 
 ## Dosya boyutu: du
 
-Dosyaların boyutunu görmek için `du` komutu kullanılır. `-h` eklendiğinde boyutlar okunabilir biçimde (K, M, G) gösterilir.
+![du -h ile gonder.tar dosyasının boyutu](../../../assets/ekran/p037-1.webp)
 
 ```bash frame="terminal"
 du -h gonder.tar
@@ -18,12 +18,19 @@ du -h gonder.tar
 12K     gonder.tar
 ```
 
+Dosyaların boyutunu görmek için `du` komutunu kullanırız. `-h` ekleyerek bizim anlayacağımız türden boyutları görürüz.
+
 ## Sıkıştırma: gzip, gunzip ve tar
 
-Dosyaları sıkıştırmak için birçok araç vardır. Bunlardan ilki `gzip dosyaadı` şeklinde kullanılır. Sıkıştırılmış dosyayı açmak için `gunzip dosyaadı` yeterlidir.
+![gzip ile gonder.tar dosyasının sıkıştırılması](../../../assets/ekran/p037-2.webp)
 
 ```bash frame="terminal"
 gzip gonder.tar
+```
+
+![du -h ile sıkıştırılmış gonder.tar.gz dosyasının boyutu](../../../assets/ekran/p037-3.webp)
+
+```bash frame="terminal"
 du -h gonder.tar.gz
 ```
 
@@ -31,11 +38,15 @@ du -h gonder.tar.gz
 4.0K    gonder.tar.gz
 ```
 
-Sıkıştırılmış bir tar arşivi doğrudan oluşturmak için `tar zcf dosyaadı` biçimi kullanılır.
+Dosyaları ziplemek yani sıkıştırmak için birçok araç vardır. Bunlardan ilki `gzip dosyaadı` şeklinde kullanılan komuttur.
+
+Sıkıştırılmış olan dosyayı açmak için ise `gunzip dosyaadı` şeklinde yazmamız yeterli.
+
+Sıkıştırılmış bir dosya oluşturmak istersek burada `tar zcf dosyaadı` şeklinde kullanmalıyız.
 
 ## alias
 
-Alias ile sık kullandığımız bir komut için kısayol oluştururuz. Kısayolu yazdığımızda asıl komut çalışır.
+![alias ile eo kısayolunun tanımlanıp çalıştırılması](../../../assets/ekran/p037-4.webp)
 
 ```bash frame="terminal"
 alias eo="echo 'ornek bir değişkendir.'"
@@ -46,9 +57,11 @@ eo
 ornek bir değişkendir.
 ```
 
+Alias kullanarak kullanmak istediğimiz bir komut için kısayol oluşturarak oluşturduğumuz kısayolu yazdığımızda esas istediğimiz kodun çalıştırılmasını sağlayabiliriz.
+
 ## Değişkenler
 
-Bir değişken tanımlayıp ona değer atayabilir, sonra değer yerine değişkeni çağırabiliriz. Tanımlama `isim=deger` biçimindedir, çağırmak için `$isim` yazılır.
+![isim değişkenine değer atanıp echo ile çağrılması](../../../assets/ekran/p037-5.webp)
 
 ```bash frame="terminal"
 isim=osman
@@ -62,9 +75,11 @@ osman
 ozgur
 ```
 
+Environment variable, bir değişken tanımlayarak buna bir değer atamamızı ve bu değer yerine değişkeni çağırarak tanımladığımız değeri çağırmamızı sağlar. Bu değişkeni diğer uygulamalarda kullanabiliriz. Kullanımı `isim=deger` şeklindedir. Tanımladığımız değişkeni çağırmak için `$isim` olarak yazmamız gerekir.
+
 ### export ile environment variable
 
-Normal bir değişken sadece tanımlandığı oturumda geçerlidir. Diğer oturumlarda (ör. açılan yeni bir `bash` içinde) da geçerli olması için onu environment variable'a dönüştürmemiz gerekir. Bunun için tanımın başına `export` yazılır:
+![export ile tanımlanan değişkenin yeni açılan bash içinde okunması](../../../assets/ekran/p038-1.webp)
 
 ```bash frame="terminal"
 export osman=bir
@@ -76,9 +91,15 @@ echo $osman
 bir
 ```
 
+Tanımladığımız değişkenin diğer session'larda geçerli olması için normal bir değişken olarak tanımladığımız değişkeni environment variable'a dönüştürmemiz gerekmektedir. Bunun için tanımlayacağımız değişken komutunun başına `export` yazmamız gerekir. Bu sayede oluşturduğumuz değişken farklı oturumlarda da geçerli olacaktır.
+
+:::caution[Düzeltme]
+`isim=deger` ile tanımlanan değişken sadece o shell içinde geçerli bir shell değişkenidir; diğer uygulamalar onu göremez. `export` onu environment variable yapar ve bu shell'den başlatılan alt process'lere (örnekteki yeni `bash` gibi) aktarır. Ayrı açılan başka bir oturumda (ör. yeni bir SSH bağlantısı) görünmez; kalıcı olması için `.bashrc` dosyasına yazılmalıdır.
+:::
+
 ### printenv ve unset
 
-Sistemdeki environment variable'ları görmek için `printenv` komutu kullanılır. Sonuna değişkenin adı yazılırsa sadece o değişkenin değeri basılır.
+![printenv komutunun çıktısı](../../../assets/ekran/p038-2.webp)
 
 ```bash frame="terminal"
 printenv
@@ -100,7 +121,7 @@ LANG=C.UTF-8
 LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:...
 ```
 
-Bir environment variable'ı silmek için:
+Bir sistemde bulunan environment variable'lara erişmek için `printenv` komutunu çalıştırmalıyız. Bu komutun sonuna istediğimiz değişkenin ismini yazarak değerini de bastırabiliriz. Bir environment variable'ı silmek istersek `unset degiskenadı` şeklinde yazabiliriz.
 
 ```bash frame="terminal"
 unset degiskenadı
@@ -108,7 +129,7 @@ unset degiskenadı
 
 ## Komut geçmişi: history
 
-`history` komutu bash shell geçmişini listeler:
+![history komutunun listelediği bash geçmişi](../../../assets/ekran/p038-3.webp)
 
 ```bash frame="terminal"
 history
@@ -128,13 +149,9 @@ history
 ...
 ```
 
-Geçmişteki komutları tekrar çalıştırmak için `!` kullanılır:
+`history` komutu bash shell geçmişini görmemizi sağlar.
 
-| Kullanım | Anlamı |
-|---|---|
-| `!!` | En son komutu tekrarlar |
-| `!10` | Geçmiş listesindeki 10 numaralı komutu çalıştırır |
-| `!echo` | `echo` ile başlayan en son komutu bulup çalıştırır |
+![!10 ile geçmişteki 10 numaralı komutun çalıştırılması](../../../assets/ekran/p039-1.webp)
 
 ```bash frame="terminal"
 !10
@@ -145,6 +162,8 @@ whoami
 ec2-user
 ```
 
+![!echo ile echo ile başlayan en son komutun çalıştırılması](../../../assets/ekran/p039-2.webp)
+
 ```bash frame="terminal"
 !echo
 ```
@@ -154,7 +173,13 @@ echo $OSTYPE
 linux-gnu
 ```
 
-Geçmişi temizlemek için `history -c` kullanılır:
+Geçmişte yazdığımız en son komutu tekrarlamak için `!!` komutunu, en son yazdığımız 10. komutu yazdırmak için ise `!10` komutunu kullanırız. Ünlem karakteri ile string aratırsak bu string ile kullanılan en son komutu bulur ve gösterir. Örneğin `!echo` komutuyla da en son kullandığımız echo komutunu verir.
+
+:::caution[Düzeltme]
+`!10`, sondan 10. komutu değil, `history` listesinde 10 numaralı komutu çalıştırır. Sondan 10. komut için `!-10` kullanılır.
+:::
+
+![history -c ile geçmişin temizlenmesi](../../../assets/ekran/p039-3.webp)
 
 ```bash frame="terminal"
 history -c
@@ -165,9 +190,11 @@ history
     1  history
 ```
 
+History temizlemek istersek `history -c` komutunu kullanırız.
+
 ## Yorum ve çok satırlı komut
 
-`#` karakterinden sonra yazılanlar yorum kabul edilir ve işlenmez:
+![# karakterinden sonra yazılanların işlenmemesi](../../../assets/ekran/p039-4.webp)
 
 ```bash frame="terminal"
 echo "osman" #bundan sonra yazdigim islenmeyecek
@@ -177,7 +204,9 @@ echo "osman" #bundan sonra yazdigim islenmeyecek
 osman
 ```
 
-Uzun bir komutu daha kolay okunması için birden fazla satıra bölmek istersek satır sonuna `\` koyarız:
+`#` karakterini yorum satırı yazmak istersek kullanırız.
+
+![\ ile birden fazla satıra bölünmüş echo komutu](../../../assets/ekran/p039-5.webp)
 
 ```bash frame="terminal"
 echo osman \
@@ -189,18 +218,22 @@ bla bla bala
 osman neredesin osman bla bla bala
 ```
 
+Eğer uzun bir komut yazıyorsak ve tek bir satırda görünmesi önemli değilse daha kolay okunabilmesi adına birden fazla satıra yazdırmak için komutun sonunda `\` karakterini kullanırız.
+
 ## Bash başlangıç dosyaları
 
-Bir Linux sisteme ya interactive olarak (terminal ile) bağlanırız ya da non-interactive olarak (script çalıştırarak). Interactive bağlantının iki çeşidi vardır:
+Bir Linux sisteme bağlanırken ya interactive olarak biz terminale bağlanıyoruz ya da noninteractive olarak script çalıştırıyoruz. Interactive olarak bağlanmanın iki çeşidi var. Bunlar login ve nonlogin bağlanmadır.
 
-- **Login:** Kendi terminal uygulamamızla bash shell'e bağlanmak.
-- **Non-login:** Mevcut bir bash oturumu altında yeni bir bash açarak bağlanmak.
+Login bağlanmada, kendi terminal uygulamamız ile bash shell'e bağlanırız. Nonlogin bağlanmada, bash altında bir session ile yeni bir bash açarak bağlanmadır.
 
-| Bağlantı türü | İşlenen dosya |
-|---|---|
-| Interactive login | Home dizinindeki `.bash_profile`. Bu dosyada sadece `.bashrc`'yi yükleyen komutlar bulunur. |
-| Interactive non-login | Home dizinindeki `.bashrc` |
+Bir terminale interactive login olarak bağlanırsak bash home directory'de duran `.bash_profile` isimli dosyanın içerisinde yazan komutları işler ve bu işlenen şeylerle o session'u açarız. Bu dosyanın içinde sadece bashrc yükleme komutları bulunmaktadır.
+
+Bir terminale interactive nonlogin olarak bağlanırsak bash home directory'de duran `.bashrc` isimli dosyanın içerisinde yazan komutları işler ve bu işlenen şeylerle o session'u açarız.
 
 İki durumda da ilk olarak `/etc/profile` işlenir.
 
-Her login olduğumuzda çalışmasını istediğimiz şeyleri `.bash_profile` dosyasına yazmamız gerekir. Ancak `.bash_profile` artık `.bashrc`'ye bağlı olduğu için alias ve environment variable tanımları gibi her şeyi `.bashrc` dosyasına yazıyoruz.
+:::caution[Düzeltme]
+`/etc/profile` yalnızca login shell'de işlenir. Nonlogin shell'de `/etc/profile` okunmaz; `~/.bashrc` okunur (o da genellikle `/etc/bashrc` dosyasını yükler).
+:::
+
+Her login olduğumuzda çalışmasını istediklerimizi `.bash_profile` dosyasına yazmamız gerekir. Ama artık `.bash_profile` dosyası da `.bashrc` dosyasına bağlı olduğu için her şeyi buraya yazıyoruz. Örneğin alias ve environment variable tanımlarımız.

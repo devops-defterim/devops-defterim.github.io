@@ -6,18 +6,21 @@ lessons: [22]
 order: 9
 ---
 
-Bucket konusunu biraz daha detaylandırmak için **Amazon S3 → Buckets** ekranında `Create bucket` diyerek yeni bir bucket oluşturmaya başlıyoruz ve bu ekrandaki ayarları sırayla inceliyoruz.
+Bucket konusunu biraz daha detaylandıracak olursak öncelikle yeni bir bucket oluşturmak için `Create bucket` diyerek başlıyoruz.
+
+![Amazon S3 Buckets ekranında Create bucket butonu](../../../../assets/ekran/p167-1.webp)
 
 ## General configuration
 
-- **Bucket name:** Daha önce bahsettiğimiz gibi benzersiz bir isim giriyoruz (örnekte `ornek-bucket`). Kuralın nedeni için bkz. [Giriş ve ilk bucket](/aws/s3/giris-ve-ilk-bucket/).
-- **Copy settings from existing bucket - optional:** Daha önce oluşturduğumuz başka bir bucket'ın ayarlarını yeni bucket'a aktarmak istersek `Choose bucket` butonundan seçim yapabiliriz.
+Daha önce bahsettiğimiz gibi unique bir isim giriyoruz. Eğer oluşturduğumuz başka bir bucket'ın özelliklerini oluşturacağımız bucket'a aktarmak istersek `Choose bucket` butonundan seçim yapabiliriz.
 
-## Erişim yönetiminin geçmişi: IAM Policies ve ACL
+![Create bucket ekranında Bucket name alanı ve Choose bucket butonu](../../../../assets/ekran/p168-1.webp)
 
-AWS, S3 servisi ilk çıktığında bucket'lara erişimi yönetmek için iki temel yol sunuyordu: **IAM Policies** ve **ACL (Access Control List)**.
+## IAM Policies ve ACL
 
-IAM tarafındaki S3 ile ilgili hazır policy'leri **IAM → Policies** ekranında arama kutusuna `s3` yazarak görebiliriz (örnekte 25 sonuç; `AmazonS3FullAccess`, `AmazonS3ExpressFullAccess` gibi AWS managed policy'ler). Örneğin `AmazonS3ExpressFullAccess` policy'sinin içeriği şöyledir:
+AWS, S3 servisi ilk çıktığında bucket'lara erişimi yönetmek için iki temel yol sunuyordu. Bunlardan ilki **IAM Policies**, diğeri ise **ACL (Access Control List)** yöntemiydi.
+
+![IAM Policies ekranında s3 aramasıyla listelenen S3 policy'leri](../../../../assets/ekran/p168-2.webp)
 
 ```json
 {
@@ -33,89 +36,90 @@ IAM tarafındaki S3 ile ilgili hazır policy'leri **IAM → Policies** ekranınd
 }
 ```
 
-ACL sayesinde ister farklı AWS hesaplarındaki kullanıcılara, ister doğrudan dış dünyaya manuel olarak dosya bazında erişim yetkisi verebiliyorduk.
-
 ## Object Ownership
 
-Günümüzde de **Object Ownership** bölümünde `ACLs enabled` seçeneğini seçerek bu şekilde manuel izinler tanımlamak hâlâ mümkündür. Varsayılan seçenek `ACLs disabled (recommended)` olup bu durumda Object Ownership `Bucket owner enforced` olur.
+ACL sayesinde, ister farklı AWS hesaplarındaki kullanıcılara istersek de doğrudan dış dünyaya manuel olarak dosya bazında erişim yetkisi verebiliyorduk. Günümüzde de `ACLs enabled` seçeneğini seçerek bu şekilde manuel izinler tanımlamak hâlâ mümkün. Bu seçeneği aktif ettiğimizde aşağıda görüldüğü gibi iki kısım açılıyor.
 
-`ACLs enabled` seçildiğinde AWS, nesne bazında erişim kontrolü gerekmiyorsa ACL'lerin kapalı tutulmasını ve hesap dışındaki kullanıcılarla paylaşım için ACL yerine bucket policy kullanılmasını öneren bir uyarı gösterir. Ayrıca iki seçenek açılır:
+- **Object writer:** Bucket'a yüklenen dosyaların sahipliğinin ve yetki haklarının, o dosyayı yükleyen kişiye (hesaba) ait olmasıdır.
+- **Bucket owner preferred:** Bucket'a dışarıdan kim dosya yüklerse yüklesin, yüklenen o dosyaların sahipliğinin ve üzerindeki hakları belirleme yetkisinin doğrudan bucket'ın asıl sahibinde (yani bizde) kalmasıdır.
 
-| Seçenek | Anlamı |
-| --- | --- |
-| `Bucket owner preferred` | Bucket'a dışarıdan kim dosya yüklerse yüklesin, yüklenen dosyaların sahipliği ve üzerindeki hakları belirleme yetkisi doğrudan bucket'ın asıl sahibinde (yani bizde) kalır. |
-| `Object writer` | Bucket'a yüklenen dosyaların sahipliği ve yetki hakları, o dosyayı yükleyen kişiye (hesaba) ait olur. |
+![Object Ownership bölümünde ACLs enabled seçeneği ve açılan iki seçenek](../../../../assets/ekran/p169-1.webp)
 
 ## Block Public Access ve Bucket Policies
 
-Zamanla S3 kullanımı o kadar yoğunlaştı ki, ufak konfigürasyon hataları yüzünden gizli kalması gereken bucket'ların yanlışlıkla tüm internete açılması büyük güvenlik sorunlarına yol açtı. AWS bunun önüne geçmek için iki önemli adım attı.
+Fakat zamanla S3 kullanımı o kadar yoğunlaştı ki, yapılan ufak konfigürasyon hataları yüzünden gizli kalması gereken bucket'ların yanlışlıkla tüm internete açılması büyük güvenlik sorunlarını beraberinde getirdi. AWS bu sorunların önüne geçmek için iki önemli adım attı.
 
-**1. Ekstra güvenlik uyarıları:** Bir bucket'ı public yapmak istediğinizde olası tehlikeleri açıkça kabul ettiğinizi onaylamanız istenir. **Block Public Access settings for this bucket** bölümünde varsayılan olarak `Block all public access` işaretlidir ve altındaki dört ayarın hepsini kapsar:
+![Block Public Access settings for this bucket bölümü ve Block all public access ayarı](../../../../assets/ekran/p169-2.webp)
 
-- Block public access to buckets and objects granted through *new* access control lists (ACLs)
-- Block public access to buckets and objects granted through *any* access control lists (ACLs)
-- Block public access to buckets and objects granted through *new* public bucket or access point policies
-- Block public and cross-account access to buckets and objects through *any* public bucket or access point policies
+İlk olarak; bir bucket'ı public yapmak istediğinizde, olası tehlikeleri açıkça kabul ettiğinizi onaylamanızı isteyen ekstra güvenlik uyarıları getirdi. İkinci ve en büyük adım olarak ise, erişimi yönetmek için çok daha güvenli olan üçüncü bir yol geliştirdi: **Bucket Policies**.
 
-`Block all public access` işaretini kaldırdığınızda "Turning off block all public access might result in this bucket and the objects within becoming public" uyarısı çıkar ve devam etmek için `I acknowledge that the current settings might result in this bucket and the objects within becoming public.` kutucuğunu işaretlemeniz gerekir.
+![Block all public access kapatıldığında çıkan uyarı ve onay kutucuğu](../../../../assets/ekran/p170-1.webp)
 
-**2. Bucket Policies:** Erişimi yönetmek için çok daha güvenli üçüncü bir yol geliştirildi. ACL'lerdeki gibi her dosya veya kullanıcı için tek tek izin ayarlamak yerine, tüm bucket'ı veya içindeki belirli klasörleri tek bir JSON dosyası üzerinden yönetmemizi sağlar. Böylece "Sadece şirketimizin IP adresinden girilebilsin" veya "Sadece şu hesaptaki kullanıcılar okuma yapabilsin" gibi çok daha detaylı kuralları tek bir merkezden yazabiliriz. Günümüzde AWS'nin erişim yönetimi için en çok tavsiye ettiği yöntem budur. Uygulaması için bkz. [Bucket policy ve statik web sitesi](/aws/s3/bucket-policy-ve-statik-site/).
+Peki nedir bu Bucket Policies? ACL'lerdeki gibi her dosya veya kullanıcı için tek tek izin ayarlamakla uğraşmak yerine, tüm bucket'ı veya içindeki belirli klasörleri tek bir JSON dosyası üzerinden yönetmemizi sağlayan yapıdır. Bu sayede 'Sadece bizim şirketimizin IP adresinden girilebilsin' veya 'Sadece şu hesaptaki kullanıcılar okuma yapabilsin' gibi çok daha detaylı ve gelişmiş kuralları tek bir merkezden kolayca yazabiliriz. Günümüzde AWS'nin de erişim yönetimi için en çok tavsiye ettiği yöntem tam olarak budur.
 
 ## Bucket Versioning
 
-Sıradaki ayar **Bucket Versioning**'dir (varsayılan `Disable`). Bu ayar aktifken aynı isimli bir dosyayı yüklemeye devam ettikçe S3 her seferinde en son gönderilen dosyayı gösterir, ancak önceki aynı isimli dosyaları silmez, versiyonlar. Böylece dosyamızdaki değişikliklere de S3 üzerinden ulaşabiliriz.
+Bucket oluşturma aşamalarını öğrenmeye devam edecek olursak sıradaki karşımıza çıkan **Bucket Versioning** oluyor. Bu ayarı aktif ederek aynı isimli bir dosyayı AWS'ye atmaya devam ettiğimiz sürece AWS her yeni gönderilen dosyayı bize gösterir ancak önceki gönderdiğimiz aynı isimli dosyaları da silmez ve versiyonlanır. Dolayısıyla dosyamızdaki değişimlere de S3 üzerinden ulaşabiliriz.
+
+![Create bucket ekranında Bucket Versioning ayarı](../../../../assets/ekran/p171-1.webp)
 
 ### Örnek
 
-1. İçinde `ilk version` yazan `deneme.txt` dosyasını bucket'a yükleyin (**Upload → Add files → Upload**).
-2. Dosyayı tarayıcıda açtığınızda içindeki metni görürsünüz:
+Gelin bu anlatımı bir örnekle somutlaştıralım. Öncelikle oluşturduğumuz txt dosyasını bucket'ımıza yüklüyoruz.
 
-   ```text title="deneme.txt"
-   ilk version
-   ```
+![deneme.txt dosyasının bucket'a yüklenmesi](../../../../assets/ekran/p171-2.webp)
 
-3. Bilgisayarınızdaki dosyada değişiklik yapıp aynı isimle S3'e tekrar yükleyin.
-4. **Objects** sekmesinde `Show versions` düğmesini aktif edin. `deneme.txt` dosyasının hem ilk hali hem de değiştirilmiş güncel versiyonu, farklı **Version ID** değerleriyle alt alta listelenir.
+Dosyayı açtığımızda içerisinde yazdığımız metni görüyoruz.
+
+![deneme.txt dosyasının tarayıcıda açılmış içeriği](../../../../assets/ekran/p172-1.webp)
+
+```text title="deneme.txt"
+ilk version
+```
+
+Şimdi bilgisayarımızdaki dosya üzerinde değişiklikler yapalım ve bu yeni dosyayı aynı isimle S3'e tekrar yükleyelim. S3 arayüzünde **Objects** menüsüne gelip `Show versions` düğmesini aktif ettiğimizde, dosyamızın hem ilk halini hem de üzerinde değişiklik yapılmış güncel versiyonunu alt alta görebiliriz.
 
 ### Delete Marker
 
-:::caution
-Versiyonlama açıkken dosyayı arayüzden normal şekilde sildiğinizde dosyanın geçmiş versiyonları aslında silinmez. AWS bunun yerine dosyanın en üstüne **Delete Marker** adında, 0 byte yer kaplayan özel bir etiket yerleştirir.
-:::
+Burada bilmemiz gereken çok önemli bir silme kuralı var: Versiyonlama açıkken arayüzden dosyayı normal bir şekilde sildiğinizde, dosyanın geçmiş versiyonları aslında silinmez. AWS bunun yerine dosyanın en üstüne **Delete Marker** adında, 0 byte yer kaplayan özel bir etiket yerleştirir.
 
-`Show versions` açıkken dosyanın altındaki tüm gerçek versiyonları silerseniz dosyanın içeriği gitse bile bu Delete Marker bucket'ta kalmaya devam eder. AWS buna **süresi dolmuş silme işaretçisi** (expired object delete marker) der. Bucket'ta kalan bu içi boş Delete Marker'ları Lifecycle Rule ile otomatik olarak temizleyebiliriz:
+Eğer `Show versions` açıkken dosyanın altındaki tüm gerçek versiyonları silerseniz, dosyanın içeriği gitse bile bu Delete Marker bucket'ınızda kalmaya devam eder. AWS buna Süresi Dolmuş Silme İşaretçisi der. Bu etiketi daha önce öğrendiğimiz [Lifecycle Rule](/aws/s3/management/) ayarlarını kullanarak bucket'ta kalan bu içi boş Delete Marker'ların otomatik olarak temizlenmesini sağlamaktır.
 
-1. Bucket'ın **Management** sekmesinde **Lifecycle rules** altındaki `Create lifecycle rule` butonuna tıklayın.
-2. **Lifecycle rule actions** bölümünde `Delete expired object delete markers or incomplete multipart uploads` kutucuğunu işaretleyin.
-3. Hemen altında açılan **Delete expired object delete markers or incomplete multipart uploads** bölümünde `Delete expired object delete markers` kutucuğunu da işaretleyin.
-4. En alttaki `Create rule` butonuyla kuralı kaydedin.
+![Show versions açıkken deneme.txt dosyasının versiyonları](../../../../assets/ekran/p172-2.webp)
 
-Böylece bucket bu içi boş kalıntılardan otomatik olarak arındırılır. Lifecycle Rule'ların ayrıntısı için bkz. [Management: lifecycle, replication, inventory](/aws/s3/management/).
+1. **Management** menüsü altından `Create lifecycle rule` butonuna tıkladıktan sonra açılan ekranda `Delete expired object delete markers or incomplete multipart uploads` yazan kutucuğu işaretliyoruz.
+2. Hemen altındaki kutucuğu da işaretleyip devam ediyoruz.
+
+   ![Lifecycle rule actions bölümünde Delete expired object delete markers kutucukları](../../../../assets/ekran/p173-1.webp)
+
+Böylece Lifecycle Rule sayesinde bucket'ımızı bu içi boş kalıntılardan arındırarak çok daha temiz ve profesyonel bir yönetim sağlamış oluyoruz. Kuralımızı en alttan kaydederek bu otomasyonu başarıyla devreye alıyoruz.
+
+![Lifecycle rule ekranının altındaki Create rule butonu](../../../../assets/ekran/p173-2.webp)
 
 ## Default encryption
 
-Verilerimizi dış dünyaya karşı nasıl koruduğumuzu gördük. Peki verilerimiz AWS'nin fiziksel makinelerinde, disklerinde dururken saf verinin güvenliğini nasıl sağlarız? Bunun cevabı **Default encryption** ayarıdır. **Encryption type** üç seçenekle sunulur:
+AWS üzerindeki verilerimizi dış dünyaya karşı nasıl koruma altına aldığımızdan bahsetmiştik peki ya bu verileri AWS'ye karşı nasıl koruyacağız? Yani verilerimizin depolandığı fiziksel makineler, diskler üzerindeyken saf verimizin güvenliğini nasıl sağlayacağız? İşte bunun cevabı aşağıdaki görselde **Default encryption** ayarıyla sağlarız. Bu ayar bizlere üç farklı seçenekle sunuluyor. Bunlardan ilkini seçersek oluşturulan key dahil her şeyin yönetimini tamamen AWS'ye bırakmış oluruz.
 
-| Seçenek | Açıklama |
-| --- | --- |
-| `Server-side encryption with Amazon S3 managed keys (SSE-S3)` | Varsayılan seçenek. Oluşturulan key dahil her şeyin yönetimi tamamen AWS'ye bırakılır. |
-| `Server-side encryption with AWS Key Management Service keys (SSE-KMS)` | Key'i kendimiz belirlemek istediğimizde seçilir. |
-| `Dual-layer server-side encryption with AWS Key Management Service keys (DSSE-KMS)` | AWS'nin sağladığı bir key ile kendi oluşturduğumuz bir key'i birlikte kullanarak güvenliği artırmak için seçilir. |
+![Default encryption bölümünde SSE-S3 seçili Encryption type seçenekleri](../../../../assets/ekran/p174-1.webp)
 
-SSE-KMS seçildiğinde **AWS KMS key** altında `Choose from your AWS KMS keys` veya `Enter AWS KMS key ARN` seçenekleri gelir. Key'i dilersek AWS KMS üzerinden oluşturabilir (`Create a KMS key`), dilersek kendi key management sistemimizde oluşturduğumuz key'i kullanabiliriz. KMS key ARN formatı şöyledir:
+Eğer kendimiz bir key oluşturmak istersek ikinci seçeneği aktif ederiz. Key oluşturmak için dilersek AWS KMS key üzerinden dilersek kendi key management sistemimizde oluşturduğumuz key'i kullanıyoruz. İkisi arasındaki temel fark oluşturduğumuz key için belli aralıklarla yapılması gereken bakımları (90 gün içinde değiştirilmesi, saklanması vb.) AWS'nin yönetiyor oluşudur.
+
+:::caution[Düzeltme]
+AWS KMS'te key rotasyonu varsayılan olarak 90 günde bir yapılmaz: AWS managed key'ler yılda bir otomatik döndürülür; customer managed key'lerde otomatik rotasyon isteğe bağlıdır (varsayılan 365 gün, 90 ile 2560 gün arasında ayarlanabilir).
+:::
+
+Eğer bir tane AWS'nin sağladığı bir tane de kendi oluşturduğumuz key ile güvenliği artırmak istersek de üçüncü seçeneği seçebiliriz. (DSSE-KMS)
+
+:::caution[Düzeltme]
+DSSE-KMS, biri AWS'nin biri bizim olan iki ayrı key kullanmaz; veriye iki katman şifreleme uygular ve her iki katman da seçtiğimiz AWS KMS key'i üzerinden yönetilir.
+:::
+
+![SSE-KMS seçildiğinde açılan AWS KMS key seçenekleri](../../../../assets/ekran/p175-1.webp)
 
 ```text
 arn:aws:kms:<region>:<account-ID>:key/<key-id>
 ```
 
-İkisi arasındaki temel fark, oluşturduğumuz key için belli aralıklarla yapılması gereken bakımları (90 gün içinde değiştirilmesi, saklanması vb.) AWS KMS kullanıldığında AWS'nin yönetiyor olmasıdır.
-
-Aynı bölümde **Bucket Key** ayarı da bulunur (varsayılan `Enable`).
-
 ## Object Lock
 
-Bucket oluştururken yapabileceğimiz son ayar, **Advanced settings** altındaki **Object Lock** ayarıdır (varsayılan `Disable`). Bu seçeneği aktif ederek hiçbir şekilde silinmemesi ve değiştirilmemesi gereken dosyalarınızı muhafaza edebilirsiniz.
-
-:::note
-Konsoldaki bilgi notuna göre Object Lock yalnızca versiyonlamanın açık olduğu bucket'larda çalışır; Object Lock'u etkinleştirmek Versioning'i de otomatik olarak açar.
-:::
+Ve bucket oluştururken yapabileceğimiz son ayar ise **Advanced settings** menüsü altındaki **Object Lock** ayarıdır. Bu seçeneği aktif ederek hiçbir şekilde silinmemesi ve değiştirilmemesi gereken dosyalarınızı muhafaza edebilirsiniz.

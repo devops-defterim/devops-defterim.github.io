@@ -6,7 +6,9 @@ lessons: [2, 3]
 order: 3
 ---
 
-Örneklerde kullanılan `deneme` dosyasının içeriği şöyle:
+## cp: kopyalama
+
+![cat deneme komutuyla dosyanın içeriği](../../../assets/ekran/p015-1.webp)
 
 ```bash frame="terminal"
 cat deneme
@@ -20,9 +22,9 @@ cat deneme
 4
 ```
 
-## cp: kopyalama
+Deneme dosyasının içeriği yukarıdaki gibidir.
 
-`cp dosyaadi hedef` ile bir dosya başka bir konuma kopyalanır. Aşağıda `deneme` dosyası `ornek1` klasörünün altına `ikincidosya` adıyla kopyalanıyor:
+![cp ile deneme dosyasını ornek1 altına kopyalama](../../../assets/ekran/p015-2.webp)
 
 ```bash frame="terminal"
 cp deneme ornek1/ikincidosya
@@ -38,9 +40,11 @@ cat ikincidosya
 4
 ```
 
+`cp dosyaadı lokasyon` komutunu kullanarak istediğimiz bir dosyayı başka bir yere, lokasyona kopyalayabiliriz. Deneme isimli dosyayı `ornek1` altında ikincidosyaya kopyalıyoruz.
+
 ## mv: taşıma ve yeniden adlandırma
 
-Bir dosyayı başka bir klasöre taşımak için `mv dosyaadi hedef` kullanılır. Aşağıda başlangıçta home klasöründe bulunan `deneme` dosyası `ornek1` klasörünün altına taşınıyor:
+![mv ile deneme dosyasını ornek1 klasörüne taşıma](../../../assets/ekran/p015-3.webp)
 
 ```bash frame="terminal"
 ls
@@ -56,7 +60,9 @@ ornek1
 deneme  ikincidosya
 ```
 
-`mv` dosyanın adını değiştirmek için de kullanılır:
+İstediğimiz bir dosyayı başka bir klasör altındaki dosyaya taşımak için `mv dosyaadı lokasyon` komutunu kullanırız. Yukarıda da göründüğü gibi başlangıçta home altında bulunan deneme dosyasını `ornek1` folder'ı altına taşıdık.
+
+![mv ile dosya adını değiştirme](../../../assets/ekran/p015-4.webp)
 
 ```bash frame="terminal"
 mv deneme ilkdosya
@@ -67,7 +73,9 @@ ls
 ikincidosya  ilkdosya
 ```
 
-`mv -i kaynak hedef` komutu işlemi etkileşimli (interactive) modda yapar. Aşağıdaki örnekte `deneme1` dosyası `deneme2` adıyla taşınıyor; `deneme2` zaten var olduğu için üzerine yazılsın mı diye sorulur. Onaylamak için `y` yazıp Enter'a basılır.
+`mv` komutunu dosya ismini değiştirmek için de kullanırız.
+
+![mv -i ile etkileşimli taşıma ve üzerine yazma onayı](../../../assets/ekran/p016-1.webp)
 
 ```bash frame="terminal"
 ls
@@ -81,9 +89,11 @@ mv: overwrite 'deneme2'? y
 deneme2  deneme3
 ```
 
+`mv -i dosyaadı dosyaadı` komutuyla dosyaları interaktif modda açabiliriz. deneme1 dosyasını taşıyorum ama deneme2 olarak yeniden adlandıracağım demiş oluyor. Onaylamak için `y` yazıp enter diyoruz.
+
 ## Kök dizin
 
-Linux'ta en üstte kök dizin (`/`, root) bulunur ve tüm klasörler onun altında şekillenir. Kök dizindeki klasörlerden bazıları:
+![Kök dizindeki klasörlerin listesi](../../../assets/ekran/p016-2.webp)
 
 ```bash frame="terminal"
 cd /
@@ -94,9 +104,11 @@ ls
 bin  boot  dev  etc  home  lib  lib64  local  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
 ```
 
+Linux'ta kök dizinimiz root'tur. En üstte root vardır ve tüm klasörler onun altında şekillenir. Bu klasörlerden bazıları üstteki gibidir.
+
 ## PATH değişkeni
 
-Linux'ta bir komut girildiğinde sistem önce `PATH` ortam değişkenine (environment variable) bakar. `PATH`, girilen komutların nerede ve hangi sırayla aranacağını söyler. `cat`, `touch` gibi komutların bir kısmı aslında birer uygulamadır.
+![echo $PATH komutunun çıktısı](../../../assets/ekran/p017-1.webp)
 
 ```bash frame="terminal"
 echo $PATH
@@ -106,11 +118,13 @@ echo $PATH
 /home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
 ```
 
-Bir komut çalıştırılmak istendiğinde önce `/home/ec2-user/.local/bin` klasörüne bakılır; uygulama orada varsa oradaki çalıştırılır. Orada bulunamazsa `/home/ec2-user/bin` klasörüne bakılır. Orada da yoksa çıktıdaki sıra takip edilir.
+Linux'ta bir kod girdiğimiz zaman, linux öncelikle path environment variable'a gider. Path bize girdiğimiz komutların nerede ve hangi sırayla aranacağını söyler. Kullandığımız `cat`, `touch` gibi bazı komutlar aslında birer uygulamadır.
+
+Bir komut girildiğinde, uygulama çalıştırılmak istendiğinde ilk olarak home altında ec2 altındaki `.local` altındaki `bin` folder'ına bakar eğer bu uygulama burada varsa burdaki path'i çalıştırır. Eğer burada bulamazsa home altında ec2 altındaki -user altında bulunan `bin` folder'ına bakar. Burda da bulunmazsa yukarıdaki çıktıda bulunan sırayı takip eder.
 
 ## which
 
-`which uygulamaadi`, çalıştırılan komutun dosyasının sistemde nerede durduğunu (dosya yolunu) gösterir:
+![which cat komutunun çıktısı](../../../assets/ekran/p017-2.webp)
 
 ```bash frame="terminal"
 which cat
@@ -120,9 +134,11 @@ which cat
 /usr/bin/cat
 ```
 
-## export: ortam değişkeni oluşturma ve değiştirme
+`which uygulamaadı` komutuyla çalıştırdığımız komutların dosyalarının nerede durduğunu görürüz. Verilen komutun sistemdeki dosya yolunu (konumunu) bulup göstermeye yarar.
 
-Yeni bir ortam değişkeni oluşturmak ya da var olanı değiştirmek için `export` kullanılır. Değişkenin değerini görmek için `echo $degiskenadi` yazılır:
+## export: environment variable oluşturma ve değiştirme
+
+![export ile yeni bir değişken oluşturup echo ile çağırma](../../../assets/ekran/p017-3.webp)
 
 ```bash frame="terminal"
 export TANISMA="merhaba, isminiz nedir"
@@ -133,7 +149,11 @@ echo $TANISMA
 merhaba, isminiz nedir
 ```
 
-Var olan bir değişkeni değiştirmek için de aynı komut kullanılır. Aşağıdaki komut mevcut `PATH` değişkenine `ornek1` klasörünü ekler:
+Bir environment variable değiştirmek veya yeni bir variable oluşturmak istiyorsak `export` komutunu kullanırız. Yeni bir environment variable oluşturmak için adımları takip etmemiz yeterlidir. Oluşturduğumuz variable'ı çağırmak için `echo $variableadı` şeklinde yazarız.
+
+Var olan bir environment variable'ı değiştirmek için ise aşağıdaki komutları yazarız. Bu komut ile var olan PATH variable'ına `ornek1` isimli klasör ekleyerek güncellemiş oluruz.
+
+![export ile PATH değişkenine ornek1 klasörünü ekleme](../../../assets/ekran/p017-4.webp)
 
 ```bash frame="terminal"
 export PATH=$PATH:/home/ec2-user/ornek1
@@ -146,11 +166,9 @@ echo $PATH
 
 ## Linkler
 
-Bir dosya başka bir kaynağa linklenebilir. Böylece link üzerinde yapılan işlemler, linkin hedefi olan kaynak üzerinde yapılmış olur. Linkler sayesinde bir dosyaya veya klasöre aynı anda birden fazla yerden erişilebilir. Soft ve hard olmak üzere iki çeşit link vardır.
-
 ### Soft link
 
-Soft link oluşturmak için `ln -s hedefdosyayolu linkadi` kullanılır. Ana dosya silinirse link silinmez.
+![ln -s ile soft link oluşturma ve ls -l çıktısı](../../../assets/ekran/p018-1.webp)
 
 ```bash frame="terminal"
 ln -s /home/ec2-user/ornek1/hedef.txt linkimiz.txt
@@ -165,7 +183,11 @@ drwxr-xr-x. 2 ec2-user ec2-user 23 Nov 10 19:02 ornek1
 lrwxrwxrwx. 1 ec2-user ec2-user 30 Nov 10 19:04 linkimiz.txt -> /home/ec2-user/ornek1/hedef.txt
 ```
 
-Link dosyası `vi` ile açılıp içine bir şey yazıldığında hedef dosyanın içeriği de değişir (`vi` için bkz. [Arama, görüntüleme ve editörler](/linux/arama-ve-goruntuleme/)):
+Bir dosyayı başka bir kaynağa linkleyebiliriz. Böylece linklediğimiz kaynak üzerinde yaptığımız işlemler linkin hedefi olan kaynak üzerinde yapılmış olur. Linkler ile bir dosyaya veya klasöre aynı anda birden fazla yerden erişim sağlarız. Bunu sembolik linkler ile yaparız. Soft ve hard olmak üzere iki çeşit link oluşturabiliriz. Soft link oluşturmak için `ln -s linklemekistediğimizdosyayolu linkismi` komutunu kullanırız. Eğer ana dosyayı silersek linkimiz silinmez.
+
+![vi ile link dosyasına yazı yazma](../../../assets/ekran/p018-2.webp)
+
+![Link ve hedef dosyanın cat çıktılarının aynı olması](../../../assets/ekran/p018-3.webp)
 
 ```bash frame="terminal"
 vi linkimiz.txt
@@ -179,7 +201,9 @@ bu yazacağım yazı link üzerinden olacak ama ana dosyada da değişiklik yapm
 bu yazacağım yazı link üzerinden olacak ama ana dosyada da değişiklik yapmış olacağım.
 ```
 
-Sonradan aynı dosyaya yeni bir link oluşturulursa onun içeriği de aynı olur:
+Yukarıda olduğu gibi daha sonra göreceğimiz komut olan [vi](/linux/arama-ve-goruntuleme/) ile linklediğimiz dosyayı açıp içine istediğimizi yazdığımızda hedef dosyanın içeriği de değişmiş oluyor.
+
+![Sonradan oluşturulan ikinci soft link ve içeriği](../../../assets/ekran/p018-4.webp)
 
 ```bash frame="terminal"
 ln -s /home/ec2-user/ornek1/hedef.txt linkimiz1.txt
@@ -190,9 +214,11 @@ cat linkimiz1.txt
 bu yazacağım yazı link üzerinden olacak ama ana dosyada da değişiklik yapmış olacağım.
 ```
 
+Sonradan bir link oluştursak bunun da içeriği diğeriyle aynı olacaktır.
+
 ### Hard link
 
-Hard link oluşturmak için `-s` olmadan `ln hedefdosyayolu linkadi` kullanılır. Soft linkten farkı şudur: ana dosya silindiğinde soft link kırık kalır, hard link ise aynı veriye bağlı ikinci bir dosya adı olduğu için içeriği korumaya devam eder. Hard link bir dosya oluşturur ve `ls -l` çıktısındaki görünümü soft linkten farklıdır:
+![ln ile hard link oluşturma ve ls -l çıktısı](../../../assets/ekran/p018-5.webp)
 
 ```bash frame="terminal"
 ln /home/ec2-user/ornek1/hedef.txt linkimiz3.txt
@@ -206,11 +232,17 @@ lrwxrwxrwx. 1 ec2-user ec2-user 30 Nov 10 19:18 linkimiz.txt2 -> /home/ec2-user/
 -rw-r--r--. 2 ec2-user ec2-user 97 Nov 10 19:08 linkimiz3.txt
 ```
 
-Çıktıda soft link `l` ile başlar ve `->` ile hedefini gösterir; hard link ise sıradan bir dosya (`-`) gibi görünür.
+İkinci link çeşidimiz olan hard linki oluşturmak için ise `ln linklemekistediğimizdosyayolu linkismi` komutunu kullanırız. Soft linkten farkı ana dosyayı sildiğimizde linkimiz de silinmiş olur. Hard link dosya oluşturur. Gösterimi de soft linkten farklı ve yukarıdaki gibidir.
+
+:::caution[Düzeltme]
+Ana dosya silindiğinde hard link silinmez. Hard link aynı veriye bağlı ikinci bir dosya adıdır, bu yüzden içeriği korumaya devam eder. Ana dosya silinince kırık kalan link soft linktir.
+:::
 
 ### Linkleri kaldırma
 
-Soft link `unlink linkadi` ile kaldırılır. Hedef dosya (`hedef.txt`) silinmez:
+![Soft link kaldırılmadan önce ls -l çıktısı](../../../assets/ekran/p019-1.webp)
+
+![unlink ile soft linki kaldırma ve sonraki ls -l çıktısı](../../../assets/ekran/p019-2.webp)
 
 ```bash frame="terminal"
 ls -l
@@ -228,7 +260,9 @@ total 8
 -rw-r--r--. 2 ec2-user ec2-user 97 Nov 10 19:08 linkimiz3.txt
 ```
 
-Hard link bir dosya olduğu için normal bir dosya gibi `rm linkadi` ile silinir. Hedef dosya yine silinmez:
+Oluşturduğumuz soft linkleri geri almak için `unlink linkismi` komutunu yazmamız yeterli olacaktır. İkinci görselde göründüğü gibi `hedef.txt` dosyası silinmiş olmaz.
+
+![rm ile hard linki silme](../../../assets/ekran/p019-3.webp)
 
 ```bash frame="terminal"
 ls
@@ -240,3 +274,5 @@ ls
 ornek1  hedef.txt  linkimiz3.txt
 ornek1  hedef.txt
 ```
+
+Hard link bir dosya olduğu için bir dosyayı nasıl siliyorsak hard linki de aynı komutla sileriz. Yani `rm linkadı` şeklinde kullanırız. Yine hedef dosyamız silinmiş olmaz.

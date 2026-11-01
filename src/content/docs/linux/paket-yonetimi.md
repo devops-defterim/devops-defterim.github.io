@@ -8,25 +8,15 @@ order: 11
 
 ## rpm ve deb paketleri
 
-Linux distro'larının iki temel çeşidi vardır ve bunları birbirinden ayıran şey uygulamalar için kullandıkları paketleme yöntemidir:
-
-- **rpm:** Red Hat tabanlı sistemlerin paket formatı. İçinde bilgisayara yüklenecek uygulama dosyaları ve uygulamayla ilgili metadata bilgileri bulunur.
-- **deb:** Debian tabanlı sistemlerin paket formatı.
+Linux dünyasında distro'ların iki temel çeşidi vardır. Bunları birbirinden ayıran uygulamalar için kullandıkları paketleme yöntemidir. Bu paketlerin iki değişik formatı vardır. Red Hat tabanlı rpm paketleri ve Debian tabanlı deb uzantılı paketlerdir. Rpm paketlerinin içinde bilgisayara yükleyebileceğimiz uygulama dosyaları ve uygulama ile ilgili metadata bilgileri vardır.
 
 ## Repository ve package manager
 
-Debian, Red Hat veya başka firmaların oluşturduğu uygulama repository'leri vardır. Bunları, sistemlerimizde kullandığımız uygulamaları indirebileceğimiz kataloglar gibi düşünebiliriz. Bu işlemi elle yapmayız; package manager'lar repository'lerle konuşarak uygulamaları sistemimize indirir.
-
-| Sistem | Package manager |
-|---|---|
-| Fedora, Red Hat (rpm tabanlı) | `yum`, `dnf` |
-| Ubuntu (deb tabanlı) | `apt`, `apt-get` |
-
-Makinede konfigüre edilmiş repository'lerin bilgileri `/etc/yum.repos.d` dizinindeki dosyalarda bulunur.
+Debian, Red Hat veya başka firmaların oluşturduğu uygulama repository'leri vardır. Bu uygulama repository'leri bu sistemlerde kullandığımız uygulamaları indirebileceğimiz kataloglar olarak düşünülebilir. Bu işlemi manuel olarak yapmıyoruz. Package manager uygulamaları Fedora ve Red Hat yani rpm tabanlı bilgisayarlarda iki tanedir. İlki `yum` diğeri ise `dnf`. Biz bu package manager'lar ile repository'ler ile konuşarak uygulamaları sistemlerimize indirebiliyoruz. Ubuntu tabanlılarda ise repository'leri `apt` veya `apt-get` uygulamaları ile indirebiliyoruz.
 
 ## yum ile paket arama
 
-`yum search uygulamaadı`, bağlı olunan repository'lerde istenen uygulamayı arar:
+![yum search mysql komutunun sonuçları](../../../assets/ekran/p048-1.webp)
 
 ```bash frame="terminal"
 yum search mysql
@@ -52,9 +42,11 @@ mariadb105-server-utils.x86_64 : Non-essential server utilities for MariaDB/MySQ
 perl-DBD-MariaDB.x86_64 : MariaDB and MySQL driver for the Perl5 Database Interface (DBI)
 ```
 
+`yum search uygulamaadı` opsiyonu ile bağlı olduğu repository'lerde istediğimiz uygulamayı arar.
+
 ## yum ile paket kurma
 
-`sudo yum install paketismi` ile bir paket sisteme kurulur. Komut önce onay ister, `y` ile onaylanınca indirme başlar:
+![sudo yum install mariadb105.x86_64 komutunun bağımlılık listesi ve onay sorusu](../../../assets/ekran/p048-2.webp)
 
 ```bash frame="terminal"
 sudo yum install mariadb105.x86_64
@@ -83,27 +75,37 @@ Installed size: 19 M
 Is this ok [y/N]:
 ```
 
-Onay sormadan doğrudan kurulum için `-y` eklenir:
+`sudo yum install paketismi` komutuyla istediğimiz bir paketi sistemimize indirebiliriz. Komutu girdiğimizde yukarıdaki gibi bir onay isteyecek `y` ile onaylayıp indirmeyi başlatabiliriz. Onay istemeden direkt indirmeyi başlatmasını istiyorsak `sudo yum install -y paketadı` şeklinde kullanmalıyız.
 
 ```bash frame="terminal"
 sudo yum install -y paketadı
 ```
 
+## Repository dosyaları
+
+Bilgisayarda konfigüre edilmiş repository'lerin adresi `cd /etc/yum.repos.d` dosyasının içinde bulunur. Buradaki dosyalarda repository'lerin bilgileri vardır.
+
 ## Sistemi güncelleme
 
-`yum` paket kurmanın yanında sistemi güncellemek için de kullanılır:
+`yum` komutu paket indirmenin yanında sistemi güncellemek için de kullanılır. `yum upgrade` komutunu kullanırız. Sistemde update edilecek bir şey var mı diye bakmak için de `sudo yum update` komutunu kullanırız.
 
 ```bash frame="terminal"
 yum upgrade
 ```
 
-Sistemde güncellenecek bir şey olup olmadığına bakmak için:
-
 ```bash frame="terminal"
 sudo yum update
 ```
 
+:::caution[Düzeltme]
+`yum update` sadece kontrol etmez, bulunan güncellemeleri kurar (onay sorar). Yalnızca güncelleme var mı diye bakmak için `yum check-update` kullanılır. Güncel sistemlerde `yum upgrade` ile `yum update` aynı işi yapar. `/etc/yum.repos.d` bir dosya değil, içinde `.repo` dosyaları bulunan bir dizindir.
+:::
+
 ## Sık kullanılan dnf komutları
+
+Aşağıya bazı dnf opsiyonlarını bırakıyorum;
+
+![Sık kullanılan dnf komutları tablosu](../../../assets/ekran/p049-1.webp)
 
 | Açıklama | Komut |
 |---|---|

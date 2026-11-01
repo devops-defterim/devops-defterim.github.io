@@ -6,15 +6,19 @@ lessons: [16]
 order: 2
 ---
 
-[Sunucudan buluta](/bulut-temelleri/sunucudan-buluta/) sayfasında anlatılan Infrastructure as a Service, bulut hizmetini satın almanın ilk şekliydi. Zamanla hizmeti sağlayan firmanın üstlendiği katmanlar arttı.
-
 ## IaaS, PaaS ve SaaS
 
-- **Infrastructure as a Service (IaaS)**: On-premises sisteme kıyasla IaaS kullanan şirketler altyapının fiziksel sorunları ve bakımıyla ilgilenmez, ancak bu altyapıya kuracakları uygulamanın tüm sorumluluğunu üstlenir.
-- **Platform as a Service (PaaS)**: IaaS'tan sonra gelen bu modelde runtime, middleware ve işletim sisteminin (O/S) yönetimi de hizmeti verenler tarafından sağlanır. Sanal makinelere kurulan işletim sistemleri, isteğe bağlı olarak örneğin Java runtime ve gerekli kütüphaneler hizmet sağlayıcı tarafından yönetilir. Böylece örneğin bir Java developer yalnızca uygulamayı oluşturup yükler; uygulamanın yazılması ve verilerinin yönetimi onun sorumluluğunda kalır.
-- **Software as a Service (SaaS)**: Yalnızca bir uygulamayı kullanmak isteyen, arka planda gerçekleşen hiçbir işlemle ilgilenmeyen şirketler için ortaya çıkmış bir modeldir. Bütün altyapı hizmet sağlayıcı tarafından karşılanır; kullanıcı yalnızca bir arayüz üzerinden kullanıcı adı ve şifre girerek sisteme bağlanır ve hizmeti kullanır.
+Bu hizmeti satın alma şekli her zaman Infrastructure as a Service şeklinde devam etmedi. On premises sisteme kıyasla Infrastructure as a Service hizmetini kullanan şirketler kullandıkları altyapının hiçbir fiziksel sorunu veya bakımıyla ilgilenmezken bu sistemde kuracakları uygulamanın tüm sorumluluklarını üstleniyorlardı.
+
+Infrastructure as a Service sistemden sonra gelen Platform as a Service kavramı ile artık runtime, middleware ve O/S sistemlerin yönetimi de hizmeti verenler tarafından sağlanmaya başlandı.
+
+Platform as a Service ile artık sanal makineler üzerine kurulan işletim sistemleri, isteğe bağlı örneğin java runtime ve gerekli kütüphaneler de hizmeti sağlayan firmalar tarafından yönetilir oldu. Bu sayede örneğin bir java developer sadece uygulamayı oluşturup yüklesin, bu uygulamanın yazılması ve verilerinin yönetilmesi onun sorumluluğunda olsun demiş oluyoruz.
+
+Bundan sonra gelen hizmet ise Software as a Service. Bu yalnızca bir uygulamayı kullanmak isteyen arka planda gerçekleşen hiçbir işlemle ilgilenmeyen şirketlerin kullandığı bir paket olarak ortaya çıkmıştır. Software as a Service bütün altyapının firmalar tarafından karşılanarak yalnızca bir arayüz yardımıyla kullanıcı şifre girerek sisteme bağlanıp bu hizmeti kullanmamızı sağlar.
 
 ## Kim neyi yönetir
+
+![On-Premises, IaaS, PaaS ve SaaS modellerinde kullanıcının ve sağlayıcının yönettiği katmanlar](../../../assets/ekran/p123-1.webp)
 
 | Katman | On-Premises | IaaS | PaaS | SaaS |
 | --- | --- | --- | --- | --- |
@@ -30,12 +34,7 @@ order: 2
 
 ## Pizza benzetmesi
 
-Pizza yemek istediğimizi ve bunu dört farklı şekilde yapabileceğimizi düşünelim:
-
-- **On-Premises (Made at Home)**: Pizzanın hamurunu yapmaktan pişirmeye, masayı kurmaktan içeceğe kadar her şeyle siz ilgilenirsiniz.
-- **IaaS (Take and Bake)**: Marketten hazır pizza alıp evde pişirir, masayı kurup yersiniz.
-- **PaaS (Pizza Delivered)**: Pizzayı internetten sipariş edersiniz; hiçbir yapım aşamasına karışmadan yalnızca masayı kurup yersiniz.
-- **SaaS (Dined Out)**: Bir restorana gidersiniz; masanın kurulması dahil hiçbir aşamada çaba harcamadan yalnızca pizzanızı yersiniz.
+![The Pizza & The Cloud: pizza örneğiyle On-Premises, IaaS, PaaS ve SaaS karşılaştırması](../../../assets/ekran/p123-2.webp)
 
 | Katman | On-Premises | IaaS | PaaS | SaaS |
 | --- | --- | --- | --- | --- |
@@ -49,19 +48,22 @@ Pizza yemek istediğimizi ve bunu dört farklı şekilde yapabileceğimizi düş
 | Cheese | Siz | Sağlayıcı | Sağlayıcı | Sağlayıcı |
 | Toppings | Siz | Sağlayıcı | Sağlayıcı | Sağlayıcı |
 
+Gelin bu yöntemleri tek bir örnek üzerinden lezzetli bir yöntemle anlamaya çalışalım.
+
+Pizza yemek istediğimizi düşünelim ve bunu 4 farklı şekilde nasıl yapabiliriz bakalım.
+
+İlk yöntemde pizzanın hamurunun yapılmasından pizzanın pişirilmesine, yemek masasının kuruluşundan içeceğine kadar her şeyiyle ilgilenirseniz bu On Premises için bir örnek haline gelir.
+
+Eğer marketten hazır pizza alıp bunu evde pişirip masayı kurduktan sonra yerseniz bu Infrastructure as a Service yöntemine benzetilir.
+
+Yemek istediğiniz pizzayı internetten sipariş vererek hiçbir yapım aşamasına karışmadan sadece masayı kurarak yerseniz bu ise Platform as a Service yöntemi olmuş olur.
+
+Siz bir restorana gidip masanın kuruluşu dahil hiçbir aşamada çaba sarf etmeden yalnızca pizzanızı yerseniz de bunu Software as a Service yöntemine örnek olarak verebiliriz.
+
 ## Modellerin birbirine göre avantajları
 
-### On-premises neden hâlâ kullanılıyor
+Bu yöntemlerin bazı durumlarda birbirlerine göre avantajları olabilir. Örneğin on premises sistemin hala kullanılmasının sebebi, bazı durumlarda uzaktaki bir sunucuda bir şeyleri barındırmak localdeki bir sunucuda barındırmaktan çok daha yavaştır. Bir diğer sebebi güvenlik, tamamen kapalı sistemlere ihtiyaç duyulması, verilerin gizliliği. Başka bir sebep ve en önemlisi bazı regülasyonlardan dolayı verilerin başka bir yerde tutulmasına izin verilmiyor oluşu örneğin bankalar, devlet kurumları vb.
 
-- Bazı durumlarda uzaktaki bir sunucuda bir şeyleri barındırmak, lokaldeki bir sunucuda barındırmaktan çok daha yavaştır.
-- Güvenlik: tamamen kapalı sistemlere ihtiyaç duyulması ve verilerin gizliliği.
-- En önemlisi, bazı regülasyonlar nedeniyle verilerin başka bir yerde tutulmasına izin verilmemesi (örneğin bankalar, devlet kurumları).
+Infrastructure as a Service günümüzde hala kullanılıyor olma sebebi PaaS yönteminde runtime, middleware ve işletim sistemi karşı firma tarafından yönetildiği için burada daha eski sürümü kullandığımız bir uygulamayı çalıştırmaya imkan sağlamıyor oluşu. Yani bu üç kısımda bir değişikliğe ihtiyaç duyduğumuz noktalarda IaaS kullanmak daha avantajlı olur. IaaS kullanmanın PaaS kullanmaya göre bir diğer avantajı örneğin 100-200 gibi çok sayıda uygulamamız varsa bunların PaaS'ta yönetilmesinin sağlanması için ödeyeceğimiz ücret IaaS'ta bu uygulamaları yönetmek için kuracağımız altyapı için gerekli ücretten çok daha fazla oluyor ayrıca verimli.
 
-### IaaS neden hâlâ kullanılıyor
-
-- PaaS'ta runtime, middleware ve işletim sistemi karşı firma tarafından yönetildiği için, daha eski bir sürüm kullanan bir uygulamayı çalıştırmak mümkün olmayabilir. Bu üç katmanda değişikliğe ihtiyaç duyulan durumlarda IaaS daha avantajlıdır.
-- Örneğin 100-200 gibi çok sayıda uygulama varsa, bunları PaaS'ta yönettirmenin maliyeti, IaaS'ta bu uygulamaları yönetmek için kurulacak altyapının maliyetinden çok daha yüksek olur; IaaS bu durumda daha verimlidir.
-
-### PaaS ne zaman SaaS'a tercih edilir
-
-Uygulamada değişiklik yapmak istediğimiz durumlarda SaaS yerine PaaS tercih edilir.
+SaaS kullanmak yerine PaaS kullanmanın avantajları ise uygulamada değişiklik yapmak istediğimiz durumlarda tercih ederiz.

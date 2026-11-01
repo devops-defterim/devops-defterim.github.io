@@ -6,11 +6,9 @@ lessons: [6, 7]
 order: 13
 ---
 
-## Dizi tanımlama, okuma ve ekleme
+## Diziye eleman ekleme
 
-Dizi elemanları parantez içinde tanımlanır, `${dizi[indeks]}` ile okunur. `${dizi[@]}` dizinin tüm elemanlarını verir.
-
-Bir diziye yeni eleman eklemenin en basit yollarından biri `int+=("4" "5")` kullanmaktır. Son satırdaki `echo` ile dizinin yeni elemanlar eklenmiş hali yazdırılır.
+![int dizisinin tanımlanması, eleman değiştirme ve += ile eleman ekleme scripti ve çıktısı](../../../../assets/ekran/p056-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -34,9 +32,11 @@ echo ${int[@]}
 1 0 3 4 5
 ```
 
+Bir diziye yeni eleman eklemenin en basit yollarından biri `int+=("4" "5")` komutunu kullanmaktır. Sonda yazdığımız komutla da dizinin yeni elemanlar eklenmiş son halini ekrana yazdırırız.
+
 ## Elemanların yerini değiştirme
 
-Yeni elemanları dizinin sonuna değil araya yerleştirmek istersek indeksler arasında yer değiştirme yapabiliriz. Önceki scriptin sonuna şu satırlar eklenir:
+![Geçici a değişkeniyle 0. ve 1. indekslerin yer değiştirmesi ve çıktısı](../../../../assets/ekran/p057-1.webp)
 
 ```bash title="scr.sh"
 a=${int[0]}
@@ -53,15 +53,15 @@ echo ${int[@]}
 0 1 3 4 5
 ```
 
-Bu kod çalışmadan önce dizi `(1 0 3 4 5)` durumundadır:
+Yeni eklediğimiz elemanları dizinin sonuna değil de arasında bir yere eklemek istersek bu durumda indeksler arasında yer değişikliği yapabiliriz. Dizinin bu kod çalışmadan önceki halinin (1 0 3 4 5) olduğunu varsayalım:
 
-1. `a=${int[0]}`: 0. indeksteki değer (1) `a` değişkenine konur. Artık `a=1`.
-2. `int[0]=${int[1]}`: 1. indeksteki değer (0) 0. indeksin üzerine yazılır. Dizi: `(0 0 3 4 5)`.
-3. `int[1]=$a`: Yedeklenen `a` değeri (1) 1. indekse konur. Dizinin son hali: `(0 1 3 4 5)`.
+1. `a=${int[0]}`: Dizinin 0. indeksindeki değeri (1) alıp a kutusuna koyduğumuzu düşünebiliriz. Artık `a=1` olur.
+2. `int[0]=${int[1]}`: 1. indeksteki değeri (0) alıp 0. indeksin üzerine yazıyoruz. Dizinin yeni hali: (0 0 3 4 5) oldu.
+3. `int[1]=$a`: Yedeklediğimiz a değerini (1) alıp 1. indekse koyuyoruz. Dizinin son hali: (0 1 3 4 5) olmuş olur.
 
 ## Eleman silme
 
-Belirli bir elemanı diziden silmek için `unset` kullanılır:
+![unset int[3] ile diziden eleman silme scripti ve çıktısı](../../../../assets/ekran/p058-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -76,9 +76,11 @@ echo ${int[@]}
 1 2 3
 ```
 
+Belli bir elemanı diziden silmek istersek `unset int[3]` komutunu kullanırız.
+
 ## Eleman sayısı
 
-Dizideki toplam eleman sayısı `${#int[@]}` ile alınır:
+![${#int[@]} ile dizinin eleman sayısının yazdırılması](../../../../assets/ekran/p058-2.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -91,3 +93,5 @@ echo ${#int[@]}
 ```text title="Çıktı"
 3
 ```
+
+Dizideki toplam eleman sayısını vermesini istersek `echo ${#int[@]}` komutunu kullanırız.

@@ -8,44 +8,62 @@ order: 6
 
 ## Neden rol kullanılır
 
-Oluşturduğumuz EC2 makinesinin AWS ile iletişime geçip istediğimiz işlemleri yapabilmesi için yetkiye ihtiyacı vardır. Giriş bilgilerini bu sanal makineye bir text dosyası olarak gömmek güvenlik açısından uygun olmadığından rol kullanırız: Makineye bir rol atanır, bu role de bir policy bağlanır; böylece policy'deki yetkiler makineye sağlanmış olur. Kavramsal arka plan için [IAM kavramları](/aws/iam/kavramlar/#role) sayfasına bakın.
+Oluşturduğumuz EC2 servisimizin AWS ile iletişime geçerek istediğimiz işlemleri gerçekleştirmesi için öncelikle bu servise bağlanmamız gerekir. Bağlanma işlemi için giriş bilgilerimizi bu sanal makineye text dosyası olarak gömmek güvenlik açısından uygun olmayacağından [rol](/aws/iam/kavramlar/#role) kullanırız. Öncelikle bu makineye bir rol atarız ardından bu rol için de bir policy atayarak bu policy üzerinde olan yetkileri makinemize sağlamış oluruz. Şimdi gelin nasıl rol oluşturabileceğimizi öğrenelim.
 
 ## EC2 için rol oluşturma
 
-1. IAM servisinde sol menüden **Roles**'a tıklayın ve **Create role** deyin.
-2. **Select trusted entity** adımında **Trusted entity type** olarak **AWS service**'i seçin.
-3. **Use case** bölümünde **Service or use case** olarak `EC2`'yu, altındaki listeden de **EC2** seçeneğini (EC2 instance'larının bizim adımıza AWS servislerini çağırmasına izin verir) seçip **Next** deyin.
-4. **Add permissions** adımında rol için gereken policy'leri seçin. Örnekte **AdministratorAccess** seçilmiştir.
-5. **Name, review, and create** adımında role bir isim verin (örnekte `Ec2-Admin-Acess`) ve **Create role** ile işlemi tamamlayın.
+1. İlk olarak IAM servisi altından **Roles**'a tıklıyoruz. Ve **Create role** diyerek devam ediyoruz.
 
-Bu adımda gösterilen trust policy, rolü EC2 servisinin üstlenebileceğini tanımlar:
+   ![IAM Roles sayfası ve Create role butonu](../../../../assets/ekran/p154-1.webp)
 
-```json title="Trust policy"
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "sts:AssumeRole"
-            ],
-            "Principal": {
-                "Service": [
-                    "ec2.amazonaws.com"
-                ]
-            }
-        }
-    ]
-}
-```
+2. **AWS service** seçeneğini seçerek aşağıda belirttiğimiz servise bu AWS hesabından yetki vermek istediğimizi söylüyoruz. **Next** diyerek devam ediyoruz.
+
+   ![Select trusted entity adımında AWS service ve EC2 use case seçimi](../../../../assets/ekran/p154-2.webp)
+
+3. Ardından oluşturduğumuz rol için istediğimiz policy'leri seçerek gerekli yetkileri verip devam ediyoruz.
+
+   ![Add permissions adımında rol için policy seçimi](../../../../assets/ekran/p155-1.webp)
+
+4. Oluşturacağımız rol için bir isim vererek **Create role** diyoruz ve işlemi tamamlıyoruz.
+
+   ![Name, review, and create adımında rol adı ve trust policy](../../../../assets/ekran/p155-2.webp)
+
+   ```json title="Trust policy"
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Action": [
+                   "sts:AssumeRole"
+               ],
+               "Principal": {
+                   "Service": [
+                       "ec2.amazonaws.com"
+                   ]
+               }
+           }
+       ]
+   }
+   ```
 
 ## Rolü EC2 instance'ına atama
 
-1. EC2 servisinde **Instances** listesinde, **Instance ID** sütunundaki ID'ye tıklayarak makinenin ayarlarını açın.
-2. Sağ üstteki **Actions** menüsünden **Security → Modify IAM role** yolunu izleyin.
-3. **Modify IAM role** ekranında **IAM role** listesinden az önce oluşturduğunuz rolü (`Ec2-Admin-Acess`) seçin ve **Update IAM role** deyin.
+1. Şimdi EC2 servisine gelerek **Instance ID** altındaki ID numaramıza tıklayarak sanal makinemizin ayarlarını açalım.
 
-Rol artık sanal makineye atanmıştır. Makineye tekrar bağlanıp `aws ec2 describe-instances` komutunu çalıştırdığımızda, makine içinde herhangi bir access key tanımlamadan AWS ile güvenli şekilde haberleşebildiğini görürüz:
+   ![EC2 Instances listesinde Instance ID bağlantısı](../../../../assets/ekran/p156-1.webp)
+
+2. Sağ üstte bulunan **Actions** menüsü altından **Security**'ye tıklayalım. Ve **Modify IAM role** diyerek devam edelim.
+
+   ![Actions menüsünde Security altındaki Modify IAM role seçeneği](../../../../assets/ekran/p156-2.webp)
+
+3. Açılan ekranda az önce oluşturduğumuz rolü seçerek **Update IAM role** diyelim ve sanal makinemize atamış oluyoruz.
+
+   ![Modify IAM role ekranında rol seçimi ve Update IAM role butonu](../../../../assets/ekran/p157-1.webp)
+
+Şimdi tekrar sanal makinemize bağlanıp `aws ec2 describe-instances` komutunu çalıştırdığımızda artık makinemiz ile güvenilir şekilde haberleşebilir duruma geldik.
+
+![Sanal makinede aws ec2 describe-instances komutunun çıktısı](../../../../assets/ekran/p157-2.webp)
 
 ```bash frame="terminal"
 aws ec2 describe-instances
@@ -77,59 +95,59 @@ aws ec2 describe-instances
                             ...
 ```
 
-Çıktıdaki `IamInstanceProfile` alanı, makineye atanan rolü gösterir.
-
 ## Diğer rol türleri
 
 ### AWS account
 
-Rolleri servislere atayabildiğimiz gibi farklı AWS hesaplarına da yetki verebiliriz. Başka bir AWS hesabının bizim hesabımızda bazı işlemler yapmasını istiyorsak, ona user açıp kullanıcı adı ve şifre vermek yerine bir rol oluşturup istediğimiz yetkileri atarız. Bunun için **Create role** ekranında **Trusted entity type** olarak **AWS account**'u seçeriz. Burada **This account** veya **Another AWS account** seçilebilir; ikincisinde rolü kullanacak hesabın 12 haneli **Account ID**'si girilir. İsteğe bağlı olarak **Require external ID** ve **Require MFA** seçenekleri de vardır.
+Rolleri servislere atayabildiğimiz gibi farklı AWS hesaplarına da istediğimiz yetkileri atayabiliriz. Başka AWS hesaplarına kendi hesabımızda bazı işlemler yaptırmak istiyorsak onlara user açıp kullanıcı adı şifre verip bağlanmasını sağlamak yerine role oluşturup istediğimiz yetkileri atarız. Bunun için aşağıdaki ekrandan **AWS account**'u seçeriz.
+
+![Select trusted entity adımında AWS account seçeneği](../../../../assets/ekran/p158-1.webp)
 
 ### Web identity ve SAML 2.0 federation
 
-**Web identity** ile dışarıdan gelen kullanıcılara veya uygulamalara yetki verebiliriz. Örneğin kullanıcıların Google, Facebook veya Amazon hesaplarıyla giriş yapıp AWS üzerinde bazı işlemler (ör. bir dosyayı okumak) yapmasını istiyorsak, her birine IAM user açıp şifre vermek mantıklı değildir. Bunun yerine dışarıdan kimlik doğrulaması yapmış bu kişilere geçici bir rol atar ve sadece belirlediğimiz sınırda işlem yapmalarını sağlarız. Bunun için **Web identity** seçeneği seçilir.
+Bir diğer rol oluşturma seçeneğimiz **web identity**. Bu rol ile dışarıdan gelen kullanıcılara veya uygulamalara da yetki verebiliriz. Örneğin; kullanıcıların kendi Google, Facebook veya Amazon gibi hesaplarıyla giriş yaparak AWS üzerinde bazı işlemler (örneğin bir dosyayı okumak) yapmasını istiyorsak, onlara sistemde tek tek IAM User açıp şifre vermek mantıklı değildir. Bunun yerine Web Identity (Web Kimliği) kullanarak, dışarıdan kimlik doğrulaması yapmış bu kişilere geçici bir rol atarız ve sadece belirlediğimiz sınırda işlem yapmalarını sağlarız. Bunun için **Web Identity** seçeneğini seçeriz.
 
-Rolleri şirketin kendi iç sistemindeki kurumsal kullanıcılara da atayabiliriz. Örneğin şirkette Microsoft Active Directory gibi bir kimlik sisteminde kayıtlı yüzlerce çalışan var ve bazılarının AWS hesabına girip işlem yapması gerekiyor. Her çalışana tek tek kullanıcı açıp şifre vermek ve işten ayrıldıklarında bunları silmek büyük bir yüktür. Bunun yerine **SAML 2.0 federation** ile şirketin kimlik sistemi AWS ile konuşturulur. Çalışanlar her gün kullandıkları şirket şifreleriyle giriş yapar ve AWS tarafında oluşturduğumuz role bürünerek (assume role) sadece istediğimiz yetkilerle çalışır.
+Rolleri servislere, farklı hesaplara ve dış uygulamalara atayabildiğimiz gibi, şirketimizin kendi iç sistemindeki kurumsal kullanıcılara da atayabiliriz. Örneğin, çalıştığımız şirkette Microsoft Active Directory gibi bir kimlik sisteminde kayıtlı yüzlerce çalışan var ve bazılarının AWS hesabımıza girip işlem yapması gerekiyor. Her bir çalışana AWS üzerinde tek tek kullanıcı açıp şifre vermek ve işten ayrıldıklarında bunları silmekle uğraşmak çok büyük bir yüktür. Bunun yerine **SAML 2.0 Federation** kullanarak şirketimizin kimlik sistemini AWS ile konuştururuz. Böylece çalışanlar her gün kullandıkları şirket şifreleriyle güvenli bir şekilde giriş yapar ve AWS tarafında bizim oluşturduğumuz role bürünerek (assume role) sadece istediğimiz yetkilerle çalışırlar.
 
 ## Amazon Resource Names (ARN)
 
-IAM'i burada noktalayıp [S3](/aws/s3/giris-ve-ilk-bucket/)'e geçmeden önce ARN konusuna kısaca değinelim. AWS servislerinde yaptığımız tüm işlemlerde aslında kaynaklar oluşturur ve onları yönetiriz. ARN, AWS dünyasında bu kaynakların her birini tekil olarak tanımlayan isimdir.
+Böylece IAM servisini burada noktalayarak bir sonraki servisimiz olan [S3](/aws/s3/giris-ve-ilk-bucket/)'e geçmeden önce kısaca Amazon Resource Names (ARNs) konusuna değinelim.
+
+Amazon servisleri altında yaptığımız işlemlerin tümünde esasında kaynaklar oluşturur ve onları yönetiriz. AWS dünyasında bu kaynakların hepsine ARN denir.
+
+:::caution[Düzeltme]
+ARN kaynağın kendisi değil, her kaynağı tekil olarak tanımlayan isimdir (adresidir).
+:::
 
 ### Partition
 
-AWS, genel ticari bölgelerinin yanı sıra yasal gereksinimler, veri gizliliği ve güvenlik politikaları nedeniyle ABD ve Çin için tamamen izole özel bulut altyapıları sunar. **Partition**, bir kaynağın hangi izole ve bağımsız altyapı ağında barındığını belirten ana kategoridir:
+Ayrıca AWS, genel ticari bölgelerinin yanı sıra yasal gereksinimler, veri gizliliği ve güvenlik politikaları nedeniyle ABD ve Çin için tamamen izole özel bulut altyapıları sunar.
 
-| Altyapı | Partition değeri |
-| --- | --- |
-| Standart AWS hesapları | `aws` |
-| ABD GovCloud | `aws-us-gov` |
-| Çin bölgeleri | `aws-cn` |
+Partition, bir AWS kaynağının hangi tamamen izole edilmiş bağımsız altyapı ağında barındığını belirten ana kategoridir. Standart AWS hesaplarında kaynakların ARN (Amazon Resource Name) adresindeki partition değeri `aws` olarak geçerken; yasal regülasyonlar nedeniyle özel kurulan ABD GovCloud altyapısında bu değer `aws-us-gov`, Çin bölgelerinde ise `aws-cn` olarak farklılık gösterir.
 
 ### ARN nerede kullanılır
 
-ARN'yi AWS dünyasındaki kaynakların T.C. kimlik numarası veya tam açık adresi gibi düşünebilirsiniz. En temel kullanım yeri yetkilendirmedir.
+Peki bu ARN'yi gerçek hayatta nerede kullanıyoruz? ARN'yi, AWS dünyasındaki kaynakların T.C. Kimlik Numarası veya tam açık ev adresi gibi düşünebilirsiniz. En temel kullanım yeri ise yetkilendirme işlemleridir.
 
-Diyelim ki bir role, Frankfurt bölgesinde (`eu-central-1`) çalışan belirli bir EC2 sunucusunu yeniden başlatma yetkisi vereceğiz. Hesapta onlarca sunucu olabilir, ama işlemin yalnızca birine yapılmasını istiyoruz. AWS'ye "Sadece bu sunucuya izin ver" demek için hedefin tam adresini belirtmemiz gerekir.
-
-Standart ARN formatı:
+Diyelim ki oluşturduğumuz bir Role'e, Frankfurt bölgesinde (`eu-central-1`) çalışan belirli bir EC2 sanal sunucusunu yeniden başlatma yetkisi vereceğiz. Hesabımızda onlarca sunucu olabilir ancak biz sadece bir tanesine işlem yapılmasını istiyoruz. AWS'ye "Sadece bu spesifik sunucuya izin ver" demek için hedefin tam adresini belirtmemiz gerekir. Standart bir ARN formatı sırasıyla şu şekildedir:
 
 ```text
 arn:partition:service:region:account-id:resource-id
 ```
 
-Bu formata göre sunucunun tam adresi:
+Bu formata göre yetki vereceğimiz sunucunun tam adresi şöyle görünür:
 
 ```text
 arn:aws:ec2:eu-central-1:123456789012:instance/i-0abcd1234efgh5678
 ```
 
-| Parça | Anlamı |
-| --- | --- |
-| `arn` | Sabit başlangıç kelimesi |
-| `aws` | Standart AWS altyapısında olunduğunu belirtir (partition) |
-| `ec2` | Yetki verilen AWS servisi |
-| `eu-central-1` | Sunucunun bulunduğu bölge (region) |
-| `123456789012` | 12 haneli AWS hesap numarası |
-| `instance/i-0abcd...` | Sunucunun kendisine ait benzersiz kimlik (resource ID) |
+Bu yapıyı parçalara ayırırsak:
 
-Kısacası ARN, yetki verirken veya otomasyon araçlarını (Terraform, Ansible vb.) kullanırken AWS'ye hedefi nokta atışı göstermemizi sağlar.
+- `arn`: Sabit başlangıç kelimesi.
+- `aws`: Standart AWS altyapısında olduğumuzu belirtir (Partition).
+- `ec2`: Yetki verdiğimiz AWS servisi.
+- `eu-central-1`: Sunucumuzun bulunduğu bölge (Region).
+- `123456789012`: 12 haneli AWS hesap numaramız.
+- `instance/i-0abcd...`: Sunucunun kendisine ait benzersiz kimliği (Resource ID).
+
+Kısacası ARN, yetki verirken veya otomasyon araçları (Terraform, Ansible vb.) kullanırken AWS'ye hedefi nokta atışı göstermemizi sağlar.

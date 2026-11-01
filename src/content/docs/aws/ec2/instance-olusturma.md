@@ -6,99 +6,114 @@ lessons: [25]
 order: 18
 ---
 
-Sol menüdeki **Instances** başlığına gidip açılan ekrandaki `Launch instances` butonuna tıklayarak sanal makine oluşturmaya başlıyoruz. Ekranın sağındaki **Summary** paneli seçilen özelliklerin özetini gösterir.
+Diğer başlıkların ayrıntısına girmeden önce, gelin hep birlikte bir sanal makine oluşturma adımlarını detaylıca inceleyelim. Bunun için sol menüdeki **Instances** başlığına gidiyor ve açılan ekrandaki `Launch instances` butonuna tıklayarak ilk adımımızı atıyoruz.
 
-## 1. Name and tags
+![Instances ekranında Launch instances butonu](../../../../assets/ekran/p206-1.webp)
 
-EC2 oluşturmanın ilk adımı makineye bir isim vermektir. Burada S3'teki isimlendirmeden farklı olarak özel bir isim vermiyoruz; aslında `Name` anahtarlı bir **tag** oluşturmuş oluyoruz. Bunun sebebi, buraya yazdığımız isim üzerinden makineyle herhangi bir etkileşim kuramamamızdır.
+## Name and tags
 
-- İsteğe bağlı olarak ilave tag eklenebilir. İsim kutucuğunun yanındaki `Add additional tags` yazısına tıklayıp açılan ekranda istenen **Key** ve **Value** girilir (ör. Key: `ortam`, Value: `test`).
-- Bu tag'in makineye bağlanan diğer nesnelere de eklenmesi isteniyorsa **Resource types** listesinden seçilir (ör. `Instances`, `Volumes`, `Spot instance requests`, `Network interfaces`).
-- Sağdaki **Number of instances** alanına bu özelliklerde kaç sanal makine oluşturulacağı yazılır.
+EC2 oluşturmak için ilk adım ona bir isim vermektir. Ancak burada vereceğimiz isim S3 için yaptığımız isimlendirmeden farklı olarak özelleşmiş bir isim vermek yerine tag oluşturmuş oluyoruz. Bunu belirtmemizin sebebi buraya yazdığımız isim üzerinden herhangi bir etkileşim kuramayışımızdır.
 
-## 2. Application and OS Images (AMI)
+![Launch an instance ekranında Name and tags alanı](../../../../assets/ekran/p206-2.webp)
 
-Bulut soyut bir kavram gibi görünse de EC2'de oluşturduğumuz her sanal makine aslında AWS veri merkezlerindeki fiziksel bir sunucu üzerinde çalışır. Oluştur butonuna bastığınız anda AWS makine parkını tarar, boş kapasitesi olan uygun bir donanımı bulur ve sanal makinenizi bu fiziksel sunucunun üzerinde ayağa kaldırır.
+İsteğe bağlı olarak ilave tag da ekleyebiliriz. Bunun için isim yazdığımız kutucuğun yanındaki `Add additional tags` yazısına tıklayarak açılan ekranda istediğimiz **Key** ve **Value** isimlerini gireriz. Bu makineye bağladığımız diğer objelere de bu tagı eklemek istersek **Resource types** başlığı altından bunu seçebiliriz.
 
-Bu donanımda hangi işletim sisteminin kurulacağını ve başlangıçta hangi programların yer alacağını **Application and OS Images**, yani **AMI (Amazon Machine Image)** belirler. AMI'yi sanal makinenin altyapısını oluşturan bir **ana şablon** olarak düşünebilirsiniz.
+Ekranın sağında bulunan **Number of instances** kısmından seçtiğimiz özelliklerde kaç tane sanal makine oluşturacağımızı yazabiliriz. Hemen altından da seçtiğimiz özelliklerin özetini görebiliyoruz.
 
-- AWS başlangıç için içinde sadece işletim sistemi (Linux, Windows vb.) bulunan hazır şablonlar sunar.
-- Asıl avantaj kendi özel imajımızı yaratabilmemizdir. Standart bir sanal makine açıp projeniz için gereken yazılımları kurduğunuzu, güncellemeleri tamamladığınızı ve sistemi istediğiniz yapılandırmaya getirdiğinizi düşünün. Ardından makineyi durdurup o anki halinin bir kopyasını alırsınız; artık size özel bir AMI'niz olur.
-- İleride yeni bir makineye ihtiyaç olduğunda kurulum adımlarını sıfırdan yapmazsınız. Kendi imajınızı seçersiniz ve AWS bir fotokopi makinesi gibi tüm özelliklerle donatılmış yeni sanal makineyi saniyeler içinde klonlar.
-- `Browse more AMIs` butonuyla hazır AMI'lere veya kendi oluşturduğumuz AMI'lere (**My AMIs** sekmesi) ulaşılır.
+![Additional tags alanında Key, Value ve Resource types ile sağdaki Summary paneli](../../../../assets/ekran/p206-3.webp)
 
-Biz şimdilik **Amazon Linux** (Amazon Linux 2023) işletim sistemini seçerek devam ediyoruz. Kendi AMI'mizi oluşturma adımları [AMI ve Image Builder](/aws/ebs-ve-ami/ami-ve-image-builder/) sayfasında.
+## Application and OS Images (AMI)
 
-## 3. Instance type
+Bulut dediğimizde aklımıza genellikle soyut bir kavram gelse de, EC2 servisinde oluşturduğumuz her sanal makine aslında AWS'nin devasa veri merkezlerindeki fiziksel bir sunucu üzerinde çalışır. Siz "Oluştur" butonuna bastığınız an, AWS kendi makine parkını tarar, boş kapasitesi olan uygun bir donanımı bulur ve sanal makinenizi bu fiziksel sunucunun üzerinde ayağa kaldırır.
 
-**Instance type** kısmından ihtiyacımıza göre sanal makine tipini seçiyoruz (örnekte `t3.micro`). Tiplerin anlamı için [Makine aileleri ve isimlendirme](/aws/ec2/makine-aileleri/) sayfasına bakabilirsiniz.
+Peki bu boş donanımın içinde tam olarak ne çalışacak? Hangi işletim sistemi kurulacak veya başlangıçta hangi programlar yer alacak?
 
-## 4. Key pair (login)
+İşte tam bu noktada karşımıza **Application and OS Images**, yani sektördeki bilinen adıyla **AMI (Amazon Machine Image)** kavramı çıkıyor. AMI'yi, sanal makinenizin altyapısını oluşturan bir "ana şablon" olarak düşünebilirsiniz.
 
-Sanal makinelere klasik kullanıcı adı ve parolayla bağlanmak yerine, parola çalınma riskini ortadan kaldıran daha güvenli bir yöntem olan **Key Pair** yapısını kullanırız.
+AWS bize başlangıç için içinde sadece işletim sistemi (Linux, Windows vb.) bulunan hazır şablonlar sunar. Ancak bu işin asıl avantajı kendi özel imajımızı yaratabilmemizdir. Diyelim ki standart bir sanal makine açtınız, içine projeniz için gereken tüm yazılımları kurdunuz, güncellemeleri tamamladınız ve sistemi tam ihtiyacınız olan yapılandırmaya getirdiniz. Ardından bu makineyi durduruyor ve tam o anki güncel halinin bir kopyasını alıyorsunuz. Tebrikler, artık tamamen size özel bir AMI'niz var.
 
-1. **Key pair (login)** bölümünde `Create new key pair` yazan yere tıklayın.
-2. Açılan **Create key pair** penceresinde key pair için bir isim girin (ör. `ornek-key`).
-3. **Key pair type** olarak `RSA`, **Private key file format** olarak `.pem` (OpenSSH ile kullanım için) seçin.
-4. `Create key pair` butonuna tıklayın. Private key dosyası bilgisayarınıza iner.
+İleride yeni bir makineye ihtiyacınız olduğunda tüm bu kurulum adımlarını sıfırdan yapmakla uğraşmazsınız. Kendi hazırladığınız bu imajı kullanırsınız ve AWS, tıpkı bir fotokopi makinesi gibi, seçtiğiniz tüm özelliklerle donatılmış yeni sanal makinenizi saniyeler içinde sizin için klonlar. Aşağıdaki görselde `Browse more AMIs` butonuna tıklayarak hazır veya kendi oluşturduğumuz AMI'lere ulaşabiliriz.
 
-:::caution
-Konsolun uyarısında da belirtildiği gibi, indirilen private key dosyasını güvenli ve erişilebilir bir yerde saklayın; makineye bağlanmak için daha sonra bu dosyaya ihtiyacınız olacak.
-:::
+Biz şimdilik Amazon Linux işletim sistemini seçerek devam ediyoruz.
 
-## 5. Network settings
+![Application and OS Images bölümünde Amazon Linux seçimi ve Browse more AMIs butonu](../../../../assets/ekran/p207-1.webp)
 
-**Network settings** başlığında sanal makinemize dış dünyadan herkesin erişebilmesi için şu seçimleri yapıyoruz:
+![AMI seçim ekranında Amazon Linux 2023 AMI detayları](../../../../assets/ekran/p207-2.webp)
 
-- **Auto-assign public IP:** `Enable`
-- **Firewall (security groups):** `Create security group`
-- `Allow SSH traffic from` işaretli, kaynak `Anywhere 0.0.0.0/0`
-- `Allow HTTPS traffic from the internet` işaretli
-- `Allow HTTP traffic from the internet` işaretli
+## Instance type
 
-Buradaki ayarların ne anlama geldiği network konusunda ayrıntılı olarak işleniyor.
+Ardından **Instance type** kısmından ihtiyacımıza göre sanal makinemizin tipini seçiyoruz.
 
-## 6. Configure storage
+![Instance type bölümünde t3.micro seçimi](../../../../assets/ekran/p208-1.webp)
 
-Hangi tipte ve kaç GB disk oluşturmak istediğimizi **Configure storage** başlığında belirliyoruz (örnekte `8 GiB`, `gp3`). Sanal makinenin işletim sistemi bu diske kurulur. Disk tipleri [EBS disk türleri](/aws/ebs-ve-ami/disk-turleri/) sayfasında anlatılıyor.
+## Key pair (login)
 
-## 7. Advanced details
+Artık makinemizin temel özelliklerini belirlediğimize göre, bağlantı güvenliğimizi sağlayacak olan Key Pair adımına geçebiliriz. Sanal makinelerimize klasik kullanıcı adı ve parolalarla bağlanmak yerine, şifre çalınma riskini ortadan kaldıran çok daha güvenli bir yöntem olan Key Pair yapısını birlikte oluşturalım.
 
-Son olarak **Advanced details** başlığındaki ayarları varsayılan bırakıyoruz (Metadata ve User data hariç, aşağıya bakın). Alanların anlamları:
+1. Öncelikle `Create new key pair` yazan yere tıklıyoruz.
 
-| Ayar | Açıklama |
-|---|---|
-| **Domain join directory** | Kurumsal ağlarda kullanılan Microsoft Active Directory yapısına sanal makineyi otomatik dahil eder. Böylece şirketin mevcut kullanıcı hesapları ve yetkilendirme kurallarıyla sunucuya giriş yapılabilir. |
-| **IAM instance profile** | Sanal makineye AWS ekosistemi içinde bir "kimlik kartı" atanan kısımdır. Bu profil sayesinde sunucu, diğer AWS servislerine (ör. S3'ten dosya okumak veya veritabanına yazmak) manuel parola girmeden güvenli şekilde erişim izni kazanır. |
-| **Hostname type & DNS Hostname** | Makinenin iç ağdaki adını ve bu adın IP adresleriyle nasıl eşleşeceğini belirler. Sunucuyla karmaşık IP numaraları yerine anlaşılır isimlerle iletişim kurmayı sağlar. |
-| **Instance auto-recovery** | Donanımsal bir arızada AWS'nin sanal makineyi otomatik olarak başka bir sağlıklı fiziksel donanıma taşıyıp yeniden başlatmasını sağlar. |
-| **Shutdown behavior** | Makinenin içinden kapatma komutu verildiğinde makinenin sadece durdurulmasını (Stop) veya tamamen silinmesini seçtiğiniz ayardır. Yanlışlıkla veri kaybetmemek için genellikle varsayılan `Stop` bırakılır. |
-| **Stop - Hibernate behavior** | Makine durdurulduğunda RAM'deki anlık verilerin diske kaydedilmesini sağlar. Makine tekrar açıldığında uygulamalar sıfırdan başlamak yerine kaldığı yerden daha hızlı devam eder. |
-| **Termination protection** | Sunucunun dalgınlıkla veya yanlış bir tıklamayla kazara silinmesini engeller. Kritik iş yükü barındıran makinelerde mutlaka açılmalıdır. |
-| **Stop protection** | Sunucunun kazara `Stop` konumuna getirilmesini engeller. Sürekli çalışması gereken canlı ortam makineleri için tercih edilir. |
-| **Detailed CloudWatch monitoring** | Standart 5 dakikalık metrik ölçümlerini 1 dakikalık aralıklara indirir. Ek ücret karşılığında açılabilir. |
-| **Credit specification** | T serisi makinelerin işlemci kapasitesi dolduğunda ekstra performans sergilemeye devam edip etmeyeceğini belirler. `Unlimited` seçilirse makine darboğaza girmez ama aşılan limit kadar faturaya ek ücret yansır. |
-| **Placement group** | Birden fazla makine kuruluyorsa bunların veri merkezinde fiziksel olarak nasıl konumlanacağını belirler. Ağ hızı için birbirine çok yakın, donanım arızası riskini dağıtmak için farklı donanımlara yerleştirilebilir. |
-| **EBS-optimized instance** | Makine ile bağlı disk arasında özel ve ayrılmış bir veri yolu tahsis eder; yoğun disk işlemlerinde performansı garanti altına alır. |
-| **Instance bandwidth configuration** | Makinenin ağ trafiği için özel bir bant genişliği limiti veya garantisi belirler; yüksek veri transferi gereken uygulamalarda ağ darboğazlarını önler. |
-| **Purchasing option** | Makinenin hangi fiyatlandırma modeliyle alınacağı seçilir. Borsa mantığındaki `Spot instances` buradan talep edilebilir; hiçbiri seçilmezse (`None`) standart kullandığın kadar öde modeliyle devam edilir. |
-| **Capacity reservation** | Belirli bir bölge için önceden donanım kapasitesi ayırttıysanız makineyi o kapasitenin içine dahil eder. Böylece "uygun donanım kalmadı" hatası alma riski ortadan kalkar. |
-| **Tenancy** | Makinenin diğer müşterilerle aynı fiziksel donanımı paylaşıp paylaşmayacağını belirler. Güvenlik veya lisans nedenleriyle donanımın size özel olması isteniyorsa `Dedicated` seçilir. |
-| **RAM disk ID & Kernel ID** | İşletim sistemi çekirdeğini veya başlangıç RAM diskini manuel değiştirmeye olanak tanır. Güncel AMI'lerde bu ayarlar imajın içinde olduğundan, çok eski sistemlerle uyumluluk gereken özel senaryolar dışında boş bırakılır. |
-| **Nitro Enclave** | Sunucunun içinde dış dünyadan ve hatta sunucu yöneticilerinden bile izole edilmiş ekstra güvenli bir "kasa" oluşturur. Sağlık verileri veya finansal şifreleme anahtarları gibi hassas bilgileri işleyen uygulamalar içindir. |
-| **License configurations** | Şirkete ait mevcut Windows veya SQL Server gibi lisansları (BYOL, Bring Your Own License) bu makineyle ilişkilendirir. Böylece bulutta ek lisans ücretiyle karşılaşmadan mevcut haklar kullanılmaya devam edilir. |
-| **CPU options** | Çekirdek sayısını veya işlemci iş parçacığı özelliklerini manuel olarak kısmaya (kapatmaya) olanak tanır. İşlemci çekirdeği sayısına göre ücretlendirilen pahalı yazılım lisanslarından tasarruf etmek için kullanılır. |
-| **Nested virtualization** | Sanal makinenin içinde başka sanal makineler (ör. Hyper-V veya KVM) çalıştırmaya olanak tanır. Sanal laboratuvarlar için kullanışlıdır ama her makine tipinde desteklenmez. |
-| **Metadata accessible & Metadata version** | Makinenin içinden IP adresi veya ID gibi bilgilere ulaşmasını sağlar; bunun için `Enabled` seçilmelidir. **Metadata version** alanını `V2 only (token required)` seçmek ekstra bir oturum anahtarı zorunluluğu getirerek sunucuyu olası güvenlik açıklarına karşı korur. |
-| **Metadata response hop limit** | Makine içindeki metadata isteklerinin ağda en fazla kaç duraktan (router/hop) geçebileceğini belirler. Sunucuda Docker gibi konteyner yapıları çalışacaksa iletişimin kesilmemesi için bu sayı yükseltilmelidir (örnekte `2`). |
-| **Allow tags in metadata** | Makineye atanan "Additional tags" verilerinin doğrudan makinenin içinden komut satırıyla okunabilmesini sağlar. |
-| **User data** | Sanal makine ilk kez ayağa kalkarken arka planda otomatik çalıştırılmasını istediğiniz komutların yazıldığı alandır. Sunucu açılır açılmaz bir web servisi kurmak veya sistem güncellemelerini başlatmak için bash komutları buraya yapıştırılır; aynı işlemleri tekrar tekrar elle yapma zahmetinden kurtarır. |
+   ![Key pair (login) bölümünde Create new key pair bağlantısı](../../../../assets/ekran/p208-2.webp)
 
-Metadata servisinin kullanımı [Metadata servisi](/aws/ec2/metadata/) sayfasında.
+2. Açılan pencerede key pair için bir isim belirliyoruz.
+3. Ve aşağıdaki seçenekleri seçerek `Create key pair` butonuna tıklıyoruz.
+
+   ![Create key pair penceresinde RSA ve .pem seçenekleri](../../../../assets/ekran/p208-3.webp)
+
+## Configure storage
+
+Hangi tarzda kaç GB bir disk oluşturmak istediğimizi **Configure storage** başlığı altından belirliyoruz. Sanal makinemizin işletim sisteminin kurulu olduğu yer bu disk olacak.
+
+![Configure storage bölümünde 8 GiB gp3 kök disk](../../../../assets/ekran/p209-1.webp)
+
+## Network settings
+
+**Network settings** başlığı altından sanal makinemize dış dünyadan herkesin erişebilmesi için aşağıdaki seçimleri yapıyoruz. Network ile ilgili konumuzda buradaki ayarların ne anlama geldiğini daha ayrıntılı öğreneceğiz.
+
+![Network settings bölümünde public IP, security group ve SSH, HTTPS, HTTP izinleri](../../../../assets/ekran/p209-2.webp)
+
+## Advanced details
+
+Son olarak **Advanced details** başlığı altındaki ayarları varsayılan olarak bırakıyoruz. Ancak ne anlama geldiklerini açıklayalım.
+
+- **Domain join directory:** Kurumsal ağlarda sıkça kullanılan Microsoft Active Directory yapısına sanal makinemizi otomatik olarak dahil etmemizi sağlar. Bu sayede şirketinizin mevcut kullanıcı hesapları ve yetkilendirme kurallarıyla sunucuya sorunsuzca giriş yapabilirsiniz.
+- **IAM instance profile:** Sanal makinemize AWS ekosistemi içinde bir "kimlik kartı" atadığımız kısımdır. Bu profil sayesinde sunucumuz, (örneğin S3'ten dosya okumak veya veritabanına yazmak gibi) diğer AWS servislerine manuel şifre girmesine gerek kalmadan, güvenli bir şekilde erişim izni kazanır.
+- **Hostname type & DNS Hostname:** Makinenizin iç ağ üzerindeki adını ve bu adın IP adresleriyle nasıl eşleştirileceğini belirlediğimiz ayarlardır. Sunucunuza karmaşık IP numaraları yerine daha anlaşılır ve yönetilebilir isimlerle iletişim kurmasını mümkün kılar.
+- **Instance auto-recovery:** Donanımsal bir arıza durumunda AWS'nin sanal makinenizi otomatik olarak başka bir sağlıklı fiziksel donanıma taşıyıp yeniden başlatmasını sağlar. Bu sayede altyapısal krizlerden minimum kesintiyle ve müdahaleye gerek kalmadan kurtulursunuz.
+- **Shutdown behavior:** Makinenin içinden "kapat" komutu verdiğinizde makinenin sadece durdurulmasını (Stop) veya tamamen silinmesini seçtiğiniz ayardır. Yanlışlıkla veri kaybetmemek için genellikle varsayılan ayar olan "Stop" olarak bırakılır.
+- **Stop - Hibernate behavior:** Tıpkı bilgisayarınızın kapağını kapattığınızdaki gibi, makineyi durdurduğunuzda RAM'deki anlık verilerin diske kaydedilmesini sağlar. Böylece makineyi tekrar açtığınızda uygulamalarınız sıfırdan başlamak yerine kaldığı yerden çok daha hızlı bir şekilde çalışmaya devam eder.
+- **Termination protection:** Dalgınlıkla veya yanlış bir tıklamayla sunucunuzun kazara tamamen silinmesini engeller. Kritik iş yükleri barındıran makineler için kesinlikle açılması gereken çok önemli bir emniyet kemeridir.
+- **Stop protection:** Tıpkı silinme koruması gibi, sunucunun kazara "Stop" konumuna getirilmesini engeller. Sürekli çalışması gereken ve anlık kesintilere tahammülü olmayan canlı ortam makineleri için tercih edilir.
+- **Detailed CloudWatch monitoring:** AWS'nin standart olarak sunduğu 5 dakikada bir yapılan metrik ölçümlerini 1 dakikalık aralıklara indirir. Sistem performansınızı anlık olarak detaylı incelemek isterseniz bu ayarı ek bir ücret karşılığında açabilirsiniz.
+- **Credit specification:** T serisi makinelerin işlemci kapasitesi dolduğunda ekstra performans sergilemeye devam edip etmeyeceğini belirler. "Unlimited" seçerseniz makineniz darboğaza girmez ancak aştığınız limit kadar faturanıza ekstra ücret yansır.
+
+![Advanced details bölümünün ilk ayarları](../../../../assets/ekran/p210-1.webp)
+
+- **Placement group:** Birden fazla sanal makine kuruyorsanız, bu makinelerin AWS veri merkezinde fiziksel olarak nasıl konumlandırılacağını seçtiğiniz kısımdır. Makineleri ağ hızını artırmak için birbirine çok yakın veya donanım arızası riskini dağıtmak için farklı donanımlara yerleştirebilirsiniz.
+- **EBS-optimized instance:** Sanal makineniz ile bağlı olduğu depolama diski arasında özel ve ayrılmış bir veri yolu tahsis eder. Veri okuma/yazma hızının kritik olduğu yoğun disk işlemlerinde performansı garanti altına alır.
+- **Instance bandwidth configuration:** Sanal makinenizin ağ trafiği için özel bir bant genişliği limiti veya garantisi belirlemenizi sağlar. Özellikle yüksek veri transferi gerektiren uygulamalarda ağ darboğazlarını önlemek için bu ayarı yapılandırabilirsiniz.
+- **Purchasing option:** Sanal makinenizi hangi ödeme modeliyle alacağınızı seçtiğiniz alandır. Daha önce bahsettiğimiz borsa mantığındaki "Spot" makineleri buradan talep edebilir, hiçbirini seçmezseniz standart kullandığın kadar öde modelinden devam edebilirsiniz.
+- **Capacity reservation:** Daha önceden AWS'de belirli bir bölge için donanım kapasitesi ayırttıysanız, bu makineyi o ayrılmış kapasitenin içine dahil etmenizi sağlar. Böylece "uygun donanım kalmadı" hatası alma riskini sıfıra indirerek makinenizi garantili bir şekilde ayağa kaldırırsınız.
+- **Tenancy:** Makinenizin AWS veri merkezinde diğer müşterilerle aynı fiziksel donanımı paylaşıp paylaşmayacağını belirler. Eğer önceki bölümlerde bahsettiğimiz gibi güvenlik veya lisans nedenleriyle donanımın tamamen size ve şirketinize özel olmasını istiyorsanız buradan "Dedicated" seçeneğini işaretleyebilirsiniz.
+- **RAM disk ID & Kernel ID:** Bu ayarlar, makinenizin işletim sistemi çekirdeğini veya başlangıç RAM diskini manuel olarak değiştirmenize olanak tanır. Güncel AMI'lerde bu ayarlar imajın içine zaten gömülü olduğu için, çok eski ve spesifik sistemlerle uyumluluk gerektiren özel senaryolar dışında genellikle boş bırakılır.
+- **Nitro Enclave:** Sunucunuzun içinde dış dünyadan ve hatta sunucu yöneticilerinden bile tamamen izole edilmiş, ekstra güvenli bir "kasa" oluşturmanızı sağlar. Sağlık verileri veya finansal şifreleme anahtarları gibi son derece hassas bilgileri işleyen uygulamalar için üst düzey bir donanım yalıtımı sunar.
+- **License configurations:** Şirketinize ait mevcut Windows veya SQL Server gibi yazılım lisanslarınızı (BYOL - Kendi Lisansını Getir) bu sanal makineyle ilişkilendirmenizi sağlar. Böylece bulutta ekstra lisans ücreti ödemeden yasal olarak kendi haklarınızı kullanmaya devam edebilirsiniz.
+- **CPU options:** Sanal makinenizin sahip olacağı çekirdek sayısını veya işlemci iş parçacığı özelliklerini manuel olarak kısmanıza (kapatmanıza) olanak tanır. Özellikle işlemci çekirdek sayısına göre ücretlendirilen pahalı yazılım lisanslarından tasarruf etmek istediğinizde bütçenizi koruyan bir özelliktir.
+
+![Advanced details bölümünde Placement group, Purchasing option, Tenancy ve CPU options ayarları](../../../../assets/ekran/p211-1.webp)
+
+- **Nested virtualization:** Sanal makinenizin içinde başka sanal makineler (örneğin Hyper-V veya KVM) çalıştırmanıza olanak tanıyan gelişmiş bir özelliktir. Kendi sanal laboratuvarlarınızı test etmek için harikadır, ancak her EC2 makine tipinde desteklenmez.
+- **Metadata accessible & Metadata version:** Makinenizin içinden IP adresi veya ID'si gibi AWS kimlik bilgilerine ulaşmasını sağlar. Bunun için `Enabled` olarak seçmemiz gerekir. Metadata version kısmını "V2 only" olarak seçmek, ekstra bir oturum anahtarı zorunluluğu getirerek sunucunuzu olası güvenlik açıklarına karşı çok daha korunaklı hale getirir.
+- **Metadata response hop limit:** Makine içindeki kimlik (metadata) isteklerinin ağ üzerinde en fazla kaç duraktan (router/hop) geçebileceğini belirler. Eğer sunucunuzun içinde Docker gibi konteyner yapıları çalıştıracaksanız, ağ iletişiminin kesilmemesi için bu sayıyı yükseltmeniz gerekir.
+- **Allow tags in metadata:** Önceki adımlarda makineye atadığımız o meşhur "Additional Tags" verilerinin, doğrudan makinenin içinden komut satırıyla da okunabilmesini sağlar.
+- **User data:** Sanal makineniz hayatında ilk kez ayağa kalkarken arka planda otomatik olarak çalıştırılmasını istediğiniz komutları yazdığınız hayat kurtarıcı alandır. Örneğin; sunucu açılır açılmaz bir web servisi kurdurmak veya sistem güncellemelerini başlatmak istiyorsanız bash komutlarınızı buraya yapıştırmanız yeterlidir. Sizi aynı işlemleri tekrar tekrar elle yapma zahmetinden kurtarır.
+
+![Advanced details bölümünde Metadata ayarları ve User data alanı](../../../../assets/ekran/p212-1.webp)
 
 ### User data script'i
 
-**User data - optional** başlığı altındaki alana aşağıdaki script'i yazıyoruz. Her komutun ne yaptığı yorum satırlarında yazıyor.
+**User data - optional** başlığı altındaki boşluğa aşağıdaki scripti yazıyoruz. Anlamlarıyla birlikte aşağıdaki görselden ulaşabilirsiniz.
+
+![User data alanına yazılan, yorum satırlarıyla açıklanmış Apache kurulum script'i](../../../../assets/ekran/p213-1.webp)
 
 ```bash title="user-data.sh"
 #!/bin/bash
@@ -114,8 +129,8 @@ systemctl enable httpd
 echo "<h1>Merhaba! Ornek EC2 Sanal Makinesine Hos Geldiniz! Projeler hazirlaniyor...</h1>" > /var/www/html/index.html
 ```
 
-`dnf` ve `systemctl` komutları Linux bölümündeki [Paket yönetimi](/linux/paket-yonetimi/) ve [systemd ve boot](/linux/systemd-ve-boot/) sayfalarında anlatılıyor.
+## Launch instance
 
-## 8. Launch instance
+Yaptığımız bu son ayarla birlikte `Launch instance` butonuna tıklayarak ilk sanal makinemizi oluşturuyoruz.
 
-Bu son ayarla birlikte `Launch instance` butonuna tıklayarak ilk sanal makinemizi oluşturuyoruz. Instances listesinde makine önce `Running` durumuna geçer, **Status check** sütunu bir süre `Initializing` görünür.
+![Instances listesinde yeni oluşturulan makine Running durumunda](../../../../assets/ekran/p213-2.webp)

@@ -8,7 +8,7 @@ order: 14
 
 ## if yapısı
 
-`if` ifadesinin iskeleti şöyledir; `fi` bloğu sonlandırır:
+if ifadesinin iskeleti yanda görüldüğü gibidir. `fi` komutu sonlandırmak için kullanılır.
 
 ```bash
 if [ koşul ]
@@ -21,7 +21,7 @@ fi
 
 ## Karşılaştırma operatörleri
 
-Köşeli parantez içinde sayısal karşılaştırma için sembollerin yerine şu ifadeler kullanılır:
+Karşılaştırma operatörleri yerine kullanabileceğimiz ifadeler vardır;
 
 | Sembol | Bash ifadesi |
 |---|---|
@@ -31,6 +31,8 @@ Köşeli parantez içinde sayısal karşılaştırma için sembollerin yerine ş
 | `>=` | `-ge` |
 | `<=` | `-le` |
 | `!=` | `-ne` |
+
+![-gt ve -eq ile var ve var2 değişkenlerini karşılaştıran if/elif/else scripti](../../../../assets/ekran/p059-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -49,8 +51,8 @@ echo "var, var2'den kucuktur"
 fi
 ```
 
-:::caution
-`[` ile `]` karakterlerinin iç tarafında boşluk bırakılmalıdır. Notlardaki ilk denemede `["$var" -gt "$var2"]` boşluksuz yazıldığı için script `[5: command not found` hatası verdi ve `else` dalına düştü:
+:::caution[Düzeltme]
+`[` ile `]` karakterlerinin iç tarafında boşluk bırakılmalıdır. Notlardaki denemede `["$var" -gt "$var2"]` boşluksuz yazıldığı için script `[5: command not found` hatası verdi ve `else` dalına düştü:
 
 ```text title="Çıktı"
 /Users/ornekkullanici/Desktop/ilk_scriptim.sh/scr.sh: line 6: [5: command not found
@@ -61,16 +63,18 @@ var, var2'den kucuktur
 
 ## Dosya test operatörleri
 
-| Operatör | Kontrol ettiği |
-|---|---|
-| `-e` | Dosya mevcut mu |
-| `-r` | Dosya okunabilir mi |
-| `-w` | Dosya yazılabilir mi |
-| `-x` | Dosya çalıştırılabilir mi |
-| `-f` | Bu bir dosya mı |
-| `-d` | Bu bir dizin mi |
+Sık kullanılan bazı operatörlerden bazılarının kullanımı aşağıdaki gibidir.
 
-`!` operatörü koşulu tersine çevirir. Aşağıdaki script `devops.txt` dosyasının varlığını ve yazılabilirliğini kontrol eder:
+| Operatör | Anlamı |
+|---|---|
+| `-e` | bu dosya mevcut mu diye kontrol eder |
+| `-r` | bu dosya okunabilir mi |
+| `-w` | dosya yazılabilir mi |
+| `-x` | bu dosya çalıştırılabilir mi |
+| `-f` | bu bir dosya mı |
+| `-d` | bu bir dizin mi |
+
+![! -e ve -w ile devops.txt dosyasını kontrol eden script ve çıktısı](../../../../assets/ekran/p060-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash

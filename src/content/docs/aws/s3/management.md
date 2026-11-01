@@ -6,79 +6,45 @@ lessons: [22, 23]
 order: 11
 ---
 
-Bucket ayarlarının bir sonraki durağı **Management** sekmesi. Burada üç ana başlık var: **Lifecycle rules**, **Replication rules** ve **Inventory configurations**. Sayfanın sonunda **Metrics** sekmesine de kısaca bakıyoruz.
-
 ## Lifecycle rules
 
-Bir dosyayı yüklerken istediğimiz depolama sınıfını (storage class) seçebildiğimizi ve S3 Intelligent-Tiering sınıfını seçtiğimizde sistemin dosyayı kullanım sıklığına göre en uygun erişim katmanına yerleştirdiğini [depolama sınıfları](/aws/s3/depolama-siniflari/) sayfasında görmüştük. Lifecycle rule ise dosyaları bu farklı depolama sınıfları arasında taşıyan kurallar oluşturmamızı sağlar.
+**Management** menüsünün ilk başlığıyla bucket özelliklerini öğrenmeye devam edelim. Bir dosyayı yüklerken istediğimiz [depolama sınıfını (storage class)](/aws/s3/depolama-siniflari/) seçebileceğimizden ve S3 Intelligent-Tiering sınıfını seçtiğimizde sistemin dosyamızı kullanım sıklığımıza göre en uygun erişim katmanına yerleştireceğinden bahsetmiştik. Şimdi ise dosyalarımızı bu farklı depolama sınıfları arasında taşıyabileceğimiz kurallar oluşturmamıza imkan veren Lifecycle Rule konusuna geçiyoruz.
 
-### Kural oluşturma
+1. Bunu öğrenmeye başlamak için **Create lifecycle rule** butonuna tıklayarak başlayalım.
 
-1. Bucket içinde **Management** sekmesine geçin ve **Lifecycle configuration** bölümünde `Create lifecycle rule` butonuna tıklayın.
-2. **Lifecycle rule name** alanına bir isim verin (ör. `ornek`).
-3. **Choose a rule scope** altında `Apply to all objects in the bucket` seçeneğini işaretleyin. Kural bucket altındaki tüm objelere uygulanacağı için çıkan uyarıdaki `I acknowledge that this rule will apply to all objects in the bucket.` kutucuğunu da işaretleyin.
-4. **Lifecycle rule actions** bölümünden kuralın yapacağı aksiyonları seçin.
-5. Ayarları tamamladıktan sonra `Create rule` ile kuralı oluşturun.
+   ![Management sekmesinde Create lifecycle rule butonu](../../../../assets/ekran/p181-1.webp)
+
+2. Ardından bir isim belirleyerek devam edelim ve bucket altındaki tüm objelere bunun uygulaması için kutucuğu işaretliyoruz.
+
+   ![Lifecycle rule adı ve Apply to all objects in the bucket seçeneği](../../../../assets/ekran/p181-2.webp)
 
 ### Lifecycle aksiyonları
 
-**Lifecycle rule actions** altında seçilebilecek aksiyonlar şunlar:
+Aşağıda gördüğünüz gibi burada seçebileceğimiz çeşitli lifecycle aksiyonları var. İlkini seçersek mevcut olan versiyonları aşağıda belirleyeceğimiz belirli kurallara göre classlar arasında gönder. Örneğin bir dosya oluşturulduktan sonra 90 gün geçtiğinde Standard-IA katmanına gönder.
 
-- `Transition current versions of objects between storage classes`
-- `Transition noncurrent versions of objects between storage classes`
-- `Expire current versions of objects`
-- `Permanently delete noncurrent versions of objects`
-- `Delete expired object delete markers or incomplete multipart uploads`
-
-İlkini seçersek mevcut (current) versiyonlar, aşağıda belirlediğimiz kurallara göre sınıflar arasında taşınır. Örneğin "bir dosya oluşturulduktan 90 gün sonra Standard-IA katmanına gönder" kuralı için:
-
-1. `Transition current versions of objects between storage classes` kutucuğunu işaretleyin. Geçişlerin istek başına ücretlendirildiğini belirten uyarıdaki onay kutucuğunu (`I acknowledge that this lifecycle rule will incur a transition cost per request.`) da işaretleyin.
-2. **Transition current versions of objects between storage classes** bölümünde **Choose storage class transitions** alanından `Standard-IA` seçin.
-3. **Days after object creation** alanına `90` yazın. Başka geçişler eklemek için `Add transition` kullanılabilir.
-
-:::note
-Ekrandaki bilgi kutusuna göre varsayılan olarak 128 KB'tan küçük objeler hiçbir depolama sınıfına taşınmaz.
-:::
-
-Sayfanın altındaki **Review transition and expiration actions** bölümü, current ve noncurrent versiyonlar için tanımlanan aksiyonları gün gün özetler.
+![Lifecycle rule actions ve 90 gün sonra Standard-IA geçişi](../../../../assets/ekran/p182-1.webp)
 
 ## Replication rules
 
-Management altındaki ikinci kavram **Replication rules**. Bu özellik, bucket'taki dosyaların otomatik olarak bir kopyasını başka bir bucket'a aktarır.
-
-Örneğin Frankfurt bölgesinde çalışan ve sürekli yeni dosyalar yüklenen bir ana bucket'ımız olsun. Olası bir sistem arızası veya felaket senaryosuna karşı verileri yedekli tutmak için buraya yüklenen her dosyanın anında Amerika'daki farklı bir bucket'a kopyalanmasını isteyebiliriz. Replication rule oluşturduğumuzda, dosyayı ana bucket'a attığımız an AWS arka planda bu dosyanın birebir kopyasını hedef bucket'a da gönderir.
-
-- Kopyalama tamamen farklı bir coğrafi bölgeye yapılabileceği gibi aynı bölgedeki başka bir bucket'a da yapılabilir.
-- Kuralı oluştururken yapılması gereken iki şey var: hedef bucket'ı seçmek ve AWS'nin bu kopyalamayı bizim adımıza yapabilmesi için gerekli yetkiyi vermek.
-
-Kural, **Management** sekmesindeki **Replication rules** bölümünden `Create replication rule` butonuyla oluşturulur.
+Management başlığı altındaki ikinci göreceğimiz kavram **Replication rules**. Bu özellik, S3 bucket'ımızdaki dosyaların otomatik olarak bir kopyasını başka bir bucket'a aktarmamızı sağlar. Örneğin; Frankfurt bölgesinde çalışan ve sürekli yeni dosyalar yüklenen bir ana bucket'ımız olduğunu düşünelim. Olası bir sistem arızası veya felaket senaryosuna karşı verilerimizi yedekli tutmak amacıyla, buraya yüklenen her dosyanın anında Amerika'daki farklı bir bucket'a kopyalanmasını isteyebiliriz. İşte Replication rules oluşturduğumuzda, biz dosyayı ana bucket'a attığımız an AWS arka planda bu dosyanın birebir kopyasını otomatik olarak hedef bucket'a da gönderir. Bu kopyalama işlemini tamamen farklı bir coğrafi bölgeye yapabileceğimiz gibi, aynı bölge içindeki başka bir bucket'a da yapabiliriz. Kuralı oluştururken tek yapmamız gereken; hedef bucket'ı seçmek ve AWS'nin arka planda bu kopyalama işlemini bizim adımıza yapabilmesi için ona gerekli yetkiyi vermektir.
 
 ### Yedekleme dışındaki kullanım: performans
 
-Replikasyonun yedekleme dışında bir görevi daha var: kullanıcılara daha hızlı hizmet vermek. Küresel çapta hizmet veren bir projenin ana bucket'ı Avrupa'da olsun. Amerika'daki bir kullanıcı büyük bir dosya indirmek istediğinde verinin okyanusu aşması zaman alır ve dosya yavaş yüklenir.
+Replikasyon işleminin yedekleme dışında bir görevi daha vardır: Kullanıcılara daha hızlı hizmet vermek. Örneğin; küresel çapta hizmet veren bir projeniz olduğunu düşünelim. Ana bucket'ınız Avrupa'da bulunuyor olsun. Amerika'daki bir kullanıcı uygulamanıza girip büyük bir dosya indirmek istediğinde, verinin okyanusu aşıp gitmesi zaman alacak ve dosya yavaş yüklenecektir. İşte bu sorunu çözmek için Amerika bölgesinde de bir bucket oluşturur ve Replikasyon kuralı ile dosyalarınızın bir kopyasını otomatik olarak oraya gönderirsiniz. Böylece Amerika'daki kullanıcılar veriyi Avrupa'dan çekmek yerine, kendilerine en yakın olan Amerika'daki bucket'tan çok daha hızlı bir şekilde alırlar. Yani replikasyon, dünyanın farklı yerlerindeki kullanıcılara yüksek performanslı bir deneyim sunmak için de kritik bir rol oynar.
 
-Bu sorunu çözmek için Amerika bölgesinde de bir bucket oluşturulur ve replication kuralıyla dosyaların bir kopyası otomatik olarak oraya gönderilir. Böylece Amerika'daki kullanıcılar veriyi Avrupa'dan çekmek yerine kendilerine en yakın bucket'tan çok daha hızlı alır. Yani replikasyon, dünyanın farklı yerlerindeki kullanıcılara yüksek performanslı bir deneyim sunmakta da kritik rol oynar.
+![Management sekmesinde Replication rules bölümü](../../../../assets/ekran/p183-1.webp)
 
 ## Inventory configurations
 
-Bucket'ta yalnızca birkaç yüz dosya varken nelerin yüklü olduğunu görmek veya liste üzerinden arama yapmak kolaydır. Ancak dosya sayısı milyonlara, hatta milyarlara ulaştığında içeride tam olarak neler olduğunu, boyutlarını, hangi storage class'ta tutulduklarını ya da şifrelenip şifrelenmediklerini tek tek sorgulamak hem çok yavaş hem de maliyetli hale gelir.
-
-S3 Inventory burada devreye girer:
-
-- Yapılandırma açıldığında AWS, belirlenen periyotlarda (günlük veya haftalık) bucket içindeki tüm objelerin ve bunlara ait detaylı verilerin bir dökümünü çıkarır.
-- Bu raporu CSV veya Parquet gibi formatlarda, yine belirlediğimiz bir S3 bucket'ına dosya olarak bırakır.
-
-Kısacası Inventory, çok büyük depolama alanlarında nelerin bulunduğunu raporlamak, denetlemek ve arka planda otomatik bir "depo sayımı" yapmak için kullanılan bir yönetim aracıdır. Management sekmesinde **Inventory configurations** bölümündeki `Create inventory configuration` butonuyla oluşturulur.
+Management başlığı altındaki son öğreneceğimiz kavram ise **Inventory configurations**. S3 bucket'ınızda sadece birkaç yüz dosya varken nelerin yüklü olduğunu görmek veya listesi üzerinden arama yapmak çok kolaydır. Ancak dosya sayınız milyonlara, hatta milyarlara ulaştığında içeride tam olarak nelerin olduğunu, boyutlarını, hangi depolama sınıfında (storage class) tutulduklarını veya şifrelenip şifrelenmediklerini tek tek sorgulamak ve listelemek hem çok yavaş hem de maliyetli bir hale gelir. İşte bu noktada S3 Inventory devreye girer. Bu yapılandırmayı açtığınızda, AWS sizin belirlediğiniz periyotlarda (günlük veya haftalık olarak) bucket'ınızın içindeki tüm objelerin ve onlara ait detaylı verilerin bir dökümünü çıkarır. Çıkardığı bu kapsamlı raporu CSV veya Parquet gibi formatlarda yine belirlediğiniz bir S3 bucket'ına dosya olarak bırakır. Kısacası Inventory; devasa boyutlardaki depolama alanlarında nelerin bulunduğunu raporlamak, denetlemek ve arka planda otomatik bir "depo sayımı" yapmak için kullanılan yönetim aracıdır.
 
 ## Metrics
 
-Bucket'ın **Metrics** sekmesinde bucket ile ilgili genel tabloyu görebiliriz. Burada günlük, haftalık veya aylık periyotlarla bucket'ın toplam ne kadar depolama alanı kapladığı veya içinde kaç obje barındırdığı gibi temel istatistiklere grafikler üzerinden erişilir.
+**Metrics** başlığına geldiğimizde ise bucket'ımızla ilgili genel tabloyu görebiliyoruz. Burada günlük, haftalık veya aylık periyotlarla bucket'ın toplam ne kadar depolama alanı kapladığı veya içinde kaç adet obje barındırdığı gibi temel istatistiklere grafikler üzerinden kolayca erişebiliyoruz.
 
-**Bucket metrics** bölümünde iki grafik yer alır:
+![Metrics sekmesinde Total bucket size ve Total number of objects grafikleri](../../../../assets/ekran/p184-1.webp)
 
 | Grafik | Gösterdiği |
 | --- | --- |
 | Total bucket size | Bucket'ın toplam boyutu |
 | Total number of objects | Bucket'taki toplam obje sayısı |
-
-Grafiklerin üstünden zaman aralığı (1h, 3h, 12h, 1d, 3d, 1w veya özel aralık) seçilebilir. Aynı sekmenin altında **Storage Class Analysis** bölümü de bulunur.

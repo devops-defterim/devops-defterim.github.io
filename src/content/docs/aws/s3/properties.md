@@ -6,70 +6,62 @@ lessons: [22]
 order: 10
 ---
 
-Bucket oluştururken nelere dikkat etmemiz gerektiğini gördükten sonra S3 konsolunu tanımaya başlıyoruz.
+Son ayarı da öğrenerek bir bucket oluştururken nelere dikkat edilmesi gerektiğini öğrenmiş olduk. Şimdi gelin AWS üzerindeki S3 servisinin konsolunu tanımaya başlayalım.
 
 ## Objects sekmesi
 
-Bucket'a girdiğimizde açılan **Objects** sekmesi, dosyalarımızı yüklediğimiz, her yüklenen dosyanın birer obje olarak tutulduğu ve bu objeler üzerinde işlem yapabildiğimiz yerdir. Bir objeyi seçtiğinizde üst kısımdaki butonlar aktif olur:
+Aşağıda gördüğümüz ekran daha önce oluşturduğumuz bucket içerisine dosyalarımızı yüklediğimiz ve her yüklenen dosyanın birer obje olarak tutulduğu, bu objeleri yönetebildiğimiz, işlemler yapabildiğimiz yerdir.
 
-| Buton | İşlev |
-| --- | --- |
-| `Copy S3 URI` | Daha önce gördüğümüz public URL'den farklı olarak, CLI üzerindeki işlemlerde kullanabileceğimiz `s3://...` biçimindeki adresi kopyalar (bkz. [S3 CLI](/aws/s3/s3-cli/)). |
-| `Download` | Objeyi bilgisayara indirir. |
-| `Open` | Objeyi açar. |
-| `Delete` | Objeyi siler. |
-| `Actions` | Diğer işlemler; bunları objelerin kendi ayarlarında göreceğiz. |
-| `Create folder` | Bir klasör oluşturur; objeyi bu klasöre taşıyabiliriz. |
+![Bucket'ın Objects sekmesinde yüklenen objelerin listesi](../../../../assets/ekran/p176-1.webp)
 
-:::caution
-Bir objeyi klasöre taşıdıktan sonra objenin URL'si değişir.
-:::
+Ayrıca daha önce gördüğümüz public URL gibi bir de istediğimiz objeye tıkladığımızda `Copy S3 URI` butonuna tıklayarak [CLI](/aws/s3/s3-cli/) üzerinde işlemler için kullanabileceğimiz bir URL'ye erişebiliriz. `Download` diyerek objeyi bilgisayarımıza indirebilir, `Open` ile açıp `Delete` ile silebiliriz. `Actions` menüsünden yapabileceğimiz işlemleri objelerin içindeki ayarlar kısmında göreceğiz. Son olarak `Create folder` diyerek bir klasör oluşturup objemizi klasöre taşıyabiliriz. Bu işlemden sonra objemizin URL'sinin değişeceğini unutmayalım.
+
+![Obje seçiliyken Copy S3 URI, Download, Open, Delete, Actions ve Create folder butonları](../../../../assets/ekran/p176-2.webp)
 
 ## Properties sekmesi
 
-Bucket oluştururken yaptığımız tüm ayarlara **Properties** sekmesinden erişebiliriz. Ayrıca burada yapabileceğimiz birkaç ekstra ayar daha vardır.
+Bucket oluştururken yaptığımız tüm ayarlara **Properties** menüsü altından erişebiliriz. Ekstra yapabileceğimiz birkaç ayara daha buradan ulaşabiliriz, gelin bunları birlikte inceleyelim.
 
 ### Intelligent-Tiering Archive configurations
 
-Intelligent-Tiering'in dosyayı kullanımımıza göre en uygun maliyetli katmana otomatik taşıdığından bahsetmiştik (bkz. [Depolama sınıfları ve fiyatlandırma](/aws/s3/depolama-siniflari/)). Ancak bu otomatik taşıma varsayılan olarak Standard ve Standard-IA katmanları arasında gerçekleşir. Dosyanın belirli bir süre hiç kullanılmadığında en ucuz seçenekler olan Glacier katmanlarına da otomatik inmesini istiyorsak, bu izni **Intelligent-Tiering Archive configurations** başlığı altında `Create configuration` ile ayrıca yapılandırmamız gerekir.
+Daha önce [Intelligent-Tiering](/aws/s3/depolama-siniflari/) (Akıllı Katmanlandırma) özelliğinin nasıl çalıştığından ve dosyamızı kullanımımıza göre en uygun maliyetli katmana otomatik taşıdığından bahsetmiştik. Ancak bu otomatik taşıma işlemi varsayılan olarak Standard ve Standard-IA katmanları arasında gerçekleşir. Eğer dosyamızın belirli bir süre hiç kullanılmadığında en ucuz depolama seçenekleri olan Glacier katmanlarına da otomatik olarak inmesini istiyorsak, bu izni **Intelligent-Tiering Archive configurations** başlığı altından özel olarak konfigüre etmemiz gerekir.
+
+:::caution[Düzeltme]
+Intelligent-Tiering kendi erişim katmanlarını kullanır: varsayılan olarak Frequent Access, Infrequent Access ve Archive Instant Access katmanları arasında otomatik taşır. Yapılandırma gerektiren katmanlar Archive Access ve Deep Archive Access katmanlarıdır.
+:::
+
+![Properties sekmesinde Intelligent-Tiering Archive configurations bölümü](../../../../assets/ekran/p177-1.webp)
 
 ### Server access logging
 
-Kim hangi dosyayı yazmış, kim erişmiş gibi S3 API'si üzerinden gelen tüm işlemlerin loglarına **Server access logging** başlığı altından ulaşabiliriz (varsayılan `Disabled`). Bunun için ikinci bir bucket oluşturup tüm logların oraya yazılmasını sağlarız:
+Kim hangi dosyayı yazmış, erişmiş gibi S3 üzerinden yapılmış olan API üzerinden gelen tüm işlemlerin loglarına **Server access logging** başlığı altından erişebiliriz. Bunun için 2. bir bucket oluşturup buradaki tüm logları oraya yazmasını istiyoruz.
 
-1. **Server access logging** bölümündeki `Edit` butonuna tıklayın.
-2. **Edit server access logging** ekranında `Enable` seçeneğini işaretleyin.
-3. Hedef bucket seçimi için açılan **Choose destination** penceresinde logların yazılacağı bucket'ı seçip `Choose destination` deyin.
-4. `Save changes` ile kaydedin.
+![Properties sekmesinde Server access logging bölümü](../../../../assets/ekran/p178-1.webp)
 
-:::note
-Choose destination penceresindeki bilgi notuna göre kaynak bucket ile aynı region'da (örnekte `Europe (Ireland) eu-west-1`) olmayan bucket'lar hedef olarak seçilemez.
-:::
+`Edit` diyerek hangi bucket'a yazmasını istiyorsak onun seçimini yapıyoruz.
+
+![Edit server access logging ekranında hedef bucket seçimi](../../../../assets/ekran/p178-2.webp)
 
 ### AWS CloudTrail data events
 
-S3 servisindeki tüm olayları; kimin, ne şekilde, hangi tarihte eriştiğini ve hangi değişiklikleri yaptığını logladığımız başlık **AWS CloudTrail data events**'tir. Bu loglar `AWS CloudTrail` butonuyla açılan CloudTrail konsolundan görüntülenir ve yapılandırılır.
+S3 servisinde olan tüm eventleri logladığımız, kim ne şekilde hangi tarihte buraya erişmiş, hangi değişiklikleri yaptı gibi logları tuttuğumuz başlık aşağıdaki **AWS CloudTrail data events**'tir.
 
 ### Event notifications
 
-Hemen altındaki **Event notifications** başlığından, örneğin "bu bucket'a yeni bir `.jpg` uzantılı dosya atılırsa şu işlemi gerçekleştir" diyebiliriz. Bu işlem örneğin Lambda'daki bir kodun tetiklenmesi olabilir. Yeni bildirim `Create event notification` ile oluşturulur.
+Hemen altında bulunan **Event notifications** başlığı altından da örneğin bu S3 bucket'a yeni bir `jpg` uzantılı dosya atılırsa git bir işlem gerçekleştir diyebiliyoruz. Bu işlem de örneğin Lambda'daki bir kodun tetiklenmesini istemek olabilir.
 
 ### Transfer acceleration
 
-**Transfer acceleration**, uzak mesafelerden yapılan dosya transferlerini büyük ölçüde hızlandırır (varsayılan `Disabled`). Örneğin bucket'ımızı Amerika'da oluşturduğumuzu düşünelim. Türkiye'den veya dünyanın öbür ucundan bu bucket'a gigabaytlarca büyüklükte bir video dosyası yüklemeye çalışırsak standart internet üzerinden bu işlem epey yavaş olabilir. Bu özellik aktifken AWS dosyayı bize en yakın merkezinden teslim alır ve kendi yüksek hızlı özel ağı üzerinden bucket'a ulaştırır. Böylece dünyanın neresinde olursak olalım büyük dosyaları yükleme ve indirme hızımız ciddi şekilde artar.
+**Transfer acceleration** uzak mesafelerden yapılan dosya transferlerini büyük ölçüde hızlandırmamızı sağlar. Örneğin bucket'ımızı Amerika'da oluşturduğumuzu düşünelim. Eğer Türkiye'den veya dünyanın öbür ucundan bu bucket'a gigabaytlarca büyüklükte bir video dosyası yüklemeye çalışırsak standart internet üzerinden bu işlem epey yavaş olabilir. İşte bu özelliği aktif ettiğimizde, AWS dosyayı bize en yakın olan merkezinden teslim alıp, kendi yüksek hızlı özel ağı üzerinden bucket'a ulaştırır. Yani dünyanın neresinde olursak olalım büyük dosyaları yükleme ve indirme hızımızı ciddi şekilde artırır. Ancak AWS, sunduğu bu ekstra hızlandırma hizmeti için veri transferi başına faturamıza ek bir ücret yansıtır.
 
-:::caution
-AWS bu ekstra hızlandırma hizmeti için veri transferi başına faturaya ek ücret yansıtır.
-:::
+![Properties sekmesinde AWS CloudTrail data events, Event notifications ve Transfer acceleration bölümleri](../../../../assets/ekran/p179-1.webp)
 
 ### Requester pays
 
-AWS'nin verimizi saklamak için ücret aldığından, veriyi dış dünyaya çıkarırken de ayrıca ücret talep ettiğinden bahsetmiştik. **Requester pays** özelliği aktifken (varsayılan `Disabled`) veriyi dış dünyaya açtığımızda, veriyi çeken taraf bu ücrete tabi tutulur. Bunun için veriyi çekmek isteyen kişinin bir AWS hesabı olması gerekir, çünkü ücret onun hesabına yansıtılır.
+Sıradaki başlığımız ilginç bir özellik sağlayan **Requester pays**. Daha önce AWS'nin verimizi saklaması için bir ücret aldığını, veriyi dış dünyaya çıkartırken de ayrıca bir ücret ödememizi istediğinden bahsetmiştik. Bu özelliği aktif ederek veriyi dış dünyaya açtığımız, yani veriyi çeken tarafın bahsettiğimiz ücrete tabi tutulmasını sağlayabiliriz. Bunun için veriyi çekmek isteyen kişinin AWS hesabına sahip olması gerekir çünkü ücret onun hesabına yansıtılacaktır.
 
 ### Static website hosting
 
-Properties sekmesindeki son başlık, S3'ün en sevilen özelliklerinden **Static website hosting**'dir (varsayılan `Disabled`). Bu özellik sayesinde HTML, CSS ve JavaScript dosyalarından oluşan statik bir web sitesini hiçbir sunucuya (örneğin bir EC2 sanal sunucusuna) ihtiyaç duymadan doğrudan S3 üzerinden yayınlayabiliriz.
+Son olarak S3 servisinin en sevilen özelliği olan **Static website hosting** başlığını öğrenerek Properties menüsünü burada noktalayacağız. Bu özellik sayesinde, hazırladığımız HTML, CSS ve JavaScript dosyalarından oluşan statik bir web sitesini, hiçbir sunucuya (örneğin bir EC2 sanal sunucusuna) ihtiyaç duymadan doğrudan S3 üzerinden yayınlayabiliriz. Örneğin; kendiniz için sadece tanıtım amaçlı bir portfolyo sitesi tasarladınız ve arka planda çalışan karmaşık bir veritabanı veya üyelik sistemi yok. Bu site dosyalarını doğrudan bucket'a yükleyip [Static website hosting](/aws/s3/bucket-policy-ve-statik-site/) özelliğini aktif ettiğinizde, AWS size anında sitenize ait bir web adresi verir. Böylece sitenizi yayınlamak için işletim sistemi kurma, sunucu yönetme veya bakım yapma gibi dertlerden tamamen kurtulmuş olursunuz. Üstelik bu yöntem, geleneksel bir sunucu kiralamaya kıyasla çok daha pratik ve maliyet açısından oldukça avantajlıdır.
 
-Örneğin kendiniz için sadece tanıtım amaçlı bir portfolyo sitesi tasarladınız ve arka planda çalışan karmaşık bir veritabanı veya üyelik sistemi yok. Site dosyalarını doğrudan bucket'a yükleyip Static website hosting özelliğini aktif ettiğinizde AWS size anında sitenize ait bir web adresi verir. Böylece siteyi yayınlamak için işletim sistemi kurma, sunucu yönetme veya bakım yapma gibi işlerle uğraşmazsınız. Bu yöntem, geleneksel bir sunucu kiralamaya kıyasla çok daha pratik ve maliyet açısından oldukça avantajlıdır.
-
-Uygulamalı kurulum için bkz. [Bucket policy ve statik web sitesi](/aws/s3/bucket-policy-ve-statik-site/).
+![Properties sekmesinde Requester pays ve Static website hosting bölümleri](../../../../assets/ekran/p180-1.webp)

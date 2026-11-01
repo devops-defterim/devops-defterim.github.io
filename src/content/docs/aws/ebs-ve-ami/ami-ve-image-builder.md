@@ -8,90 +8,122 @@ order: 24
 
 ## AMI nedir?
 
-Daha önce [Instance oluşturma](/aws/ec2/instance-olusturma/) sırasında bahsettiğimiz AMI'yi, sanal sunucuları kurmak için kullandığımız **hazır bir kurulum kalıbı** olarak düşünebiliriz. Bulutta bir sanal makineyi ayağa kaldırmak için işletim sistemi ve temel ayarlar gibi gereken tüm başlangıç bilgileri bu paketin içinde hazır gelir.
+Daha önce de bahsettiğimiz AMI kavramını biraz daha detaylandıracak olursak; bunu sanal sunucularımızı kurmak için kullandığımız hazır bir kurulum kalıbı olarak düşünebiliriz. Bulutta bir sanal makineyi ayağa kaldırmak için işletim sistemi ve temel ayarlar gibi ihtiyaç duyduğumuz tüm başlangıç bilgileri bu paketin içinde hazır olarak gelir.
 
-AWS'de yeni bir sanal makine başlatırken sistem mutlaka bir kaynak AMI seçmemizi ister. Tamamen aynı ayarlara ve altyapıya sahip birden fazla sunucuya ihtiyacınız varsa her birini sıfırdan kurmazsınız; **tek bir AMI kalıbından saniyeler içinde yüzlerce birebir aynı kopya başlatabilirsiniz.** Farklı özelliklerde sunucular gerektiğinde her biri için uygun farklı bir AMI seçilir.
+AWS üzerinde yeni bir sanal makine başlatırken sistem bizden mutlaka bir kaynak AMI seçmemizi ister. İşin en büyük avantajı şudur: Eğer tamamen aynı ayarlara ve altyapıya sahip birden fazla sunucuya ihtiyacınız varsa, her birini sıfırdan kurmakla uğraşmazsınız. Tek bir AMI kalıbını kullanarak ondan saniyeler içinde yüzlerce birebir aynı kopyayı başlatabilirsiniz. Elbette farklı özelliklerde sunuculara ihtiyacınız olduğunda, her biri için ihtiyacınıza uygun farklı bir AMI seçerek yolunuza devam edersiniz.
 
 ## AMI çeşitleri
 
-Erişim haklarına ve lisans durumlarına göre üç çeşit AMI vardır:
+Erişim haklarına ve lisans durumlarına göre AWS üzerinde 3 farklı AMI çeşidi bulunur:
 
-| Çeşit | Açıklama |
-|---|---|
-| **Public** (herkese açık) | AWS'nin kendisi veya topluluk tarafından hazırlanan, herkesin varsayılan olarak erişip kullanabileceği standart kalıplar. |
-| **Private** (özel) | Sadece kendi hesabımızda oluşturduğumuz, dışarıya kapalı ve yalnızca bizim kullanabildiğimiz kalıplar. |
-| **Paid** (ücrete tabi) | AWS Marketplace üzerinde satılan, içinde özel lisanslı programlar veya kurumsal yazılımlar kurulu gelen kalıplar. |
+- **Public (Herkese Açık) AMI:** AWS'nin kendisi veya topluluk tarafından hazırlanan, hepimizin varsayılan olarak erişip kullanabileceği standart kalıplardır.
+- **Private (Özel/Gizli) AMI:** Sadece kendi hesabımızda oluşturduğumuz, dışarıya tamamen kapalı olan ve yalnızca bizim kullanabildiğimiz kalıplardır.
+- **Paid (Ücretli) AMI:** AWS Marketplace üzerinde satılan, içinde özel lisanslı programlar veya kurumsal yazılımlar kurulu halde gelen ücretli kalıplardır.
 
-## 1. Yöntem: Manuel AMI oluşturma
+Şimdi gelin birlikte kendi AMI kalıbımızı oluşturup, bu kalıptan yepyeni bir sanal makineyi AWS arayüzü üzerinden nasıl ayağa kaldıracağımızı öğrenelim.
 
-1. **Volumes** sekmesinden ilgili diski seçip bir snapshot oluşturun (bkz. [Volume ve snapshot](/aws/ebs-ve-ami/volume-ve-snapshot/)).
-2. **Snapshots** menüsünde snapshot'ı seçip **Actions → Create image from snapshot** seçeneğine tıklayın.
-3. İşlem tamamlanınca soldaki menüden **AMIs** kısmına geldiğinizde oluşturduğunuz kalıbın burada olduğunu görürsünüz.
-4. **Instances** menüsünden sanal makine oluşturma adımlarına geçin. İmaj seçim ekranında kendi oluşturduğunuz AMI'yi (**My AMIs**) seçerek yeni sanal makineyi başlatın.
+## 1. Yöntem: Manuel olarak AMI oluşturma
 
-:::note
-Oluşturulan AMI'ler varsayılan olarak **Private** durumdadır. Bunu değiştirmek için **AMIs → Actions → Edit AMI permissions** ekranından imajı **Public** yapabilir veya Private kalıpları farklı AWS hesaplarıyla paylaşabilirsiniz.
-:::
+1. Öncelikle **Volumes** sekmesinden ilgili diskimizi seçip bir [Snapshot](/aws/ebs-ve-ami/volume-ve-snapshot/) oluşturuyoruz.
+2. Ardından **Snapshots** menüsüne gelerek **Actions** altından **Create image from snapshot** seçeneğine tıklıyoruz.
+3. İşlem tamamlandığında soldaki menüden **AMIs** kısmına geldiğimizde, oluşturduğumuz kalıbın buraya yüklendiğini görüyoruz.
+4. Daha sonra **Instances** menüsünden sanal makine oluşturma adımlarına geçiyoruz. Buradaki imaj seçim ekranında, kendi oluşturduğumuz bu AMI'yi seçerek yeni sanal makinemizi başarıyla ayağa kaldırıyoruz.
 
-## 2. Yöntem: EC2 Image Builder ile otomatikleştirme
+Ayrıca oluşturduğumuz AMI'ler varsayılan olarak Private durumdadır. Eğer bunu değiştirmek istersek, **AMIs** menüsü altındaki **Actions** kısmından **Edit AMI permissions** başlığına girerek imajımızı Public yapabilir veya Private durumdaki kalıpları farklı AWS hesaplarıyla paylaşabiliriz.
 
-Her seferinde manuel olarak makine açmak, güncellemeleri yapmak ve imaj almak bir süre sonra yorucu ve hataya açık hale gelir. AMI oluşturma adımlarını otomatikleştirmek için **EC2 Image Builder** kullanılır. Servis bir **pipeline** kurmaya dayanır.
+## 2. Yöntem: EC2 Image Builder ile süreci otomatikleştirme
 
-1. EC2 servisinde **AMIs** başlığına tıklayın; açılan ekranda `EC2 Image Builder` butonuna tıklayın.
-2. `Create image pipeline` butonuyla pipeline oluşturmaya başlayın. Sihirbaz şu adımlardan oluşur: Specify pipeline details, Choose recipe, Define image creation process, Define infrastructure configuration (isteğe bağlı), Define distribution settings (isteğe bağlı), Review.
+İlk yöntemde gördüğümüz gibi her defasında manuel olarak makine açmak, güncellemeleri yapmak ve imaj almak bir süre sonra yorucu ve hataya açık bir hale gelebilir. İşte bu AMI oluşturma adımlarını otomatize etmek adına **EC2 Image Builder** özelliği devreye girer.
 
-### Adım 1: Pipeline detayları
+Bu servisin çalışma mantığı çok basittir: Bir **Pipeline** kurmaya dayanır.
 
-| Alan | Açıklama |
-|---|---|
-| **Pipeline name** | Otomatik imaj alma hattının adı. Gelecekte kaynaklar arasında kaybolmamak için projeyi anlatan net bir isim girilir (ör. `aylik-ubuntu-guncel-imaj`). |
-| **Description** | İsteğe bağlı. Pipeline'ın hangi amaca hizmet ettiği veya hangi ekibin kullanacağı not edilir. |
-| **Enhanced metadata collection** | İşaretliyken AWS (Systems Manager Inventory aracılığıyla) imajın içindeki bileşenler hakkında daha detaylı bilgi toplar. Kurulan programların imajla uyumlu çalışıp çalışmadığını doğrulamak için varsayılan olarak işaretli bırakmak iyi bir pratiktir. |
-| **Save a snapshot of vulnerability findings** | Amazon Inspector ile imajda işletim sistemi veya yazılım güvenlik açığı olup olmadığı denetlenir. Kutucuklar ekranda pasif görünse de güvenlik standartları yüksek kurumsal projelerde bu taramalar aktif edilebilir. |
+1. EC2 servisi altında **AMIs** başlığına tıkladığımızda açılan ekranda `EC2 Image Builder` yazan butona tıklıyoruz.
 
-**Build schedule** bölümü:
+   ![AMIs ekranında EC2 Image Builder butonu](../../../../assets/ekran/p226-1.webp)
 
-- **Schedule options:** İmaj alma işleminin nasıl tetikleneceği seçilir. Üç seçenek vardır:
-  - **Schedule builder:** Ekranda seçili olan, en pratik yöntem. İşlem gün ve saat belirterek otomatikleştirilir. Örnekteki ayara göre sistem her hafta (`Week`), cumartesi (`Saturday`) UTC 14:00'te çalışıp yeni bir imaj üretir.
-  - **cron expression:** Çalışma takvimi cron formatında kodla, daha detaylı kurallarla belirlenir.
-  - **Manual:** Otomasyonu takvime bağlamak yerine sadece biz çalıştırdığımızda imaj alınır.
-- **Dependency update settings:** Takvim geldiğinde sistemin nasıl davranacağı seçilir. Seçili olan `Run pipeline based on schedule` ile sistem, temel işletim sisteminde veya kurulu programlarda güncelleme olup olmadığına bakmadan takvime uyar ve her hafta o saatte yeni imaj üretir.
-- **Auto-disable policy** (Advanced settings): Maliyetleri ve kaynakları koruyan bir güvenlik ayarıdır. Hatta bir şey ters giderse (ör. hatalı kod nedeniyle imaj oluşturulamıyorsa) sistemin sürekli boşuna çalışıp hata vermesini engeller. Örnekte sınır `5`; sistem üst üste 5 kez başarısız olursa, biri hatayı çözene kadar pipeline kendini otomatik olarak devre dışı bırakır.
+2. Ardından `Create image pipeline` butonuna tıklayarak Pipeline oluşturmaya başlıyoruz.
 
-### Adım 2: Recipe (tarif)
+   ![EC2 Image Builder ekranında Create image pipeline butonu](../../../../assets/ekran/p226-2.webp)
 
-| Alan | Açıklama |
-|---|---|
-| **Recipe configuration** | `Create new recipe` seçilerek önceden kaydedilmiş bir şablon yerine sıfırdan yeni tarif oluşturulacağı belirtilir. |
-| **Image type** | Üretilecek imaj türü. Standart sanal makine kalıbı için `Amazon Machine Image (AMI)` seçili. Diğer seçenek olan Docker, konteyner altyapıları içindir. |
-| **Recipe details** | Tarife bir isim ve **Version** (ör. `1.0.0`) verilir. Tarifler sonradan değiştirilemediği için her yapılandırma değişikliğinde sürüm numarası artırılır. |
-| **Select image** | Kalıbın hangi temel üzerine inşa edileceği. `Select managed images` ile AWS'nin yönettiği güvenli imajlar kullanılır. |
-| **Image Operating System (OS)** | Temel işletim sistemi olarak Amazon Linux seçili. İhtiyaca göre Ubuntu, Windows veya CentOS da seçilebilir. |
-| **Image origin** | `Quick start` ile AWS'nin kullanıma hazır sunduğu optimize edilmiş standart başlangıç kalıplarından biri seçilir. |
-| **SSM agent** | AWS'nin imajı hazırlarken açtığı geçici makineye güvenle bağlanıp komutları (kurulumları) çalıştırabilmesi için gereken araçtır. İmaj bittikten sonra yeni kalıpta yer almasın isteniyorsa `Remove SSM agent after pipeline execution` işaretlenir. |
-| **User data** | Makine ilk ayağa kalkarken otomatik çalışması istenen özel başlangıç script'leri varsa buraya yazılır. |
-| **Working directory** | AWS'nin kurulum sırasında indireceği dosyaları geçici olarak tutup çalıştıracağı klasör. Varsayılan `/tmp`. |
-| **Build components** | İmajın içine nelerin kurulacağı adım adım belirlenir. Örneğin "işletim sistemini güncelle", "şu yazılımı indir", "güvenlik ayarlarını yap" gibi komut paketleri buradan eklenir. |
-| **Test components** | Kurulumlar bittikten sonra "kurduğum programlar düzgün çalışıyor mu?" diye makineyi kontrol eden doğrulama testleri eklenir. |
-| **Storage (volumes)** | Üretilecek AMI'nin diskinin kaç GB ve hangi tipte (ör. gp3) olacağı ayarlanır. Temel imajın disk ayarları otomatik yansır; istenirse `Add new EBS volume` ile ek disk eklenir. |
-| **AMI watermarks** | İsteğe bağlı güvenlik ve takip adımı. Üretilen imaja gizli bir filigran eklenir; kalıp kopyalanıp başka yerde kullanılsa bile kaynağının bu otomasyon hattı olduğu takip edilebilir. |
+### Pipeline detayları
 
-### Adım 3: Image creation process
+- **Pipeline name:** Oluşturacağımız bu otomatik imaj alma otomasyonuna vereceğimiz isimdir. Gelecekte yüzlerce kaynağın arasında kaybolmamak için projemizi anlatan, net ve açıklayıcı bir isim (örneğin: `aylik-ubuntu-guncel-imaj`) girmemiz istenir.
+- **Description:** İsteğe bağlı bir alandır. Bu pipeline'ın tam olarak hangi amaca hizmet ettiğini veya hangi ekibin kullanacağını not düşebileceğimiz kısımdır.
+- **Enhanced metadata collection:** Bu kutucuk işaretli olduğunda, AWS (Systems Manager Inventory aracılığıyla) oluşturacağımız imajın içindeki bileşenler hakkında çok daha detaylı bilgi (metadata) toplar. Kurduğumuz programların imajla uyumlu çalışıp çalışmadığını doğrulamak için bu seçeneği varsayılan olarak işaretli bırakmak iyi bir pratiktir.
+- **Save a snapshot of vulnerability findings:** AWS'nin güvenlik aracı olan Amazon Inspector'ı kullanarak, hazırladığımız imajda herhangi bir işletim sistemi veya yazılım güvenlik açığı (vulnerability) olup olmadığını denetlediğimiz bölümdür. Ekrandaki kutucuklar şu an pasif görünse de, özellikle kurumsal güvenlik standartlarının yüksek olduğu projelerde bu tarama özelliklerini aktif hale getirebiliriz.
 
-**Type:** AWS'nin imajı üretirken işlemleri hangi sırayla (workflow) yapacağı belirlenir.
+![Specify pipeline details adımında Pipeline name, Description ve güvenlik taraması seçenekleri](../../../../assets/ekran/p226-3.webp)
 
-- Ekranda `Default workflows` seçili; yani AWS'ye "standart derleme (build) ve test adımlarını kendi varsayılan sıranla yap" talimatı verilir.
-- Adımların sırasına tamamen kendimiz karar vermek isteseydik (ör. önce şu testi yap, sonra bunu kur) `Custom workflows` seçeneğini kullanırdık.
+### Build schedule
 
-### Adım 4: Infrastructure configuration
+**Schedule options:** İmaj alma işleminin nasıl tetikleneceğini seçtiğimiz kısımdır. Karşımıza üç seçenek çıkar:
 
-- **Configuration options:** AWS'nin imajı hazırlamak için arka planda açacağı geçici sanal makinenin özellikleri belirlenir. `Create infrastructure configuration using service defaults` seçili olduğu için sistem AWS'nin otomatik ayarlarına bırakılır.
-- **IAM instance profile:** Geçici makinenin program kurabilmesi ve AWS servisleriyle konuşabilmesi için bir kimliğe ihtiyacı vardır. AWS bu seçenekte gereken IAM rollerini bizim yerimize otomatik oluşturur ve tanımlar.
-- İsteğe bağlı olarak alt kısımdaki ayarlardan geçici makinenin boyutu (Instance type), çalışacağı ağ (VPC) veya tabi olacağı ağ güvenlik kuralları (Security groups) manuel belirlenebilir.
+- **Schedule builder:** Ekranda da seçili olan en pratik yöntemdir. İşlemi gün ve saat belirterek otomatikleştiririz. (Görseldeki ayara göre sistem; her hafta (Week), Cumartesi günü (Saturday), UTC saatiyle 14:00'te otomatik olarak çalışıp yeni bir imaj üretecektir).
+- **cron expression:** İşlemin çalışma takvimini kod yazarak (cron formatında) çok daha detaylı ve karmaşık kurallarla belirlemek istersek bunu kullanırız.
+- **Manual:** Otomasyonu bir takvime bağlamak yerine, sadece biz sisteme girip "Şimdi Çalıştır" butonuna bastığımızda imaj alınmasını istiyorsak bu seçeneği işaretleriz.
 
-### Adım 5: Distribution settings
+**Dependency update settings:** Sistemin belirlenen takvim geldiğinde nasıl davranacağını seçtiğimiz yerdir.
 
-Testler başarılı olup imaj üretildikten sonra yeni kalıbın nereye gideceği, yani dağıtım kuralları bu ekranda belirlenir.
+Ekranda seçili olan "Run pipeline based on schedule" seçeneği ile sistem, temel işletim sisteminde veya kurduğumuz programlarda bir güncelleme olup olmadığına bakmaksızın, takvime harfiyen uyar ve her hafta o saatte yeni bir imaj üretir.
 
-- **Region settings:** Varsayılan (service defaults) ayarlar kullanıldığı için üretilen AMI sadece o an işlem yapılan bölgeye (ekranda `us-east-1`) kaydedilir.
-- İsteğe bağlı olarak kapsamlı bir projede gelişmiş ayarlarla AWS'ye "Ürettiğin imajı otomatik olarak Avrupa (Frankfurt) bölgesine de kopyala ve diğer ekiplerin kullandığı şu AWS hesaplarıyla da paylaş" denebilir.
+**Auto-disable policy:** Maliyetleri ve sistem kaynaklarını koruyan harika bir güvenlik ayarıdır. Kurduğumuz otomasyon hattında bir şeyler ters giderse (örneğin yazdığımız bir kod hatalıysa ve imaj oluşturulamıyorsa), sistemin sürekli boş yere çalışıp hata vermesini engelleriz.
+
+Ekranda bu sınır 5 olarak belirlenmiş. Yani sistem üst üste 5 kez başarısız olursa, birisi gelip hatayı çözene kadar bu Pipeline kendini otomatik olarak disable bırakacaktır.
+
+![Build schedule bölümünde Schedule builder, Dependency update settings ve Auto-disable policy ayarları](../../../../assets/ekran/p227-1.webp)
+
+### Recipe (tarif)
+
+- **Recipe configuration:** Burada "Create new recipe" seçeneğini işaretleyerek önceden kaydettiğimiz bir şablonu kullanmak yerine sıfırdan kendi tarifimizi oluşturacağımızı belirtiyoruz.
+- **Image type:** Ne tür bir imaj üreteceğimizi seçtiğimiz yerdir. Biz standart bir sanal makine kalıbı istediğimiz için Amazon Machine Image (AMI) seçili. (Diğer seçenek olan Docker, konteyner altyapıları içindir).
+- **Recipe details:** Tarifimize bir isim ve Versiyon (örneğin 1.0.0) veriyoruz. AWS'de tarifler sonradan değiştirilemediği için, yapılandırmada her değişiklik yaptığımızda bu versiyon numarasını artırarak ilerleriz.
+
+![Choose recipe adımında Recipe configuration, Image type ve Recipe details alanları](../../../../assets/ekran/p227-2.webp)
+
+- **Select image:** Kalıbımızı hangi temelin üzerine inşa edeceğimizi seçtiğimiz kısımdır. "Select managed images" diyerek AWS'nin kendi yönettiği ve sunduğu güvenli imajları kullanacağımızı belirtiyoruz.
+- **Image Operating System (OS):** Temel işletim sistemi olarak Amazon Linux seçilmiş. İhtiyaca göre buradan Ubuntu, Windows veya CentOS da seçilebilir.
+- **Image origin:** "Quick start" diyerek AWS'nin kullanıma hazır olarak sunduğu, optimize edilmiş standart başlangıç kalıplarından birini seçiyoruz.
+
+![Base image bölümünde Select managed images, Amazon Linux ve Quick start seçimleri](../../../../assets/ekran/p227-3.webp)
+
+![Instance configuration bölümünde SSM agent, User data ve Working directory alanları](../../../../assets/ekran/p228-1.webp)
+
+- **SSM agent:** AWS'nin imajı hazırlarken arka planda açtığı geçici makineye güvenli bir şekilde bağlanıp komutları (kurulumları) çalıştırabilmesi için gereken araçtır. İmaj bittikten sonra bu aracın yeni kalıbınızda yer almasını istemezseniz "Remove SSM agent" kutucuğunu işaretleyebilirsiniz.
+- **User data:** Makine ilk ayağa kalkarken otomatik olarak çalışmasını istediğiniz özel başlangıç scriptleri varsa buraya yazarsınız.
+- **Working directory:** AWS'nin kurulum yaparken indireceği dosyaları geçici olarak tutacağı ve çalıştıracağı sistem klasörüdür. Varsayılan olarak Linux'taki `/tmp` klasörü kullanılır.
+
+![Build components, Test components ve Storage (volumes) bölümleri](../../../../assets/ekran/p228-2.webp)
+
+- **Build components:** İmajın içine tam olarak nelerin kurulacağını adım adım belirlediğimiz yerdir. Örneğin; "İşletim sistemini güncelle", "Şu yazılımı indir", "Güvenlik ayarlarını yap" gibi komut paketlerini buradan ekleriz.
+- **Test components:** Kurulumlar bittikten sonra "Kurduğum programlar düzgün çalışıyor mu?" diye makineyi kontrol eden ufak doğrulama testlerini eklediğimiz kısımdır.
+- **Storage (volumes):** Ürettiğimiz bu yeni AMI kalıbının diskinin kaç GB olacağını ve hangi tipte (örneğin gp3) çalışacağını ayarladığımız bölümdür. Temel imajın disk ayarları otomatik olarak buraya yansır ama istersek ek diskler de (Add new EBS volume) bağlayabiliriz.
+
+![AMI watermarks bölümü](../../../../assets/ekran/p228-3.webp)
+
+**AMI watermarks:** İsteğe bağlı bir güvenlik ve takip adımıdır. Ürettiğimiz bu nihai imaja sistem üzerinden gizli bir filigran ekleriz. Böylece bu kalıp kopyalanıp başka yerlerde kullanılsa bile, kaynağının bizim oluşturduğumuz bu otomasyon hattı olduğunu kurumsal olarak rahatça takip edebiliriz.
+
+### Image creation process
+
+![Define image creation process adımında Default workflows seçimi](../../../../assets/ekran/p229-1.webp)
+
+- **Type:** AWS'nin bu imajı üretirken işlemleri hangi sırayla yapacağını (workflow) belirlediğimiz kısımdır.
+  - Ekranda Default workflows seçili. Yani AWS'ye "Standart derleme (build) ve test adımlarını kendi varsayılan sıranla yap" talimatını veriyoruz.
+  - Eğer adımların sırasına tamamen kendimiz karar vermek isteseydik (örneğin önce şu testi yap, sonra bunu kur gibi) sağ taraftaki Custom workflows seçeneğini kullanabilirdik.
+
+### Infrastructure configuration
+
+![Define infrastructure configuration adımında service defaults seçeneği](../../../../assets/ekran/p229-2.webp)
+
+- **Configuration options:** AWS'nin imajı hazırlamak için arka planda açacağı o "geçici sanal makinenin" özelliklerini belirlediğimiz yerdir. Ekranda "Create infrastructure configuration using service defaults" seçili olduğu için sistemi AWS'nin kendi otomatik ayarlarına bırakıyoruz.
+- **IAM instance profile:** O geçici makinenin içine program kurabilmesi ve AWS servisleriyle konuşabilmesi için bir kimliğe ihtiyacı vardır. AWS bu seçenekte makine için gereken IAM rollerini bizim yerimize otomatik olarak oluşturur ve tanımlar.
+- **İsteğe Bağlı:** Eğer istersek alt kısımdaki ayarlardan bu geçici makinenin boyutunu (Instance type), hangi ağda (VPC) çalışacağını veya hangi ağ güvenlik kurallarına (Security groups) tabi olacağını manuel olarak da belirleyebilirdik.
+
+### Distribution settings
+
+![Define distribution settings adımında Region settings ve service defaults](../../../../assets/ekran/p229-3.webp)
+
+**Distribution Settings:** Her şey bitti, testler başarılı oldu ve imajımız üretildi. Peki bu yeni kalıp nereye gidecek? Bu ekranda imajın dağıtım kurallarını belirliyoruz.
+
+**Region settings:** Yine varsayılan (service defaults) ayarları kullandığımız için, üretilen yeni AMI kalıbı sadece o an işlem yaptığımız AWS bölgesine (ekrandaki `us-east-1` bölgesine) kaydedilecektir.
+
+**İsteğe Bağlı:** Eğer kapsamlı bir proje yönetiyorsak, gelişmiş ayarları kullanarak AWS'ye şunu diyebilirdik: "Ürettiğin bu imajı otomatik olarak Avrupa (Frankfurt) bölgesine de kopyala ve diğer ekiplerin kullandığı şu AWS hesaplarıyla da anında paylaş."

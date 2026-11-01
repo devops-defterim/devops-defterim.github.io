@@ -8,7 +8,9 @@ order: 5
 
 ## Sembolik gösterim
 
-`ls -l` çıktısındaki her satırın başı, dosyanın tipini ve izinlerini gösterir. Örnek bir çıktı:
+Linux Dosya ve Klasör Yetkilerinin Sembolik Gösterimleri;
+
+![ls -l çıktısında dosya tipi, sahip, grup ve diğerleri izinlerinin renklerle gösterimi](../../../assets/ekran/p026-1.webp)
 
 ```text
 total 20
@@ -18,8 +20,6 @@ drwxr-xr-x 2 shum staff 4096 Jan 13 16:42 public
 drwxr-xr-x 2 shum staff 4096 Jan 16 14:07 public_html
 -rw-r--r-- 1 shum staff  628 Jan 15 20:04 verse
 ```
-
-Sütunların anlamı (soldan sağa):
 
 | Sütun | Örnek | Anlamı |
 | --- | --- | --- |
@@ -34,15 +34,19 @@ Sütunların anlamı (soldan sağa):
 | Tarih | `Jan 16 22:04` | Son değiştirilme tarihi |
 | Ad | `Mail` | Dosya adı |
 
-İzin harfleri:
+Burada gösterilen izinlerden `r` okuma, `w` yazma ve `x` ise bir executable dosyaları çalıştırabilme hakkı verir.
 
-- `r` (read): okuma
-- `w` (write): yazma
-- `x` (execute): çalıştırılabilir dosyaları çalıştırma
+Sarı ile gösterilen kısım dosyanın tipi hakkında (klasör, dosya vs.) bilgi verir.
+
+Yeşil ile gösterilen `r`, `w`, `x` harfleri yetkilerden hangilerinin bu dosyanın sahibinde olunduğunu gösterir. Mavi ile gösterilen `r`, `w`, `x` harfleri yetkilerden hangilerinin staff isimli grup üyelerinde olduğunu gösterir.
+
+Kırmızı ile gösterilen `r`, `w`, `x` harfleri yetkilerden hangilerinin sistemde kalan diğer tüm kullanıcılarda olduğunu gösterir.
 
 ## Sayısal (numerik) gösterim
 
-İzinler harf yerine sayıyla da gösterilebilir. Her izin grubu üç bitlik bir sayıdır: `r` = 4, `w` = 2, `x` = 1.
+Yetkileri harfli gösterim yerine bunları numerik olarak aşağıdaki gibi gösteriyoruz.
+
+![Binary, octal ve sembolik izin karşılıkları tablosu](../../../assets/ekran/p027-1.webp)
 
 | Binary | Octal | Sembolik | İzinler |
 | --- | --- | --- | --- |
@@ -55,7 +59,7 @@ Sütunların anlamı (soldan sağa):
 | 110 | 6 (4+2+0) | `rw-` | Read + Write |
 | 111 | 7 (4+2+1) | `rwx` | Read + Write + Execute |
 
-Örneğin `rwxrw-r-x` izni şöyle hesaplanır:
+![rwxrw-r-x izninin 765 olarak hesaplanması](../../../assets/ekran/p027-2.webp)
 
 | | Owner | Group | Other |
 | --- | --- | --- | --- |
@@ -63,7 +67,7 @@ Sütunların anlamı (soldan sağa):
 | Hesap | 4+2+1 | 4+2+0 | 4+0+1 |
 | Sayısal | 7 | 6 | 5 |
 
-Bir örnek daha (`U` user, `G` group, `O` other):
+![rwxr-xr-- izninin symbolic, binary ve decimal karşılıkları](../../../assets/ekran/p027-3.webp)
 
 | | U | G | O |
 | --- | --- | --- | --- |
@@ -73,7 +77,7 @@ Bir örnek daha (`U` user, `G` group, `O` other):
 
 ## İzinleri görüntüleme
 
-Dosya ve klasörlerin izinlerini görmek için `ls -l` kullanılır:
+![ls -l komutuyla izinlerin görüntülenmesi](../../../assets/ekran/p028-1.webp)
 
 ```bash frame="terminal"
 ls -l
@@ -85,9 +89,11 @@ drwxr-xr-x. 3 ec2-user ec2-user   36 Nov 10 19:43 ornek1
 -rw-r--r--. 1 ec2-user ec2-user 1713 Nov 13 14:15 linuxsample.txt
 ```
 
+Bu izinlerin hangi dosya veya klasörlerde ne şekilde olduğunu görmek için `ls -l` komutunu kullanırız.
+
 ## chmod ile izin değiştirme
 
-İzinleri sayısal olarak değiştirmek için `chmod 777 dosyaadi` biçimi kullanılır:
+![chmod 777 ile dosya ve klasör izinlerini değiştirme](../../../assets/ekran/p028-2.webp)
 
 ```bash frame="terminal"
 chmod 777 linuxsample.txt
@@ -105,16 +111,9 @@ drwxrwxrwx. 3 ec2-user ec2-user   36 Nov 10 19:43 ornek1
 -rwxrwxrwx. 1 ec2-user ec2-user 1713 Nov 13 14:15 linuxsample.txt
 ```
 
-İzinleri değiştirmenin diğer yolu harflerle belirtmektir:
+Bu izinleri değiştirmek için kullanacağımız komut `chmod 777 dosyaadı` komutunu
 
-| Harf | Kime |
-| --- | --- |
-| `u` | user (sahip) |
-| `g` | group (grup) |
-| `o` | others (diğerleri) |
-| `a` | all (hepsi) |
-
-`+` izin ekler, `-` izin kaldırır. Örneğin gruptan yazma iznini almak için `chmod g-w dosyaadi` kullanılır. Aşağıda herkesten yazma izni kaldırılıyor:
+![chmod a-w ile herkesten yazma iznini kaldırma](../../../assets/ekran/p028-3.webp)
 
 ```bash frame="terminal"
 chmod a-w ornek1
@@ -127,9 +126,11 @@ dr-xr-xr-x. 3 ec2-user ec2-user   36 Nov 10 19:43 ornek1
 -rwxrwxrwx. 1 ec2-user ec2-user 1713 Nov 13 14:15 linuxsample.txt
 ```
 
+Bu izinleri değiştirmenin diğer bir yolu; `u` user, `g` grup, `o` diğerleri ve `a` hepsi olmak üzere örneğin bir gruptan yazma yetkisini almak için `chmod g-w dosyaadı` komutunu kullanırız.
+
 ## umask ile varsayılan izinler
 
-Normalde bir klasör ilk oluşturulduğunda 777, bir dosya ilk oluşturulduğunda 666 izinleriyle oluşturulur. **umask**, yeni oluşturulan dosya ve klasörlere varsayılan olarak verilecek izinleri belirlemeyi sağlar. Belirtilen değer varsayılan izinlerden (777, 666) düşülür. Örneğin `umask 022` yazılırsa klasörler için 777 - 022 işleminden kalan değer izin olarak atanır.
+Normalde bir klasörü ilk oluşturduğumuzda otomatik olarak 777 izinleriyle, bir dosyayı ilk oluşturduğumuzda ise 666 izinleriyle oluşturuluyor. Ancak bu izinleri dosya oluştururken değiştirmemizi sağlayan umask sistemi vardır. Yeni oluşturduğumuz dosya ve klasörlerde varsayılan olarak verilmesini istediğimiz izinleri belirtiriz. Belirttiğimiz bu izinler varsayılan izinlerden (777, 666) düşürülür örneğin `umask 022` yazarsak 777 - 022 işlemi sonucunda kalan değer izin olarak atanır.
 
 ```bash frame="terminal"
 umask 022

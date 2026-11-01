@@ -8,7 +8,7 @@ order: 15
 
 ## for döngüsü
 
-1'den 10'a kadar sayıları ekrana yazdıran basit bir for döngüsü:
+![1'den 10'a kadar sayıları yazdıran for döngüsü ve çıktısı](../../../../assets/ekran/p061-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -27,7 +27,9 @@ sayi: 3
 sayi: 10
 ```
 
-Bulunulan dizindeki `.asd` uzantılı tüm dosyaları kontrol eden for döngüsü:
+En basit haliyle for döngüsünün kullanımına kolay bir örnekle bakacak olursak. 1'den 10'a kadar sayıları ekrana bastırmak için yazdığımız döngü yukarıdaki gibidir.
+
+![.asd uzantılı dosyaları kontrol eden for döngüsü ve çıktısı](../../../../assets/ekran/p061-2.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -46,9 +48,11 @@ file: 1.asd
 file: 2.asd
 ```
 
+Mesela bulunduğumuz dizindeki asd uzantılı tüm dosyaların kontrol edilmesini istersek yazmamız gereken for döngüsü yukarıdaki gibi olmalıdır.
+
 ## while döngüsü
 
-while ile 1'den 10'a kadar sayıları yazdırma:
+![while ile 1'den 10'a kadar sayıları yazdıran script ve çıktısı](../../../../assets/ekran/p062-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -72,9 +76,11 @@ done
 10
 ```
 
+while döngüsü ile 1'den 10'a kadar sayıları bastırmak istersek yukarıdaki yolu takip edebiliriz.
+
 ### break ile döngüden çıkma
 
-Kullanıcının girdiği değer 7 olduğunda sonlanan bir while döngüsü. `while :` sonsuz bir döngü başlatır, `break` döngüden çıkar:
+![Kullanıcı 7 girince break ile sonlanan while döngüsü ve çıktısı](../../../../assets/ekran/p062-2.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -94,9 +100,11 @@ girdiginiz sayi: 5
 bir sayi giriniz:7
 ```
 
+Kullanıcıdan alınan input örneğin 7 olduğunda döngünün sonlanmasını sağlayan bir while döngüsü yukarıda verilmiştir.
+
 ## IFS ile dosyayı satır satır okuma
 
-`while IFS= read -r line` kalıbıyla bir dosya, satırlar bitene kadar satır satır okunur. Her satır `line` değişkenine atanır ve `echo` ile yazdırılır. Dosya döngüye `done < "$t1"` ile verilir:
+![while IFS= read -r line ile devops.t1 dosyasını satır satır okuyan script ve çıktısı](../../../../assets/ekran/p063-1.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -127,7 +135,13 @@ mdkwjcnec error 23
 error
 ```
 
-Aynı örneğin genişletilmiş hali, çalıştığı klasördeki tüm `.t1` uzantılı dosyaları döngüye alır. Her birinin dosya olup olmadığını kontrol eder, IFS ile satır satır okur ve `error` olan satır varsa "hata bulundu" yazar:
+IFS, kabuk üzerinde yaptığımız işlemlerdir. While döngüsü içinde IFS kullanarak satırlar bitene kadar satırları okuyoruz ve line değişkenine atayarak echo ile ekrana yazdırmasını sağlıyoruz.
+
+:::caution[Düzeltme]
+IFS (Internal Field Separator), shell'in bir satırı kelimelere bölerken kullandığı ayraç karakterleridir (varsayılan: boşluk, tab, yeni satır). `IFS=` boş bırakılınca `read` satırın başındaki ve sonundaki boşlukları silmeden tüm satırı okur.
+:::
+
+![Klasördeki .t1 dosyalarında error satırı arayan genişletilmiş script ve çıktısı](../../../../assets/ekran/p063-2.webp)
 
 ```bash title="scr.sh"
 #!/bin/bash
@@ -158,3 +172,5 @@ cat devops.t1
 ```text title="Script çıktısı"
 hata bulundu error
 ```
+
+Önceki örneğin daha genişletilmiş hali yukarıdaki gibidir. Bu komutun çalıştığı klasörde `.t1` uzantılı tüm dosyaları bir döngüye alırız. Bu uzantılı dosyanın var olup olmadığını kontrol ederiz ve IFS ile satır satır okutup error olan satır varsa "hata bulundu" çıktısını vermesini istedik.

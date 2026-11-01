@@ -6,46 +6,42 @@ lessons: [14, 15]
 order: 4
 ---
 
-Görevlerin tam listesi için [Görevler](/mini-proje/gorevler/) sayfasına bakın.
-
 ## Görev 10: EBS volume oluşturma ve formatlama
 
 > 10-) 4gb boyutunda bir EBS Volume yaratın ve bunu oluşturduğunuz instance'a bağlayın. Bunun üzerinde tüm disk boyutunu kullanan tek bir partition yaratın ve xfs dosya sistemiyle formatlayın.
 
 ### Volume oluşturma
 
-1. EC2 konsolunda soldaki menüden **Elastic Block Store → Volumes** seçeneğine tıklayın.
-2. Açılan ekranda `Create volume` butonuna tıklayın.
-3. **Create volume** ekranında volume boyutunu ve özelliklerini belirleyin:
-   - **Volume type**: `General Purpose SSD (gp3)`
-   - **Size (GiB)**: `4`
-   - **IOPS**: `3000`
-   - **Throughput (MiB/s)**: `125`
-   - **Availability Zone**: instance ile aynı zone (örnekte `use1-az4 (us-east-1c)`)
-   - **Snapshot ID**: `Don't create volume from a snapshot`
-   - **Encryption**: `Encrypt this volume` işaretsiz
-4. Sağ alttaki `Create volume` butonuyla volume'ü oluşturun. Listede 4 GiB'lık yeni volume görünür.
+1. Öncelikle bir volume oluşturmak için solda bulunan menü üzerinden **Elastic Block Store** altında **Volumes** seçeneğine tıklıyoruz.
+2. Açılan ekranda **Create volume** diyerek devam ediyoruz.
+
+   ![Elastic Block Store altında Volumes ekranı ve Create volume butonu](../../../assets/ekran/p111-2.webp)
+
+3. Oluşturacağımız volume boyutunu ve özelliklerini belirledikten sonra sağ alttan **Create volume** diyerek yeni volume yaratıyoruz.
+
+   ![Create volume ekranında 4 GiB gp3 volume ayarları](../../../assets/ekran/p112-1.webp)
+
+   ![Volumes listesinde oluşturulan 4 GiB volume](../../../assets/ekran/p112-2.webp)
 
 ### Volume'ü instance'a bağlama
 
-1. Oluşturulan volume'ü seçip **Attach volume** ekranını açın.
-2. **Instance** alanında proje instance'ını seçin (örnekte `miniprojem (running)`). Yalnızca volume ile aynı Availability Zone'daki instance'lar listelenir.
-3. **Device name** alanında `/dev/sdf` seçili kalsın.
-4. `Attach volume` butonuna tıklayın.
+Oluşturduğumuz volume'e bağlanıyoruz.
 
-:::note
-Konsol bu ekranda, yeni Linux kernel'lerinin cihazları içeride `/dev/xvdf` ile `/dev/xvdp` arasında yeniden adlandırabileceğini belirtir; ekranda girilen ad `/dev/sdf` olsa bile. Örnekteki sunucuda disk `/dev/nvme1n1` olarak görünmüştür.
+![Attach volume ekranında instance ve device name seçimi](../../../assets/ekran/p112-3.webp)
+
+### Partition oluşturma ve xfs ile formatlama
+
+Şimdi bunun üzerinde tüm disk boyutunu kullanan tek bir partition oluşturalım bunun için `sudo fdisk cihaz_yolu` komutunu kullanırız ardından xfs dosya sistemiyle formatlamak için de `sudo xfs-f xfs cihaz_yolu` komutunu çalıştırıyoruz.
+
+:::caution[Düzeltme]
+Formatlama komutu `sudo mkfs.xfs -f cihaz_yolu` şeklindedir ve cihaz yolu olarak diskin kendisi değil, fdisk ile oluşturulan partition verilir (örnekte `/dev/nvme1n1p1`).
 :::
 
-### Partition oluşturma
-
-Tüm disk boyutunu kullanan tek bir partition için `sudo fdisk cihaz_yolu` komutu kullanılır:
+![fdisk ile partition oluşturma ve mkfs.xfs ile formatlama çıktısı](../../../assets/ekran/p113-1.webp)
 
 ```bash frame="terminal"
 sudo fdisk /dev/nvme1n1
 ```
-
-fdisk içinde verilen yanıtlarla oturum şöyle ilerler (`d` mevcut partition'ı siler, `n` yeni partition oluşturur, `p` primary seçer, `1` partition numarasıdır, sektör sorularında Enter ile varsayılanlar kabul edilir, `w` değişiklikleri yazar):
 
 ```text title="fdisk oturumu"
 Welcome to fdisk (util-linux 2.37.4).
@@ -73,8 +69,6 @@ Calling ioctl() to re-read partition table.
 Syncing disks.
 ```
 
-### xfs ile formatlama
-
 ```bash frame="terminal"
 sudo mkfs.xfs -f /dev/nvme1n1p1
 ```
@@ -92,5 +86,3 @@ log      =internal log           bsize=4096   blocks=16384, version=2
          =                       sectsz=512   sunit=1 blks, lazy-count=1
 realtime =none                   extsz=4096   blocks=0, rtextents=0
 ```
-
-Disk, partition ve dosya sistemi kavramları için [Disk yönetimi](/linux/disk-yonetimi/) sayfasına bakabilirsiniz.

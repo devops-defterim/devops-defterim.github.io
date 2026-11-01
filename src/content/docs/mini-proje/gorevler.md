@@ -6,21 +6,11 @@ lessons: ["talimat"]
 order: 1
 ---
 
-## Projenin amacı
-
-Bu mini proje, o ana kadar öğrenilen Linux ve Git konularını pekiştirmek ve uygulama sırasında yeni yetkinlikler kazanmak için hazırlanmış uçtan uca küçük bir simülasyondur. Amaç, bir Cloud Engineer'ın günlük iş akışını deneyimlemektir:
-
-- AWS üzerinde bir sunucu kurmak ve üzerinde gerekli ayarları yapmak,
-- web sitesini ve onu barındıracak GitHub altyapısını oluşturmak,
-- siteyi sunucuya yükleyip herkesin görebileceği hale getirmek ve tüm süreci bir script ile otomatik çalışır hale getirmek.
-
-Görevlere başlamak için [AWS Console](https://aws.amazon.com/tr/console/) üzerinden oturum açılır.
-
-:::note
-Bu sayfada yalnızca görevler yer alır. Her görevin altındaki bağlantı, çözümün anlatıldığı sayfaya gider.
-:::
+Öğrendiklerimizi pekiştirmek ve uygulama sırasında yeni yetkinlikler kazanmak adına gerçekçi mini bir proje ile bir Cloud Engineer'ın günlük iş akışını deneyimlemek adına uçtan uca küçük bir simülasyon projesi başlatıyoruz.
 
 ## Sunucuyu kurma
+
+Gelin ilk olarak bir sunucu kuralım ve bunun üstünde gerekli ayarları yapalım. Bunun için ilk olarak [https://aws.amazon.com/tr/console/](https://aws.amazon.com/tr/console/) adresinden oturum açalım ve bizden istenilen ilk talimata göz atalım.
 
 ### 1. EC2 instance oluşturma
 
@@ -84,6 +74,8 @@ Bu sayfada yalnızca görevler yer alır. Her görevin altındaki bağlantı, ç
 
 ## Web sitesi ve GitHub
 
+Web sitemizi ve onu host edeceğimiz GitHub altyapısını oluşturarak devam edelim.
+
 ### 11. Site dosyalarını indirme
 
 11-) https://github.com/aytitech/public/raw/main/sayfa.tgz dosyasını indirin ve açın.
@@ -98,7 +90,7 @@ onepage klasörüne girin ve git initialization gerçekleştirin.
 
 ### GitHub reposu oluşturma
 
-Ardından GitHub üzerinde onepage adında public bir GitHub reposu oluşturun. README.md dosyası olmasın içinde.
+Ardından github üzerinde onepage adında public bir github reposu oluşturun. README.md dosyası olmasın içinde.
 
 Çözüm: [Web sitesi ve GitHub → GitHub reposu oluşturma](/mini-proje/web-sitesi-ve-github/#github-reposu-oluşturma)
 
@@ -110,19 +102,20 @@ Bu git initialization yaptığınız projeyi yeni oluşturduğunuz repo'ya gönd
 
 ### main branch koruması
 
-GitHub repo'nuzun main branch'ını koruma altına alın ve 1 kişi review etmeden main branch'a merge işlemi gerçekleşemesin.
+Github repo'nuzun main branch'ını koruma altına alın ve 1 kişi review etmeden main branch'a merge işlemi gerçekleşemesin.
 
 Çözüm: [Web sitesi ve GitHub → main branch koruması](/mini-proje/web-sitesi-ve-github/#main-branch-koruması)
 
 ## Siteyi yayına alma ve otomasyon
 
+Sunucu hazır, web sitemiz hazır. O zaman bunu sunucuya yükleyelim de herkes görebilsin. Hatta tüm süreci otomatize çalışacak hale getirelim.
+
 ### Script yazma
 
-Bir script yazın. Bu script sunucunuzda çalıştırıldığı zaman:
+Bir script yazın.
 
-1. İlk olarak `git clone` ile onepage GitHub reposunu `/tmp` folder'ına clonelasın. Bu işlem sadece ilk defa indireceğiniz zaman ya da makine kapatılıp açıldığında işe yarayacaktır, çünkü makine kapanıp açıldığında tmp folder'ı temizlenir. Bu nedenle script önce bu folder var mı diye baksın. Folder yoksa `git clone` çalışsın, varsa çalışmasın.
-2. Scripte devam edin ve bu onepage folder'ına girerek remote repository'deki değişiklikleri locale çekin.
-3. Ardından `index.html` dosyasının içindeki `ISIM` kelimesini kendi isminizle, `EPOSTA` değerini de kendi e-posta adresinizle değiştirin.
-4. Son olarak onepage folder'ının içindeki tüm dosyaları `/var/www/html` folder'ına kopyalayın. Eğer bu folder'da aynı isimli dosyalar varsa bunların üzerine yazsın.
+Bu script sunucunuzda çalıştırıldığı zaman
+
+İlk olarak `git clone` ile onepage github reposunu `/tmp` folder'ına clonelasın. "Bu işlem sadece ilk defa indireceğiniz zaman ya da makine kapatılıp açıldığında işe yarayacaktır. Çünkü makine kapanıp açıldığında tmp folder'ı temizlenir. Bu nedenle script önce bu folder var mı diye baksın. Folder yoksa `git clone` çalışsın. Varsa çalışmasın" Scripte devam edin ve bu onepage folder'ına girerek remote repository'deki değişiklikleri locale çekin. Ardından `index.html` dosyasının içindeki `ISIM` kelimesini kendi isminizle, `EPOSTA` değerini de kendi eposta adresinizle değiştirin. Ve son olarak onepage folder'ının içindeki tüm dosyaları `/var/www/html` folder'ına kopyalayın. Eğer bu folder'da aynı isimli dosyalar varsa bunların üzerine yazsın.
 
 Çözüm: [Web sitesi ve GitHub → Yayına alma scripti](/mini-proje/web-sitesi-ve-github/#yayına-alma-scripti)

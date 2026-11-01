@@ -8,19 +8,11 @@ order: 4
 
 ## Branch nedir
 
-Bir tez yazdığımızı düşünelim. Yazıyı bitirip son halini kaydettik, sonra eklenmesi gereken yeni bir kısım çıktı. En mantıklı yol, tezin son halinin bir kopyasını çıkarıp değişikliği onun üzerinde denemektir. Branch'ler tam olarak bu işe yarar.
-
-Projenin çalışan ve kararlı haline yeni bir özellik eklemek istendiğinde, bunu doğrudan `main` branch (ana dal) üzerinde yapıp olası hatalarla projeyi çalışmaz hale getirmek yerine yeni bir dal oluşturulur. Değişiklikler bu güvenli alanda tamamlanır, her şeyin sorunsuz çalıştığından emin olunduktan sonra dal ana dalla birleştirilir.
+Şimdi gelin GitHub’ın en önemli konseptlerinden biri olan branch konusuna geçelim. Bir tez yazdığımızı düşünelim. Yazımızı bitirdik ve son halini kaydettik. Ardından eklememiz gereken yeni bir kısım oldu. Burada yapılacak en mantıklı işlem tezimizin son halinin bir kopyasını çıkarıp değişikliği onun üzerinde denemek olacaktır. Branch’ler de tam olarak bu işe yarar. Bir projenin çalışan ve kararlı haline yeni bir özellik eklemek istediğimizde, bunu doğrudan main branch (ana dal) üzerinde yapıp olası hatalarla projeyi çalışmaz hale getirmek yerine, kendimize yeni bir dal oluştururuz. Değişikliklerimizi bu güvenli alanda tamamlayıp her şeyin sorunsuz çalıştığından emin olduktan sonra, bu dalı ana dalımızla birleştiririz.
 
 ## Branch oluşturma ve listeleme
 
-| Komut | İşlev |
-| --- | --- |
-| `git branch <branch_adi>` | Yeni branch oluşturur |
-| `git branch --list` | Branch'leri listeler |
-| `git checkout <branch_adi>` | Belirtilen branch'e geçer |
-| `git checkout -b <branch_adi>` | Branch oluşturur ve aynı anda o branch'e geçer |
-| `git branch -d <branch_adi>` | Branch'i siler |
+![git branch ile titledegis branch'inin oluşturulması ve git branch --list çıktısı](../../../assets/ekran/p091-1.webp)
 
 ```bash frame="terminal"
 git branch titledegis
@@ -32,9 +24,11 @@ git branch --list
   titledegis
 ```
 
+Yeni bir branch oluşturmak için `git branch branchismi` komutunu, branch’leri listelemek için ise `git branch --list` komutunu kullanırız.
+
 ## Branch'ler arasında geçiş
 
-Aşağıdaki örnekte `titledegis` branch'inde yeni bir dosya oluşturulup commit ediliyor. `main` branch'e dönüldüğünde bu dosyanın orada görünmediği görülüyor:
+![main branch'te ls çıktısı](../../../assets/ekran/p091-2.webp)
 
 ```bash frame="terminal"
 git checkout main
@@ -46,6 +40,8 @@ Switched to branch 'main'
 Your branch is up to date with 'origin/main'.
 ornek.txt       index.html      README.md
 ```
+
+![titledegis branch'inde branchdosyam dosyasının oluşturulup commit edilmesi](../../../assets/ekran/p091-3.webp)
 
 ```bash frame="terminal"
 git checkout titledegis
@@ -63,6 +59,8 @@ Switched to branch 'titledegis'
 branchdosyam    ornek.txt       index.html      README.md
 ```
 
+![main branch'e dönüldüğünde branchdosyam dosyasının görünmemesi](../../../assets/ekran/p091-4.webp)
+
 ```bash frame="terminal"
 git checkout main
 ls
@@ -74,26 +72,25 @@ Your branch is up to date with 'origin/main'.
 ornek.txt       index.html      README.md
 ```
 
+Oluşturduğumuz bu branch’e gitmek için `git checkout branchadı` komutunu kullanıyoruz. Burada yaptığımız değişikliğin örneğin aşağıda olduğu gibi yeni bir dosya oluşturma işleminin main branch’te gözükmediğini görüyoruz.
+
+Bir branch oluşturup aynı zamanda o branch’e checkout olmak istiyorsak `git checkout -b branchadi` komutunu kullanırız.
+
+Bir branch’i silmek için ise `git branch -d branchadi` komutunu kullanırız.
+
 ## Merge
 
-Branch üzerinde yapılan değişiklikleri ana projeye dahil etme işlemine **merge** denir. Böylece yan yolda geliştirilen özellikler ana yola (`main`) bağlanır. `main` branch'teyken:
-
-```bash frame="terminal"
-git merge branchadi
-```
+Oluşturduğumuz branch üzerinde yaptığımız değişikliklerin ardından bu değişiklikleri ana projeye dahil etme işlemine "merge" denir. Bu işlemle yan yolda geliştirdiğimiz özellikleri ana yola (main) bağlamış oluruz. Bunun için main branch’deyken `git merge branchadi` komutunu kullanırız.
 
 ## Branch'i GitHub'a gönderme
 
-Yerelde oluşturulan bir branch'i GitHub'a göndermek için önce o branch'e geçilir, ardından push yapılır:
-
-```bash frame="terminal"
-git checkout branchadı
-git push -u origin branchadı
-```
+Kendi makinemizde oluşturduğumuz branch’i GitHub’a atmak istersek öncelikle `git checkout branchadı` komutuyla branch’e geçiyoruz ve `git push -u origin branchadı` komutunu kullanırız.
 
 ## Merge conflict
 
-Kendi dalımızda çalışırken `main` branch'e de yeni commit'ler eklenir. Bu değişiklikler dosyanın farklı satırlarındaysa Git bunları kendisi birleştirir. Ancak iki dalda aynı dosyanın aynı satırında farklı değişiklikler yapılmışsa Git hangisinin doğru olduğuna karar veremez. Bu duruma **merge conflict** (birleştirme çakışması) denir.
+Biz main branch’i bilgisayarımıza çekip kendi dalımız üzerinde çalışırken aynı zamanda main branch üzerine de eklenen yeni commitler olacaktır. Eğer bu değişiklikler dosyanın farklı satırlarındaysa, Git bunları kendisi kolayca birleştirir. Ancak, eğer her iki dalda da aynı dosyanın aynı satırı üzerinde farklı değişiklikler yapılmışsa, Git hangi bilginin doğru olduğuna karar veremez. Bu durumda ortaya çıkan duruma 'Merge Conflict' (Birleştirme Çakışması) denir.
+
+![git merge titledegis komutunda index.html dosyasında çıkan merge conflict](../../../assets/ekran/p092-1.webp)
 
 ```bash frame="terminal"
 git merge titledegis
@@ -106,10 +103,12 @@ Automatic merge failed; fix conflicts and then commit the result.
 ```
 
 :::note
-Merge conflict bir hata değil, Git'in veri kaybını önlemek için aldığı bir güvenlik önlemidir.
+Bu durum bir hata değil, Git'in veri kaybını önlemek için aldığı bir güvenlik önlemidir.
 :::
 
-Böyle bir durumda Git, aynı satırda yapılan iki değişikliği de dosyaya yazar ve hangisinin doğru olduğunu sorar. Dosya açılır (`code index.html`) ve istenmeyen satırlar elle silinerek çakışma çözülür. Örnekteki `index.html` dosyası:
+Bunu çözmenin iki yolu vardır. İlki böyle bir durum yaşandığında Git dosya üzerinde aynı satırda yapılan değişiklikleri dosyaya yazar ve hangisinin doğru olduğunu sorar. Bunu manuel şekilde istemediğimiz satırları silerek yaparız.
+
+![VS Code'da index.html dosyasındaki çakışma işaretleri ve iki dalın title satırları](../../../assets/ekran/p092-2.webp)
 
 ```html title="index.html"
 <!DOCTYPE html>
@@ -129,11 +128,11 @@ Böyle bir durumda Git, aynı satırda yapılan iki değişikliği de dosyaya ya
 </html>
 ```
 
-`<<<<<<< HEAD` ile `=======` arası bulunulan daldaki (Current Change), `=======` ile `>>>>>>> titledegis` arası birleştirilmek istenen daldaki (Incoming Change) satırdır. VS Code bu bölümün üstünde `Accept Current Change | Accept Incoming Change | Accept Both Changes | Compare Changes` seçeneklerini gösterir.
-
 ## Uzak branch'leri listeleme
 
-`git branch` normalde yalnızca yerelde oluşturulan dalları gösterir. GitHub (uzak sunucu) tarafındaki dalları görmek için:
+Normalde `git branch` komutu sadece kendi bilgisayarımızda oluşturduğumuz dalları gösterir. Ancak projenin GitHub (uzak sunucu) tarafında hangi dalların bulunduğunu görmek istersek `git branch -r` komutunu kullanırız.
+
+![git branch -r çıktısında origin/main ve origin/titledegis](../../../assets/ekran/p092-3.webp)
 
 ```bash frame="terminal"
 git branch -r
@@ -143,5 +142,3 @@ git branch -r
   origin/main
   origin/titledegis
 ```
-
-Rebase, [Detached HEAD, diff, reset ve stash](/git/detached-head-conflict-stash/) sayfasında anlatılıyor.

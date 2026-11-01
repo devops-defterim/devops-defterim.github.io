@@ -8,9 +8,13 @@ order: 5
 
 ## CLI'a erişim
 
-AWS hesaplarına bağlanma yöntemlerinden biri CLI'dır. AWS CLI'ı bilgisayarımıza indirip kullanabileceğimiz gibi, AWS konsolunun sağ üstündeki **CloudShell** simgesinden de ulaşabiliriz.
+IAM servisini arkamızda bırakarak bir sonraki servis olan CLI hizmetine giriş yapalım. Daha önce de bahsettiğimiz gibi biz AWS hesaplarımıza üç şekilde bağlanabiliyorduk. Bu yöntemlerden biri de CLI servisi. CLI'ı bilgisayarımıza indirip kullanabildiğimiz gibi AWS üzerinden de aşağıdaki gibi sağ üstteki **CloudShell**'den ulaşabiliriz.
 
-CloudShell'de `aws --version` komutunu çalıştırınca CLI'ın yüklü olduğunu görürüz:
+![AWS konsolunun sağ üstündeki CloudShell simgesi](../../../assets/ekran/p150-1.webp)
+
+Gördüğünüz gibi `aws --version` komutunu çalıştırırsak burada yüklü olduğunu görürüz.
+
+![CloudShell'de aws --version komutunun çıktısı](../../../assets/ekran/p150-2.webp)
 
 ```bash frame="terminal"
 aws --version
@@ -22,13 +26,9 @@ aws-cli/2.35.19 Python/3.14.6 Linux/6.1.175-219.359.amzn2023.x86_64 exec-env/Clo
 
 ## aws configure
 
-Daha önce [oluşturduğumuz access key](/aws/iam/kullanici-mfa-access-key/#access-key-oluşturma) ile kendi bilgisayarımızın terminalinden giriş yapmak için önce `aws configure` komutunu çalıştırıyoruz. Komut sırasıyla şunları sorar:
+Daha önce [oluşturduğumuz access key](/aws/iam/kullanici-mfa-access-key/#access-key-oluşturma) ile CLI üzerinden giriş yapmak için ilk olarak terminalimizde `aws configure` komutunu çalıştırıyoruz.
 
-1. **AWS Access Key ID** ve **AWS Secret Access Key:** Access key bilgilerimizi girip Enter'a basıyoruz.
-2. **Default region name:** "Kodlarım ve verilerim dünya haritası üzerinde tam olarak hangi şehirdeki sunucularda barınsın?" sorusunun cevabına göre bir region yazıyoruz (örnekte `eu-west-1`).
-3. **Default output format:** Çıktıların JSON formatında gelmesi için `json` yazıp Enter'a basıyoruz.
-
-Örnekte önce yerel terminalde CLI sürümü kontrol ediliyor, ardından `aws configure` çalıştırılıyor:
+![Yerel terminalde aws --version, aws configure ve aws sts get-caller-identity komutları](../../../assets/ekran/p151-1.webp)
 
 ```bash frame="terminal"
 aws --version
@@ -49,8 +49,6 @@ Default region name [me-central-1]: eu-west-1
 Default output format [json]: json
 ```
 
-Böylece CLI üzerinden, oluşturduğumuz user ile AWS hesabımıza bağlanmış olduk. Örnekte bağlantı `aws sts get-caller-identity` komutuyla kontrol ediliyor; çıktıda kullanıcı ID'si, hesap numarası ve kullanıcının ARN'i görünür:
-
 ```bash frame="terminal"
 aws sts get-caller-identity
 ```
@@ -63,21 +61,25 @@ aws sts get-caller-identity
 }
 ```
 
+1. Ardından **Access Key ID** ve **Secret Access Key** bilgilerimizi girerek enter diyoruz.
+2. Sıradaki **region name** kısmına "Benim kodlarım ve verilerim dünya haritası üzerinde tam olarak hangi şehirdeki sunucularda barınsın?" sorusunun cevabına göre bir region yazarak devam ediyoruz.
+3. Son olarak alacağımız çıktıların formatını JSON olarak belirlemek için `json` yazıp enter diyoruz.
+
+Evet böylece artık CLI üzerinden oluşturmuş olduğumuz user ile AWS hesabımıza bağlanmış olduk.
+
 ## Komut yapısı
 
-CLI komutları her zaman `aws` anahtar kelimesiyle başlar. Ardından işlem yapılacak servisin adı (ör. `ec2`, `s3`), son olarak da o serviste yapılacak işlem yazılır. Gerekirse en sona o işleme ait parametreler eklenir:
+CLI üzerinden AWS kaynaklarımızı nasıl yönettiğimizi ve AWS CLI'ın arka planda nasıl çalıştığını gelin birlikte öğrenelim.
 
-```text
-aws <servis> <işlem> [parametreler]
-```
+Kullanım syntax'ı temel olarak şu şekildedir: Komut satırına her zaman öncelikle `aws` anahtar kelimesini yazarız. Ardından işlem yapmak istediğimiz servisin adını (örneğin `ec2`, `s3` vb.) ve son olarak o serviste yapmak istediğimiz işlemi belirterek komutu oluştururuz. İhtiyaç halinde en sona o işleme ait parametreleri ekleriz.
 
-Örneğin EC2 servisindeki durdurulmuş bir sanal makineyi başlatmak için:
+Örnek olarak, EC2 servisi üzerindeki durdurulmuş bir sanal makineyi başlatmak için şu komutu kullanırız:
 
 ```bash frame="terminal"
 aws ec2 start-instances --instance-ids i-1234567890abcdef0
 ```
 
-Bir serviste kullanılabilecek eylemleri görmek için `aws <servis> help` komutu kullanılır:
+![aws ec2 help komutunun çıktısı](../../../assets/ekran/p152-1.webp)
 
 ```bash frame="terminal"
 aws ec2 help
@@ -104,14 +106,13 @@ AVAILABLE COMMANDS
 ...
 ```
 
+Bir servis üzerinden kullanabileceğimiz eylemleri görmek için `aws <servis adı> help` komutunu kullanırız.
+
 ## Çıktıları filtreleme
 
-AWS CLI komutlarının döndürdüğü uzun çıktılar iki yöntemle filtrelenip özelleştirilebilir:
+AWS CLI kullanarak çalıştırdığımız komutların bize döndürdüğü uzun çıktılar üzerinde iki farklı yöntemle filtrelemeler yapabiliriz ve sonuçları özelleştirebiliriz. İlk olarak, `--filters` parametresini kullanarak AWS'nin bize sadece belirli özelliklere sahip kaynakları (örneğin sadece çalışan sanal makineleri) getirmesini sağlayabiliriz. İkinci olarak ise `--query` parametresini kullanırız. Bu parametre sayesinde, dönen detaylı veri yığını içinden sadece görmek istediğimiz özel değerlerin (örneğin sadece makinelerin IP adreslerinin) yolunu yazarak nokta atışı sonuçlar elde edebiliriz.
 
-- **`--filters`:** AWS'nin yalnızca belirli özelliklere sahip kaynakları (örneğin sadece çalışan sanal makineleri) getirmesini sağlar.
-- **`--query`:** Dönen detaylı veri içinden sadece görmek istediğimiz değerlerin (örneğin sadece makinelerin IP adreslerinin) yolunu yazarak nokta atışı sonuç almamızı sağlar.
-
-Sadece tek bir makinenin özelliklerini görmek için `aws ec2 describe-instances --instance-ids <makine_id>` komutu kullanılır:
+![aws ec2 describe-instances --instance-ids komutunun JSON çıktısı](../../../assets/ekran/p153-1.webp)
 
 ```bash frame="terminal"
 aws ec2 describe-instances --instance-ids i-0123456789abcdef0
@@ -150,3 +151,5 @@ aws ec2 describe-instances --instance-ids i-0123456789abcdef0
                             },
                             ...
 ```
+
+Sadece tek bir makinenin özelliklerini görmek istiyorsak `aws ec2 describe-instances --instance-ids makine_id` komutunu kullanırız.

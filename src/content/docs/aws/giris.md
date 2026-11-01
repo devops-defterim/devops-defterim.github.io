@@ -8,37 +8,34 @@ order: 1
 
 ## Cloud computing
 
-[Daha önce bahsettiğimiz](/bulut-temelleri/sunucudan-buluta/) cloud kavramıyla başlayalım. Cloud computing; en az düzeyde efor sarf ederek, bazı özellikleri kendi programımız içinde yöneterek istediğimiz anda kaynak oluşturup silebildiğimiz, bunlara anında internet üzerinden erişebildiğimiz ve kullandığımız hizmetlerin faturalandırmasının gösterildiği bilgisayar kaynaklarıdır.
+Temel kavramları burada noktalayarak uzun süre devam edeceğimiz AWS konusuna kısa bir giriş yapalım. [Daha önce bahsettiğimiz cloud kavramıyla](/bulut-temelleri/sunucudan-buluta/) başlayabiliriz. Cloud computing, en az düzeyde efor sarf ederek kendi programımız içinde bazı özellikleri yöneterek; istediğimiz anda kaynak oluşturup silebildiğimiz, bunlara anında internet üzerinden erişebildiğimiz ve kullandığımız hizmetlerin faturalandırılmasının gösteriminin olduğu bilgisayar kaynaklarıdır.
 
-Cloud'u üç kısımda anlatabiliriz:
-
-| Tür | Açıklama | Örnekler |
-| --- | --- | --- |
-| Public cloud | Başka bir firma tarafından yönetilip sunulan altyapı üzerinden alınan hizmetler | AWS, Microsoft Azure, Google Cloud Platform |
-| Private cloud | Kendi veri merkeziyle işleri yürüten sistemler | IBM, Red Hat, OpenStack, Dell, EMC, HPE, Microsoft |
-| Hybrid | Hem private cloud altyapısını koruyan hem de public cloud özelliklerinden yararlanan sistemler | |
+Cloud'u kendi içinde üç kısımda anlatabiliriz. İlki bir başka firma tarafından yönetilip sunulan altyapı üzerinden aldığımız **public cloud** hizmetleridir. Bunlardan bazıları AWS, Microsoft Azure ve Google Cloud Platform. Diğeri kendi veri merkeziyle işleri yürüten **private cloud** sistemlerdir. IBM, Red Hat, OpenStack, Dell, EMC, HPE, Microsoft bunlara örnek verilebilir. Son olarak hem private cloud altyapısını koruyan hem de public cloud özelliklerinden yararlanan sistemler de vardır.
 
 ## Amazon Web Services (AWS)
 
-AWS, işletmelerin ölçeklenmesine ve büyümesine yardımcı olan işlem gücü, veritabanı, depolama alanı ve içerik teslimatı gibi işlevler sunan güvenli bir bulut hizmetleri platformudur. Amazon bünyesinden çıkmış, 130'dan fazla computing hizmeti sunan bir bulut servis sağlayıcısıdır. Bir yazılımı geliştirmekten müşterilere ulaştırmaya kadar olan tüm süreçte kullanılabilecek hizmetleri tek bir çatı altında toplayarak yönetmemizi sağlar.
+Amazon Web Services (AWS), işletmelerin ölçeklendirilmesine ve büyümesine yardımcı olan işlem gücü, veritabanı, depolama alanı ve içerik teslimatı gibi işlevler sunan güvenli bir bulut hizmetleri platformudur. Biraz daha detaylandıracak olursak Amazon bünyesinden çıkmış 130'dan fazla computing hizmeti sunan bulut servis sağlayıcısıdır. Bir yazılımı geliştirmekten tutun onu müşterilere ulaştırmaya kadar olan tüm süreçte kullanılabilecek hizmetleri tek bir çatı altında toplayarak yönetmemizi sağlayan platformdur.
 
 ### Kısa tarihçe
 
-Amazon ilk olarak satış yapan bir firma olarak ortaya çıktı. Satılan ürünlerin veritabanı genişleyince bu veritabanını geliştiricilere açma fikri ortaya kondu. Ardından web mağazası o kadar büyüdü ki firmanın en önemli unsuru IT altyapısı olmaya başladı ve bu altyapıyı da geliştiricilere açma fikri konuşulmaya başlandı. Önce hizmete sunulan veritabanının yanına SQS eklendi, ardından S3 geldi. EC2 servisinin de kullanıcılara açılmasıyla cloud denilen konseptin temelleri atılmış, prensipleri belirginleşmeye başlamış oldu.
+Amazon ilk olarak satış gerçekleştiren bir firma olarak ortaya çıksa da sonrasında satılan ürünler veritabanını genişletince oluşan veritabanını geliştiricilere açma fikri ortaya koyuldu. Ardından bu web mağazası o kadar genişledi ki firmanın en önemli unsuru IT altyapısı olmaya başladı. Sonrasında oluşturulan bu altyapıyı da geliştiricilere açma fikri konuşulmaya başlandı. Öncesinde hizmete sunulan database yanına SQS eklendi sonrasında S3 servisi bunu takip etti ve EC2 servisinin de kullanıcılara açılmasıyla cloud denilen konseptin temelleri atılmış, prensipleri belirginleşmeye başlamış oldu.
 
-AWS; bilgi işlem gücü, veritabanı, depolama, içerik teslimi ya da başka bir işleve ihtiyaç duymanız fark etmeksizin, daha yüksek esneklik, ölçeklenebilirlik ve güvenilirlikle sofistike uygulamalar oluşturmanıza yardımcı olacak hizmetlere sahiptir.
+Tarihçe kısmına değindiğimize göre daha teknik olan kısımlara yavaşça geçebiliriz.
+
+AWS, bilgi işlem gücü, veritabanı depolaması, içerik teslimi özelliklerine veya başka diğer işlevlere ihtiyaç duymanız fark etmeksizin daha yüksek esneklik, ölçeklenebilirlik ve güvenilirlik ile sofistike uygulamalar oluşturmanıza yardımcı olacak hizmetlere sahiptir.
 
 ## Region ve availability zone
 
-AWS servislerini en yüksek hızda kullanabilmemiz için kullandığımız sunucuların fiziksel olarak bize yakın olması gerekir. Bu yüzden AWS'nin dünyanın geneline yayılmış birçok veri merkezi ve bu veri merkezlerinin birbirine bağlandığı bir altyapısı vardır.
+AWS üzerindeki bu servisleri kullanma hızımızın en yüksek seviyelere çıkması için kullandığımız sunucuların fiziksel olarak yakınımızda olması gerekir. Bu yüzden AWS, dünyanın geneline yayılmış birçok veri merkezine sahiptir ve bu veri merkezlerinin de birbirleriyle bağlanabilecekleri altyapısı vardır. AWS terminolojisinde bu altyapıların olduğu bölgelere **regions** (bölgeler) denir. Her region en az üç adet veri merkezinden oluşur. Veri merkezleri **availability zone** ismini alır.
 
-- **Region (bölge):** Bu altyapıların bulunduğu coğrafi bölgelerdir. Her region en az üç veri merkezinden oluşur.
-- **Availability zone:** Region içindeki veri merkezlerine verilen isimdir.
+:::caution[Düzeltme]
+Bir region en az üç availability zone'dan oluşur. Her availability zone ise bir veya birden fazla veri merkezinden oluşur; yani availability zone tek bir veri merkezi olmak zorunda değildir.
+:::
 
-Bir region içindeki veri merkezleri birbirine çok hızlı bağlantılarla bağlanır. Bu bağlantılar o kadar hızlıdır ki aralarındaki gecikme çok azalır ve üç merkez sanki tek bir yerden yönetiliyormuş gibi çalışır. Veri merkezleri fiziksel olarak birbirinden tamamen ayrı olduğu için birinde yaşanan sorun diğerini etkilemez. Bu yapının tamamına region - availability zone yapısı denir.
+Bu veri merkezleri de birbirlerine çok hızlı bağlantılarla bağlanır. Hatta bu bağlantılar o kadar hızlı seviyelerde oluyor ki sanki üç merkez tek bir yerden yönetiliyormuş gibi aralarındaki gecikme çok az hale geliyor. Ayrıca fiziksel olarak birbirlerinden tamamen ayrı oldukları için de birinde yaşanan sorun diğerini etkilemiyor. Bu tüm duruma regions - availability zone denir.
 
 ## IAM'e ilk bakış
 
-AWS'de ilk öğreneceğimiz servis IAM (Identity and Access Management), yani kimlik ve erişim yönetimi servisidir. AWS kullanmak istiyorsak önce kullanıcılar oluşturmamız ve bu kullanıcıların AWS üzerinde neleri yapabileceğine dair kuralları belirlememiz gerekir. IAM bu işlemleri yapmamızı sağlar.
+Artık AWS'de kullanılan servisleri tanımaya başlayabiliriz. İlk öğreneceğimiz [IAM (Identity and Access Management)](/aws/iam/kavramlar/) yani kimlik ve erişim yönetimi isimli servistir. AWS kullanmak istiyorsak ilk olarak kullanıcılar oluşturmamız ve bu kullanıcıların AWS üzerinden neleri yapabileceğine dair kuralları belirlememiz gerekmektedir. IAM servisi bu işlemleri yapmamızı sağlar.
 
-AWS IAM, AWS servislerine ve kaynaklarına erişimi güvenli bir şekilde yönetmenizi sağlar. IAM ile AWS kullanıcılarını yönetebilir, ayrıca AWS kaynaklarına erişime izin vermek veya erişimi reddetmek için izinleri kullanabilirsiniz. Ayrıntılar için [IAM kavramları](/aws/iam/kavramlar/) sayfasına bakın.
+AWS IAM, AWS servislerine ve kaynaklarına erişimi güvenli bir şekilde yönetmenizi sağlar. IAM'i kullanarak AWS kullanıcılarını yönetebilir, ayrıca AWS kaynaklarına erişmelerine izin vermek ve bunları reddetmek için izinleri kullanabilirsiniz.

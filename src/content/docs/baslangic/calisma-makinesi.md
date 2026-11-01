@@ -6,52 +6,65 @@ lessons: [1]
 order: 2
 ---
 
-Derslerde komutları denemek için AWS üzerinde bir sanal makine (EC2 instance) kullanılıyor. Bu sayfa makinenin konsoldan nasıl açılacağını, nasıl durdurulup başlatılacağını ve tarayıcı üzerinden nasıl bağlanılacağını anlatır.
-
 ## EC2 ekranına ulaşma
 
-1. https://aws.amazon.com/tr/console/ adresinden AWS hesabına giriş yap. **Console Home** ekranı açılır.
-2. Üstteki arama kutusuna `EC2` yaz ve çıkan ilk seçeneği (**EC2 – Virtual Servers in the Cloud**) seç.
-3. Açılan EC2 Dashboard'unda **Resources** bölümündeki **Instances** bağlantısına tıkla.
+1. Sanal bir makine oluşturmak için öncelikle https://aws.amazon.com/tr/console/ sitesi üzerinden amazon hesabımıza giriş yaparak aşağıdaki ekrana ulaşıyoruz.
 
-**Instances** ekranında oluşturulan sanal makineler listelenir. Yeni makine oluşturma ve silme işlemleri de buradan yapılır.
+   ![AWS Console Home ekranı](../../../assets/ekran/p001-1.webp)
+
+2. Arama kısmına `EC2` yazarak çıkan ilk seçeneği seçerek devam ediyoruz.
+
+   ![Konsol arama kutusunda EC2 araması ve çıkan ilk sonuç](../../../assets/ekran/p001-2.webp)
+
+3. Açılan sayfada okla gösterilen **Instances** bölümüne tıklıyoruz.
+
+   ![EC2 Dashboard'unda okla gösterilen Instances bağlantısı](../../../assets/ekran/p002-1.webp)
+
+Burada oluşturduğumuz sanal makineleri görebileceğimiz, yeni sanal makineler oluşturup silebileceğimiz ekranla karşılaşıyoruz.
+
+![EC2 Instances ekranı](../../../assets/ekran/p002-2.webp)
 
 ## Yeni sanal makine oluşturma
 
-1. **Instances** ekranında sağ üstteki `Launch instances` butonuna tıkla. **Launch an instance** sayfası açılır.
-2. Sanal makinenin özelliklerini belirle (ad, AMI, instance tipi vb.). Örnekte sağdaki **Summary** panelinde şu değerler görünüyor:
-   - Software Image (AMI): Amazon Linux 2023 AMI
-   - Virtual server type (instance type): `t3.micro`
-   - Firewall (security group): New security group
-   - Storage (volumes): 1 volume(s) - 8 GiB
-3. Sağ alttaki `Launch instance` butonuyla makineyi oluştur.
+1. Yeni bir sanal makine oluşturmak için sağ üstte görünen **Launch instance** butonuna tıklayarak aşağıdaki ekranın açılmasını sağlıyoruz.
+
+   ![Launch an instance sayfası ve sağdaki Summary paneli](../../../assets/ekran/p003-1.webp)
+
+2. Burada oluşturacağımız sanal makinenin özelliklerini belirterek ilerliyoruz.
+3. Ve sağ alttaki **Launch instance** butonuyla sanal makinemizi oluşturuyoruz.
 
 ## Makineyi durdurma ve başlatma
 
-1. **EC2 → Instances** ekranına gel.
-2. İşlem yapmak istediğin makineyi yanındaki onay kutusuyla seç.
-3. `Instance state` menüsüne tıkla ve açılan listeden istediğin işlemi seç: `Stop instance`, `Start instance`, `Reboot instance`, `Hibernate instance` veya `Terminate (delete) instance`.
+1. Oluşturduğumuz sanal makineyi durdurmak veya tekrar başlatmak için **Instances** kısmına gelerek istediğimiz sanal makineleri yanındaki buton yardımıyla seçiyoruz.
+
+   ![Instances listesinde onay kutusuyla seçilmiş sanal makine](../../../assets/ekran/p003-2.webp)
+
+2. Burada okla gösterilen **Instance state** menüsüne tıklayarak açılan pencereden gerçekleştirmek istediğimiz işlemi seçiyoruz.
+
+   ![Instance state menüsünde Stop, Start, Reboot, Hibernate ve Terminate seçenekleri](../../../assets/ekran/p004-1.webp)
 
 ## EC2 Instance Connect ile bağlanma
 
-Makineye hızlıca tarayıcıdan bağlanmak için:
+1. Oluşturduğumuz sanal makineye hızlı ve kolay şekilde bağlanıp işlemlerimizi gerçekleştirmek için sanal makinemiz çalışır durumdayken **Instance ID** tıklıyoruz.
 
-1. Makine çalışır durumdayken (**Instance state**: Running) **Instances** listesinde makinenin **Instance ID** değerine tıkla.
-2. Açılan **Instance summary** sayfasında `Connect` butonuna bas.
-3. **Connect** sayfasında **EC2 Instance Connect** sekmesi seçili gelir. Hiçbir ayarı değiştirmeden sağ alttaki `Connect` butonuna tıkla. Varsayılan ayarlar:
-   - Connection type: Connect using a Public IP
-   - Username: `ec2-user`
+   ![Running durumdaki makinenin Instance ID bağlantısı](../../../assets/ekran/p004-2.webp)
 
-Bağlantı kurulunca tarayıcıda Amazon Linux 2023 karşılama ekranıyla bir terminal açılır:
+2. Açılan sayfada **Connect** butonuna basarak devam ediyoruz.
+
+   ![Instance summary sayfasında Connect butonu](../../../assets/ekran/p005-1.webp)
+
+3. Daha sonra hiçbir ayarı değiştirmeden sağ alttaki **Connect** yazan butona tıklıyoruz.
+
+   ![EC2 Instance Connect sekmesi ve sağ alttaki Connect butonu](../../../assets/ekran/p005-2.webp)
+
+Böylece sanal makinemize erişmiş olduk. Çıkmak için `exit` komutunu yazıp enter'a tıklamamız yeterlidir.
+
+![Tarayıcıda açılan Amazon Linux 2023 terminali](../../../assets/ekran/p006-1.webp)
 
 ```text title="Çıktı"
 Last login: Sat Nov  8 14:46:47 2025 from 203.0.113.11
 ```
 
-Oturumdan çıkmak için `exit` yazıp Enter'a basman yeterli:
-
 ```bash frame="terminal"
 exit
 ```
-
-Terminalde görünen satırın anlamı ve ilk komutlar için [Shell ve temel komutlar](/linux/temel-komutlar/) sayfasına bak.

@@ -8,51 +8,39 @@ order: 1
 
 ## Versiyon kontrol sistemleri
 
-Yazılım geliştirmede en büyük zorluklardan biri, birden fazla kişinin aynı dosyalar üzerinde birbirinin emeğini ezmeden çalışabilmesidir. Birden fazla kişi aynı anda birden fazla dosyada değişiklik yapıyorsa, bu değişikliklerin bir araya getirilip tek bir proje haline getirilmesi için araçlar kullanılır.
+Günümüzde yazılım geliştirme süreçlerinde karşılaşılan en büyük zorluk; birden fazla kişinin aynı dosyalar üzerinde çalışırken birbirinin emeğini ezmeden projeyi ilerletebilmesidir. Birden fazla kişi aynı anda birden fazla dosya üzerinde birlikte değişiklik yapılıyorsa bu değişikliklerin bir araya getirilip tek bir dosya, proje haline getirilmesinde kullanılan araçlar vardır.
 
-Tek başına çalışırken bile her gün eklenen veya çıkarılan kod satırlarını takip etmek gerekir; yanlışlıkla yapılan bir işlem, farkında olmadan programı çalışmaz hale getirebilir. Tüm değişikliklerin kaydı tutulsaydı, ne zaman nasıl bir değişiklik yapıldığı görülür ve hata daha kolay bulunurdu. Bu sorunları çözmek için versiyon kontrol sistemleri geliştirilmiştir.
+Tek başımıza bir proje üzerinde çalışıyor olsak bile her gün yeni eklediğimiz veya çıkardığımız kod satırlarını takip etmek, yanlışlıkla yaptığımız bir işlemin farkında olmadığımız şekilde programı çalışmaz hale getirmesi gibi sorunlarla da karşılaşırız. Yaptığımız tüm değişikliklerin kaydı olsaydı ne zaman nasıl bir değişiklik yaptığımızı görseydik hatamızı bulmak daha kolay olurdu. İşte tüm bu sorunları çözmek için versiyon kontrol sistemleri geliştirilmiştir.
 
-**Versiyon kontrol sistemleri**, yönetim altına alınan dosyaların birden fazla kişi tarafından aynı anda değiştirilebilmesini, bu sırada çıkabilecek sorunların çözülmesini ve dosyalarda kimin, ne zaman, neyi değiştirdiğinin kayıt altına alınmasını sağlayan araçlardır. Bunların en bilineni Git'tir.
+Versiyon kontrol sistemleri yönetim altına aldığımız dosyaların birden fazla insan tarafından aynı anda modifiye edilmesine bu modifikasyon sırasında da çıkabilecek sorunların çözülmesine ve dosyalar üzerinde yapılan değişikliklerin kim ne zaman neyi değiştirmiş gibi bilgileri kayıt altına alınmasını sağlayan araçlara verilen isimdir. Bu araçlardan en bilindik olanı Git Versiyon Kontrol Sistemidir.
 
 ## Git
 
-Git, projelerdeki her satır değişikliğinin kim tarafından ve ne zaman yapıldığını kaydeden, dağıtık yapısı sayesinde projenin tam bir kopyasını her geliştiricide saklayan modern bir versiyon kontrol sistemidir. Hem ekip içi çakışmaları önler hem de projenin geçmişinde güvenle gezinmeyi sağlar.
+Git, projelerdeki her satır değişikliğinin kim tarafından ve ne zaman yapıldığını kaydeden, dağıtık yapısı sayesinde projenin tam bir kopyasını her geliştiricide saklayan modern bir versiyon kontrol sistemidir. Hem ekip içi çakışmaları önler hem de projenin geçmişine güvenli bir yolculuk yapmamızı sağlar.
 
-Git'in diğer versiyon kontrol sistemlerinden farkı **decentralized** (dağıtık) olmasıdır: projenin yalnızca merkezi bir sunucuda değil, projeye dahil olan herkesin bilgisayarında tam bir kopyası bulunur. Bu sayede internet olmadan da çalışılabilir ve ana sunucu çökse bile proje kaybolmaz.
+Git diğer versiyon kontrol sistemlerinden farkı decentralized oluşudur. Decentralized yani dağıtık yapı, projenin sadece merkez bir sunucuda değil, projeye dahil olan herkesin bilgisayarında tam bir kopyasının bulunması anlamına gelir. Bu sayede internet olmasa bile çalışabilir ve ana sunucu çökse bile projemizi kaybetmeyiz.
 
-Git terminalden kullanılır.
+Şimdi gelin bahsettiğimiz Git’in komut satırındaki işlevlerine bakalım. Git’i terminal ekranlarımızda kullanabiliriz.
 
 ## İlk ayarlar
 
-Git'i kullanmaya başlamadan önce bazı temel ayarlar yapılır. Git'te kaydedilen her değişikliğin bir sahibi olmalıdır; bu yüzden önce işlemlerin kime ait olduğu belirtilir.
+Git kullanmaya başlamadan önce yapmamız gereken bazı temel ayarlar vardır. Bunların başında, yapılan işlemlerin kime ait olduğunu belirtmek gelir; çünkü Git üzerinde kaydedilen her değişikliğin bir sahibi olmalıdır. Kullanıcı adımızı tüm projelerimizde geçerli olacak şekilde sisteme tanıtmak için `git config --global user.name "Kullanıcı Adınız"` komutunu kullanırız.
 
-Kullanıcı adını tüm projelerde geçerli olacak şekilde tanıtmak için:
+Ardından mail adresimizi tanıtmamız gerekir burada kullanacağımız mail adresi GitHub hesabımıza kayıt olduğumuz mail adresimiz ile aynı olmalıdır. Bu tanımı yapmak için `git config --global user.email "mail adresiniz"` komutunu kullanırız.
+
+Son olarak `git config --global init.defaultBranch main` komutunu girerek yeni oluşturulan her Git projesindeki varsayılan ana dal isminin otomatik olarak 'main' olarak belirlenmesini sağlar. Böylece projelerimizi GitHub gibi platformlarla birleştirirken isim farklılıklarından doğabilecek karmaşaların önüne geçmiş olur.
 
 ```bash frame="terminal"
 git config --global user.name "Kullanıcı Adınız"
-```
-
-Ardından e-posta adresi tanıtılır. Buradaki adres, GitHub hesabına kayıt olunan e-posta adresiyle aynı olmalıdır:
-
-```bash frame="terminal"
 git config --global user.email "mail adresiniz"
-```
-
-Son olarak, yeni oluşturulan her Git projesinde varsayılan ana dal adının otomatik olarak `main` olması için:
-
-```bash frame="terminal"
 git config --global init.defaultBranch main
 ```
 
-Böylece projeler GitHub gibi platformlarla birleştirilirken isim farklılıklarından doğabilecek karışıklıkların önüne geçilir.
-
-### Komut yapısı
-
-Git komutları üç parçadan oluşur: ana komut (`git`), yapılacak eylem ve bu eylemin nasıl yapılacağını belirleyen seçenekler.
+Git komutlarının genel yapısı; ana komut yani `git`, yapılacak eylem ve bu eylemin nasıl yapılacağını belirleyen opsiyonlardan oluşur.
 
 ### git config --list
 
-Git'te tanımlı tüm yapılandırma ayarlarını (kullanıcı adı, e-posta, varsayılan branch adı, editör ayarları vb.) tek ekranda listeler. O ana kadar yapılan ayarların özetini görmek için kullanılır:
+![git config --list çıktısında kullanıcı adı, e-posta ve varsayılan branch ayarları](../../../assets/ekran/p082-1.webp)
 
 ```bash frame="terminal"
 git config --list
@@ -71,15 +59,13 @@ http.version=HTTP/1.1
 init.defaultbranch=main
 ```
 
+`git config --list` komutu, Git sisteminde tanımlanmış olan tüm yapılandırma ayarlarını tek bir ekranda görmemizi sağlayan komuttur. Bu komut, Git'in o anki çalışma ortamında geçerli olan tüm ayarları (kullanıcı adı, e-posta, varsayılan branch adı, editör ayarları vb.) terminal ekranına listeleyen bir kontrol komutudur. O ana kadar yaptığın tüm ayarların bir özet raporunu sunar.
+
 ## Çalışma klasörü ve git init
 
-Komutları, gerekli verileri ve alıştırmaları tutmak için bir çalışma klasörü oluşturmak işi kolaylaştırır:
+Bundan sonra çalıştıracağımız komutları, gerekli verileri ve yapacağımız alıştırmaları depolayacağımız bir çalışma alanı oluşturmak işimizi kolaylaştıracaktır. Bunun için terminalde `mkdir git` komutuyla yeni bir klasör oluşturalım.
 
-```bash frame="terminal"
-mkdir git
-```
-
-Bir klasördeki işlemlerin Git tarafından izlenmesi ve kaydedilmesi için Git'in üç aşamalı takip mekanizması başlatılmalıdır. Bir projede Git kullanmak için ilk iş, o klasörde Git'i başlatmaktır (initialize). Bundan sonra Git klasör içinde olup bitenleri takip edebilir:
+![git init komutuyla boş bir Git repository'sinin başlatılması](../../../assets/ekran/p083-1.webp)
 
 ```bash frame="terminal"
 git init
@@ -89,25 +75,15 @@ git init
 Initialized empty Git repository in /Users/ornekkullanici/git/proje/.git/
 ```
 
+Oluşturduğumuz bu klasör içindeki işlemlerin Git tarafından izlenmesini ve kaydedilmesini istiyorsak, Git'in üç aşamalı takip mekanizmasını başlatmamız gerekir. Bir projede Git kullanmak için yapılması gereken ilk işlem, o klasör içinde Git'i başlatmaktır (initialize). Bu sayede Git, klasör içinde olup bitenleri takip edebilir hale gelir. Bunun için `git init` komutunu kullanırız.
+
 ## Staging: git add
 
-Git, yapılan değişiklikleri otomatik olarak kalıcı kayda dönüştürmez. Değişiklikler yapılır, ardından Git'e bu dosyaların bir sonraki kayda dahil edilmeye hazır olduğu söylenir (staging):
-
-```bash frame="terminal"
-git add dosyaadı
-```
-
-`git add .` kullanılırsa bulunulan klasördeki tüm değişmiş dosyalar hazırlık alanına alınır.
+Ancak bu işlemden sonra Git, yaptığımız her değişikliği henüz otomatik olarak kalıcı bir kayıt haline getirmez. Biz değişiklikleri yaparız ve Git'e bu dosyaların bir sonraki kayda dahil edilmeye hazır olduğunu söyleriz (staging). Bu işlem için `git add dosyaadı` komutunu kullanırız. Eğer `git add .` komutunu kullanırsak bu, içinde bulunduğumuz folder’da yapılan tüm değişiklik olan dosyaları kaydet anlamına gelir.
 
 ## Kayıt: git commit
 
-Git'in her şeyi otomatik kaydetmemesinin sebebi, hangi değişikliğin önemli olup hangisinin olmadığını seçme şansı vermesidir. Sürecin sonunda hazırlanan değişiklikler Git'e kaydedilir (commit) ve projenin o anki hali kalıcı hale gelir:
-
-```bash frame="terminal"
-git commit -m "yorum satırı"
-```
-
-Örnek:
+![git commit -m komutuyla ilk commit'in oluşturulması](../../../assets/ekran/p083-2.webp)
 
 ```bash frame="terminal"
 git commit -m "yeni dosyalar olusturuldu"
@@ -121,4 +97,4 @@ git commit -m "yeni dosyalar olusturuldu"
  create mode 100644 index.html
 ```
 
-Durumu izleme ve geçmişi görme komutları [status, log ve temel akış](/git/temel-akis/) sayfasında.
+Git'in her şeyi otomatik kaydetmemesinin sebebi, bize hangi değişikliğin önemli olup hangisinin olmadığını seçme şansı tanımasıdır. Bu sürecin sonunda, hazırladığımız tüm bu değişiklikleri Git'e kaydetmemiz (commit) gerekir. Böylece projemizin o anki halini ölümsüzleştirmiş oluruz. Bunun için kullanacağımız komut iskeleti ise `git commit -m "yorum satırı"` olmalıdır.

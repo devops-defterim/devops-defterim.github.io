@@ -6,36 +6,42 @@ lessons: [1]
 order: 1
 ---
 
+[Sanal makinemizi oluşturduk](/baslangic/calisma-makinesi/) şimdi biraz teorik kısma geçelim.
+
 ## İşletim sistemi neden ortaya çıktı
 
-Bilgisayarlar ilk ortaya çıktığında işletim sistemleri yoktu. Bilgisayara doğrudan bir program yükleniyor ve o programa ne yapması gerektiği söyleniyordu. Farklı bir uygulama çalıştırmak için ikinci bir bilgisayar gerekiyordu; yani bilgisayarlar tek bir programı çalıştırmak üzerine kuruluydu.
+Bilgisayarlar ilk ortaya çıktığı zaman işletim sistemleri yoktu. Bilgisayara direkt bir program yüklüyorduk ve o programa ne yapmasını istiyorsak onu söylüyorduk. Farklı bir uygulama yüklemek istersek ikinci bir bilgisayara ihtiyaç duyuyorduk. Yani eskiden bilgisayarlar tek bir programın çalıştırılması üzerine kurulmuştu.
 
-Zamanla bir bilgisayara birden fazla uygulama kurulabilir hale geldi, fakat bu sefer de her uygulamayı tek tek çalıştırmak gerekiyordu.
+Zaman içerisinde bu gelişti ve bir bilgisayar üzerine birden fazla uygulama kurabilir hale geldi. Fakat bu sefer de her uygulamayı tek tek çalıştırmamız gerekti.
 
-İlk bilgisayarlara yüklenen bu programlar, monitöre gelecek veriden donanım parçalarına kadar her şeyi kendileri kontrol ediyordu. Makineyi kontrol etme işini uygulamaların üzerinden almak ve uygulamalarla makine arasında köprü görevi görmek için bir katman daha yazıldı. İşletim sistemi kavramı böyle ortaya çıktı.
+İlk bilgisayarlara yüklediğimiz bu programlar monitör ekranına gelecek veriden donanım parçalarına kadar her şeyi kontrol ediyordu.
 
-Artık uygulamalar donanıma doğrudan ulaşmak yerine önce işletim sistemine ulaşır, ne istediğini söyler ve işlemi işletim sistemi yapar.
+Bilgisayarlara yüklenen bu uygulamaların üzerinden makineyi kontrol etme işini almak ve uygulamalar ile makine ile arasına bir köprü görevi görmesi amacıyla bir katman daha yazılmış ve işletim sistemi konsepti ortaya çıkmıştır.
+
+Böylece uygulamalar direkt donanıma ulaşmak yerine önce işletim sistemine ulaşırlar ne istediğini söylerler ve işletim sistemi o işlemi yapar.
 
 ## İşletim sisteminin bileşenleri
 
-Tam anlamıyla bir işletim sistemi üç bileşenden oluşur:
+Tam anlamıyla bir işletim sistemi kernel, kullanıcı arayüzü ve uygulamalar olmak üzere üç bileşenden oluşur.
 
-- Kernel
-- Kullanıcı arayüzü
-- Uygulamalar
-
-**Kernel**, işletim sisteminin bütün işlerini yapan ve bilgisayarın bütün donanımını yöneten ana kısımdır. Donanımı yöneterek uygulamaların onu kullanabilmesini sağlar. Bunun için uygulamaların kernel ile konuşabilmesi gerekir; bu konuşma **sistem çağrıları (system call)** ile yapılır.
+**Kernel** işletim sisteminin bütün işlerini yapan, bilgisayarın bütün donanımını yöneten ana kısımdır. Bütün donanımı yöneterek bunların uygulamalar tarafından kullanılabilmesini sağlar. Bunun sağlanması için uygulamaların kernel ile konuşabilmesi gerekir. Bu konuşma **sistem çağrıları (system call)** ile sağlanır.
 
 ## Sanallaştırma
 
-Eskiden bir sunucu bilgisayarda tek bir uygulama çalıştırılabiliyordu, çünkü aynı sunucuya birden fazla uygulama kurulduğunda uygulamalar birbirine bağımlı hale geliyordu. Her uygulama için ayrı bir sunucu kurmak hem zahmetliydi hem de kaynak israfına yol açıyordu.
+Bir sunucu bilgisayar üzerinde eskiden tek bir uygulama çalıştırabiliyorduk. Çünkü bir sunucu bilgisayar üzerine birden fazla uygulama kurmak istediğimizde uygulamalar birbirlerine bağımlı hale geliyorlardı.
 
-Sanallaştırma bu sorunları çözerek tek bir donanım üzerinde birden fazla işletim sistemi kullanabilmeyi sağladı.
+Her seferinde bu şekilde bir uygulama için bir sunucu bilgisayar kurmak oldukça zahmetli ve kaynak israfına yol açıyordu.
+
+Sanallaştırma bu sorunları çözerek tek bir donanım üzerinde birden fazla işletim sistemi kullanabilmemize imkan sağladı.
 
 ## Terminal ve shell
 
-**Terminal**, bir Linux sunucuya uzaktan bağlanıp komut göndermeyi sağlayan, fakat kendi üzerinde hiçbir işlem yapılmayan arayüzdür.
+Şimdi linux dünyasına girmeden önce terminal ve shell farkını anlatarak başlayalım.
 
-Bir bilgisayarı yönetmenin iki yolu vardır: grafik arayüz üzerinden ya da komut satırından. **Shell**, komut satırına verilen komutları işleyerek sistemi yönetmeyi sağlayan altyapıdır. Linux'un kullandığı shell, **bash** uygulamasıdır.
+**Terminal**, bir linux sunucuya uzaktan bağlanıp komutlar göndermemizi sağlayan fakat üzerinde hiçbir işlem yapılmayan arayüzdür.
 
-Bir sonraki adımda [oluşturulan sanal makineye](/baslangic/calisma-makinesi/) bağlanıp [temel Linux komutlarına](/linux/temel-komutlar/) geçilir.
+Bir bilgisayarı yönetmenin iki yolu vardır. Birincisi grafiksel arayüz üzerinden, diğeri komut satırı ile yönetmektir. **Shell** bu komut satırına komutlar vererek sistemi yönetmemizi sağlayan, verdiğimiz komutları işleyen altyapıdır.
+
+Linux'un kullandığı shell, **bash** uygulamasıdır.
+
+Şimdi oluşturduğumuz sanal makineye bağlanarak [linux komutlarını](/linux/temel-komutlar/) öğrenmeye başlayabiliriz.

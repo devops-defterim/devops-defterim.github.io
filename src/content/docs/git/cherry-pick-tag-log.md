@@ -8,44 +8,30 @@ order: 5
 
 ## git cherry-pick
 
-Bazen bir branch'te onlarca commit yapılır ama yalnızca biri o kadar kritiktir ki diğer değişiklikleri almadan yalnızca o commit'i ana dala veya başka bir dala taşımak istenir. `cherry-pick`, başka bir daldaki tüm commit'leri değil, yalnızca istenen commit'i alıp bulunulan dala uygular:
-
-```bash frame="terminal"
-git cherry-pick commit_id
-```
+Bazen bir branch’te onlarca commit yaparsınız ama sadece bir tanesi o kadar kritiktir ki, diğer tüm değişiklikleri almadan sadece o tek bir commit’i ana dalınıza veya başka bir dala taşımak istersiniz. İşte cherry-pick, başka bir daldaki tüm commit'leri değil, sadece istediğiniz spesifik bir commit'i çekip bulunduğunuz dala yapıştırmanızı sağlar. Bunun için `git cherry-pick commit_id` komutunu kullanırız.
 
 ## .gitignore
 
-Proje klasöründeki her şeyin GitHub'a gitmesi gerekmez; bazı dosyalar hem yer kaplar hem de güvenlik riski oluşturur. GitHub'a gitmesi istenmeyen her şey `.gitignore` dosyasına yazılır. Git bu dosyayı okur ve içindeki dosyaları hiç yokmuş gibi görmezden gelir. Böylece proje daha güvenli olur ve yalnızca gerekli dosyalar paylaşılır.
-
-Bunun için projenin kök (root) klasöründe `.gitignore` adlı bir dosya oluşturulur. Diğer dosyalarda olduğu gibi bu dosya için de sırasıyla `git add` ve `git commit` çalıştırılır.
+Bir proje klasöründe her şeyin GitHub'a gitmesi gerekmez. Bazı dosyalar hem yer kaplar hem de güvenlik riski oluşturur. Proje klasörümüzde duran ama GitHub'a gitmesini istemediğimiz her şeyi `.gitignore` dosyasının içine yazarız. Git bu dosyayı okur ve o dosyaları sanki hiç yokmuş gibi davranarak görmezden gelir. Böylece hem projemiz daha güvenli olur hem de sadece gerekli olan dosyalar paylaşılır. Bunun için root klasörünün içinde `.gitignore` isimli bir dosya oluşturmamız gerekir. Diğer dosyalarda yaptığımız gibi bunda da sırasıyla `git add` ve `git commit` komutlarını çalıştırıyoruz.
 
 ## git tag
 
-Commit ID'ler karmaşıktır ve akılda tutulamaz. Tag ile bu ID'lere istenen isimler verilebilir. İki yöntem vardır:
+Daha önce bahsi geçen commit ID’ler çok karmaşıktır ve akılda tutulamaz. Tag sayesinde bu karmaşık ID’lere istediğimiz isimleri verebiliriz. Bunun için şu iki yöntemi kullanırız:
 
-| Komut | Sonuç |
-| --- | --- |
-| `git tag etiket_ismi commit_id` | Basit bir etiket koyar |
-| `git tag -a etiket_ismi commit_id -m "mesaj"` | Açıklamalı etiket oluşturur; tag'in ne zaman, kim tarafından ve niçin eklendiği bilgisini de verir |
-| `git tag etiket_ismi` | Etiketi son commit'e koyar |
-| `git tag -d etiket_ismi` | Tag'i siler |
+- `git tag etiket_ismi commit_id` ile sadece basit bir etiket koyarız.
+- `git tag -a etiket_ismi commit_id -m "mesaj"` Bu komutla 'açıklamalı etiket' oluştururuz. Bu tag’in ne zaman, kim tarafından ve niçin eklendiği bilgilerini de verir.
 
-Oluşturulan tag'ler standart `git push` ile GitHub'a gönderilmez. Tek bir tag'i göndermek için:
+Eğer `git tag etiket_ismi` komutunu yazıp enter dersek son commit için geçerli olacak şekilde çalışır.
 
-```bash frame="terminal"
-git push origin etiket_ismi
-```
+Oluşturduğumuz tag’leri standart `git push` komutu ile GitHub’a gönderemeyiz. Bunun için `git push origin etiket_ismi` komutunu kullanmamız gerekir.
 
-Tüm tag'leri tek seferde göndermek için:
+Eğer tag’leri tek tek göndermek yerine hepsini tek seferde yollamak istersek `git push origin --tags` komutunu kullanırız.
 
-```bash frame="terminal"
-git push origin --tags
-```
+Bir tag’i silmek istersek de `git tag -d etiket_ismi` komutunu kullanırız.
 
 ## git log --pretty=oneline
 
-Normalde `git log` her kayıt için yazar, tarih, commit ID ve mesaj gibi 4-5 satırlık yer kaplar. Projede 50 commit varsa aranan kaydı bulmak için sayfalarca aşağı inmek gerekir. Her commit'i (ID ve mesajı) tek satırda listelemek için:
+![git log --pretty=oneline çıktısında HEAD -> main ve origin/main etiketleri](../../../assets/ekran/p095-1.webp)
 
 ```bash frame="terminal"
 git log --pretty=oneline
@@ -62,10 +48,15 @@ e5a64c00d4e0766e749656c40d94948b2be649aa ornek dosyasında son değişiklik
 8dbdaaa2342ea1be3c458369c65dcfb9fce5fadd yeni dosyalar olusturuldu
 ```
 
-- İlk satırdaki `HEAD -> main`, bilgisayardaki çalışma alanının en son yapılan commit ile eşleştiğini, yani yerel sistemin güncel olduğunu gösterir.
-- İkinci satırdaki `origin/main`, GitHub'daki `origin` sunucusunda `main` dalının bilgisayardaki son commit ile eşleşmediğini gösterir. İkisini eşlemek için yerel değişiklik `git push` ile GitHub'a gönderilir.
+Normalde `git log` komutunu kullandığımızda her kayıt; yazar, tarih, commit ID ve mesajı gibi 4-5 satırlık yer kaplar. Eğer projemizde 50 tane commit varsa aradığımızı bulmak için sayfalarca aşağı inmemiz gerekir.
 
-Push sonrasında aynı komut `origin/main`'in de son commit'te olduğunu gösterir:
+Her bir commit bilgisini (ID ve mesajını) tek bir satıra sığdırarak listelemek için `git log --pretty=oneline` komutunu kullanırız. Böylece ekranı kaplayan satırlardan kurtulup, projenin tüm geçmişini tek bir bakışta, çok daha hızlı bir şekilde inceleyebiliriz.
+
+İlk satırda gördüğümüz `HEAD -> main` ifadesi, bilgisayarımızdaki çalışma alanımızla en son yaptığımız commit’in eşleştiğini yani yerel sistemimizin güncel olduğunu gösterir.
+
+İkinci satırda ise GitHub üzerinde oluşturduğumuz origin isimli sunucuda main dalının bilgisayarımızda bulunan son commit ile eşleşmediğini görüyoruz. Bunu düzeltip bilgisayarımızda yaptığımız bir değişikliği GitHub’a atarak ikisini eşlemek için `git push` komutunu kullanmamız gerektiğini öğrenmiştik.
+
+![git push sonrasında git log --pretty=oneline çıktısında origin/main'in son commit'te olması](../../../assets/ekran/p095-2.webp)
 
 ```text title="Çıktı"
 125696f4aef808140e654d8aae15377da041e90e (HEAD -> main, origin/main) çakışmalar düzeltildi
@@ -75,10 +66,6 @@ Push sonrasında aynı komut `origin/main`'in de son commit'te olduğunu göster
 
 ## git fetch origin
 
-GitHub'da yapılan bir değişikliği yerelde görmek için `git pull` kullanılır. Ancak gelen değişiklikleri her zaman hemen kodlara dahil etmek istemeyebiliriz. Yalnızca "neler değişmiş" bilgisini görmek için:
+GitHub üzerinde yaptığımız bir değişikliği lokalde görmek istersek de `git pull` komutunu kullandığımızdan bahsetmiştik.
 
-```bash frame="terminal"
-git fetch origin
-```
-
-`git fetch origin` gelen değişiklikleri bilgisayara indirir ama mevcut kodlarla birleştirmez, yani merge işlemini otomatik yapmaz. Amaç, değişiklikleri önce güvenli şekilde görmek, ardından emin olunca kontrollü biçimde dahil etmektir.
+Ancak her zaman gelen değişiklikleri anında kodlarımıza dahil etmek istemeyebiliriz. Bu değişikliklerin hemen uygulanmasını değil de sadece "neler değişmiş" bilgisini görmek istersek, `git fetch origin` komutunu kullanırız. İşte burada hayati bir fark ortaya çıkar: `git fetch origin` komutu, gelen değişiklikleri bilgisayarımıza indirse de mevcut kodlarımızla birleştirmez, yani merge işlemini otomatik olarak yapmaz. Bu komutu kullanmamızdaki asıl amaç, yapılan değişiklikleri önce güvenli bir şekilde görüp, ardından her şeyden emin olarak kontrollü bir şekilde sistemimize dahil etmektir.

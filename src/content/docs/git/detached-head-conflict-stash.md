@@ -8,24 +8,22 @@ order: 6
 
 ## Detached HEAD
 
-Bilgisayarda checkout olunan yer `main` dalı değil de farklı bir commit ise buna **Detached HEAD** denir.
+Bilgisayarımızda checkout olduğumuz dal main ile aynı değilse farklı bir committe isek buna Detached HEAD denir.
 
-Belirli bir commit'i sisteme çekmek için:
+:::caution[Düzeltme]
+Başka bir branch'e checkout olmak Detached HEAD değildir. Detached HEAD, HEAD'in bir branch'i değil doğrudan bir commit'i gösterdiği durumdur (ör. `git checkout commit_id` sonrası).
+:::
 
-1. `git log --pretty=oneline` ile commit'ler listelenir.
-2. İstenen commit ID kopyalanır ve o commit'e checkout olunur (`git checkout commit_id`).
-3. Burada yeni bir branch oluşturulur.
-4. `main` branch'e geçilir ve `git merge branch_adı` ile istenen commit sisteme alınır.
+Bilgisayarımıza çekmek istediğimiz spesifik bir commit varsa:
+
+1. Öncelikle `git log --pretty=oneline` komutuyla commitleri listeliyoruz.
+2. İstediğimiz commit ID’yi kopyalıyoruz ve buraya checkout oluyoruz.
+3. Burada yeni bir branch oluşturuyoruz.
+4. Ardından main branch’e geçip `git merge branch_adı` komutuyla istediğimiz commit’i sistemimize çekmiş oluruz.
 
 ## git diff
 
-`git diff` ile dosyalar ve commit'ler arasındaki farklara bakılır:
-
-| Komut | Gösterdiği fark |
-| --- | --- |
-| `git diff` | Son commit'ten bu yana yapılan değişiklikler |
-| `git diff branch_adi1 branch_adi2` | İki branch arasındaki fark |
-| `git diff commit_id1 commit_id2` | İki commit arasındaki fark |
+![git diff main titledegis çıktısında index.html farkı](../../../assets/ekran/p096-1.webp)
 
 ```bash frame="terminal"
 git diff main titledegis
@@ -46,18 +44,15 @@ index 4b4f039..103b178 100644
  <body>
 ```
 
+`git diff` komutunu kullanarak dosyalar ve commit’ler arasındaki farklara bakabiliriz. Opsiyonsuz olarak sadece `git diff` komutunu girersek son commit’ten beri yapılan değişiklikleri görürüz. Branch’ler arası farka bakmak istersek `git diff branch_adi1 branch_adi2` komutunu kullanırız. Commitler arasındaki farkı görmek için de benzer şekilde `git diff commit_id1 commit_id2` komutunu kullanırız.
+
+:::caution[Düzeltme]
+Opsiyonsuz `git diff`, çalışma klasörünü hazırlık alanıyla (staging area) karşılaştırır; `git add` ile hazırlık alanına alınmış değişiklikleri göstermez. Son commit'ten bu yana yapılan tüm değişiklikler için `git diff HEAD`, yalnızca hazırlık alanındakiler için `git diff --staged` kullanılır.
+:::
+
 ## git rm
 
-Bir dosya oluşturulup `git add` ile takibe alındıktan sonra vazgeçilirse `git rm dosya_adi` ile dosya hem bilgisayardan hem projeden tamamen silinir. Dosya yalnızca Git'in takibinden çıkarılıp bilgisayarda tutulmak isteniyorsa komutun sonuna `--cached` eklenir:
-
-```bash frame="terminal"
-git rm dosya_adi
-git rm dosya_adi --cached
-```
-
-:::note
-Her iki durumda da işlemin kalıcı olması için ardından commit yapmak gerekir.
-:::
+![git rm branchdosyam komutu ve ardından git status çıktısı](../../../assets/ekran/p096-2.webp)
 
 ```bash frame="terminal"
 ls
@@ -78,6 +73,8 @@ Changes to be committed:
         deleted:    branchdosyam
 ```
 
+![Silme işleminin commit edilmesi ve git status çıktısı](../../../assets/ekran/p096-3.webp)
+
 ```bash frame="terminal"
 git commit -m "Gereksiz olan branchdosyam silindi"
 git status
@@ -94,52 +91,36 @@ Your branch is ahead of 'origin/titledegis' by 1 commit.
 nothing to commit, working tree clean
 ```
 
+Bir dosyayı oluşturup `git add` ile takibe aldıktan sonra, eğer bu dosyadan vazgeçersek `git rm dosya_adi` komutunu kullanarak dosyayı hem bilgisayarımızdan hem de projemizden tamamen silebiliriz. Eğer dosyayı sadece Git'in takibinden çıkarmak ama bilgisayarımızda tutmaya devam etmek istiyorsak, komutun sonuna `--cached` parametresini eklememiz yeterlidir. Her iki durumda da işlemin kalıcı olması için sonrasında mutlaka bir commit yapmamız gerektiğini unutmamalıyız.
+
 ## Merge ve rebase
 
-Farklı dallarda çalışmak özgürce kod yazmayı sağlar. İş bitip dallar ana dalla birleştirilmek istendiğinde iki yol vardır:
+Projemizde ana daldan ayrılarak farklı dallarda çalışmak, özgürce kod yazmamızı sağlar. Ancak işleri bitirip bu dalları ana dal ile birleştirmek istediğimizde karşımıza iki farklı yol çıkar. Eğer bu birleştirme işlemini klasik Merge yöntemiyle yaparsak, dalların ayrılıp tekrar birleştiği o karmaşık "örümcek ağı" görüntüsü ana geçmişte (history) kalmaya devam eder. Bu da proje büyüdükçe geçmişin okunmasını zorlaştırabilir.
 
-- **Merge:** Klasik merge yöntemiyle birleştirildiğinde dalların ayrılıp tekrar birleştiği karmaşık "örümcek ağı" görüntüsü ana geçmişte (history) kalır. Proje büyüdükçe geçmişin okunması zorlaşabilir.
-- **Rebase:** Proje geçmişini tek bir düz çizgide, sanki her şey sırayla yapılmış gibi görmek için kullanılır. Rebase, farklı bir dalda yapılan tüm işlemleri alır ve ana dalın en ucuna ekleyerek tüm geçmişi tek bir satıra (single line) dizer. Karmaşık dallanma görüntüleri ortadan kalkar; projenin gelişimi bir kitap gibi düz bir çizgide okunur.
-
-Merge'ün kullanımı [Branch, merge ve conflict](/git/branch-merge-rebase/) sayfasında.
+Eğer projenin geçmişini tek bir düz çizgi üzerinde, sanki her şey sırayla yapılmış gibi tertemiz görmek istiyorsak; burada Rebase kullanırız. Rebase, farklı bir dalda yaptığımız tüm işlemleri alır ve ana dalın en ucuna ekleyerek tüm geçmişi tek bir satıra (single line) dizer. Böylece karmaşık dallanma görüntüleri ortadan kalkar ve projenin gelişim süreci bir kitap gibi sayfa sayfa, dümdüz bir çizgide okunabilir hale gelir.
 
 ## git reset
 
-Çalışırken hatalı bir commit yapılabilir, yanlış dosyalar hazırlık alanına (staging area) eklenebilir ya da proje birkaç adım geriye döndürülmek istenebilir. `git reset`, Git'in en güçlü "geri alma" aracıdır.
+Projenizde çalışırken bazen işler istediğiniz gibi gitmez; hatalı bir commit yapabilir, yanlış dosyaları hazırlık alanına (staging area) ekleyebilir veya sadece projenizi birkaç adım öncesine döndürmek isteyebilirsiniz. İşte bu noktada `git reset`, Git'in sunduğu en güçlü "geri alma" aracı olarak imdadımıza yetişir.
 
-En temel haliyle `git reset`, projenin o anki durumunu geçmişteki belirli bir commit'e geri döndürür. Geri dönüşün "sertliği" kullanılan parametreye göre değişir:
+En temel haliyle `git reset`, projemizin o anki durumunu geçmişteki belirli bir commit’e veya duruma geri döndürmemizi sağlar. Ancak bu geri dönüşün "sertliği", kullanacağımız parametreye göre değişir:
 
-| Komut | Etkisi |
-| --- | --- |
-| `git reset --soft commit_id` | Yalnızca commit'i iptal eder. Kodlara dokunmaz, onları hazırlık alanında (staged) tutar. "Commit mesajını yanlış yazdım ama kodlarım kalsın" durumunda kullanılır. |
-| `git reset --mixed commit_id` | Varsayılandır. Commit'i iptal eder ve dosyaları hazırlık alanından çıkarır. Kodlar bilgisayarda durur ama Git onları henüz takip etmiyor gibidir. |
-| `git reset --hard commit_id` | Belirlenen commit'ten sonra yapılan tüm değişiklikleri fiziksel olarak siler ve projeyi tamamen o ana döndürür. |
+- `git reset --soft commit_id` Sadece commit'i iptal eder. Yazdığımız kodlara dokunmaz, onları "hazırlık alanında" (staged) tutmaya devam eder. Yani "Commit mesajını yanlış yazdım ama kodlarım kalsın" dediğimizde kullanılır.
+- `git reset --mixed commit_id` (Varsayılan): Commit'i iptal eder ve dosyaları hazırlık alanından çıkarır. Kodlarımız hala bilgisayarımızdadır ama Git onları henüz "takip etmiyor" gibidir.
+- `git reset --hard commit_id` Bu en tehlikeli ve kesin olanıdır. Belirlediğimiz commit'ten sonra yaptığımız tüm değişiklikleri fiziksel olarak siler ve projeyi o ana tamamen geri döndürür.
 
-:::danger
-`git reset --hard` en tehlikeli ve kesin olan seçenektir; belirtilen commit'ten sonraki değişiklikler silinir.
-:::
-
-Yanlışlıkla `git add .` ile tüm klasör hazırlık alanına eklendiyse, yalnızca o dosyaları çıkarmak için `git reset` yeterlidir:
-
-```bash frame="terminal"
-git reset
-```
+Yanlışlıkla `git add .` diyerek tüm klasörü hazırlık alanına eklediğinizde, sadece o dosyaları çıkarmak için `git reset` kullanmamız yeterlidir.
 
 ## git stash
 
-Bir iş üzerinde çalışırken, değişiklikler commit'e hazır olmadan başka bir branch'e geçmek gerekebilir. Bu durumda `git stash` kullanılır: mevcut klasördeki tamamlanmamış değişiklikler bir kenara kaydedilir.
+Bir işlem üzerinde çalışırken henüz yaptığımız değişiklikleri commitlemeye hazır hale gelmeden başka bir branch’e geçmemiz gerekebilir. Bu durumlarda `git stash` komutunu kullanırız. `git stash` komutuyla mevcut directory üzerindeki o anki tamamlanmamış değişikliklerimizi bir yere kaydederiz. Başka bir daldaki yapmamız gerekenleri tamamladıktan sonra `git stash list` komutuyla kaydettiğimiz işlemleri listeledikten sonra `git stash pop` komutuyla yarım bıraktığımız işlemimize devam edebiliriz. Eğer kaydettiğimiz bu dosyayı silmek istersek `git stash drop` komutunu kullanırız.
 
-| Komut | İşlev |
-| --- | --- |
-| `git stash` | Tamamlanmamış değişiklikleri saklar |
-| `git stash list` | Saklanan kayıtları listeler |
-| `git stash pop` | En son saklanan kaydı geri getirir ve işe kalınan yerden devam edilir |
-| `git stash drop` | Saklanan kaydı siler |
-
-Birden fazla stash kaydı varsa `git stash pop` yalnızca en sonuncuyu geri getirir. Belirli bir kaydı geri getirmek için `git stash list` çıktısındaki ID'si (örneğin `stash@{0}`) kullanılır.
+:::note
+Eğer birden fazla stash kaydınız varsa, `git stash pop` sadece en sonuncuyu geri getirir. Belirli bir kaydı geri getirmek isterseniz list komutundaki ID'sini (örneğin `stash@{0}`) kullanabilirsiniz.
+:::
 
 ## Yerelden GitHub'a
 
-Buraya kadarki işlemlerin hepsi yerelde, kendi bilgisayarımızda yapıldı. Gerçek hayatta projeler kişisel bilgisayarlarda kalmaz; başkalarıyla paylaşılması, yedeklenmesi ve ekipçe yönetilmesi gerekir.
+Şu ana kadar öğrendiğimiz her şeyi sadece kendi bilgisayarımızda, yani yerelde yaptık. Ancak gerçek hayatta projeler sadece kişisel bilgisayarlarda kalmaz; başkalarıyla paylaşılması, yedeklenmesi ve ekipçe yönetilmesi gerekir.
 
-Git bir versiyon kontrol sistemiyken GitHub bu sistemin üzerine kurulmuş bir bulut platformudur. Terminalden GitHub'ın görsel arayüzüne geçmenin temel sebebi, projeleri internete taşıyarak her yerden erişilebilir hale getirmek ve diğer yazılımcılarla iş birliği yapabilmektir.
+Git bir versiyon kontrol sistemiyken, GitHub bu sistemin üzerine kurulmuş bir bulut platformudur. Terminaldeki siyah ekrandan çıkıp GitHub'ın görsel arayüzüne geçmemizin temel sebebi, projelerimizi internete taşıyarak dünyanın her yerinden erişilebilir hale getirmek ve diğer yazılımcılarla iş birliği yapabilmektir.

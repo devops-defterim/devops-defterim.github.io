@@ -6,37 +6,40 @@ lessons: [25]
 order: 20
 ---
 
-## Metadata servisi nedir?
+## Metadata servisi
 
-Sanal makinenin (EC2) içine bağlandıktan sonra terminal üzerinden **Metadata servisine** erişerek sunucuyla ilgili temel verileri listeleyebiliriz. Bunun için makine içinden özel bir HTTP endpoint'i ile iletişim kurulur. Bu servis AWS üzerinde her zaman sabit olan **169.254.169.254** IP adresi üzerinden çalışır. Token'ı aldıktan sonra metadata başlıklarına ulaşıp ihtiyacımız olan spesifik bilgileri (makinenin ID'si, IP adresi vb.) komut satırına çekebiliriz.
+Sanal makinemizin (EC2) içine bağlandıktan sonra, terminal ekranımız üzerinden Metadata servisine erişerek sunucumuzla ilgili temel verileri listeleyebiliriz. Bu işlem için makine içinden özel bir HTTP endpoint'i ile iletişim kurarız ve bu servis AWS üzerinde her zaman sabit olan **169.254.169.254** IP adresi üzerinden çalışır. Güvenlik gereği oluşturduğumuz token'ı kullanarak EC2 makinemizin içinden `curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/` komutunu çalıştırdığımızda, makinemize ait tüm metadata başlıklarına ulaşabilir ve ihtiyacımız olan spesifik bilgileri (örneğin makinenin ID'si, IP adresi vb.) komut satırına çekebiliriz.
 
-Servisin erişilebilir olması için instance oluştururken **Metadata accessible** `Enabled` olmalıdır; **Metadata version** `V2 only (token required)` seçildiğinde token zorunlu hale gelir (bkz. [Instance oluşturma](/aws/ec2/instance-olusturma/)).
+**curl** (Client URL), terminal üzerinden internetteki veya ağdaki bir sunucuya veri göndermeni ya da oradan veri çekmemizi sağlayan bir komut satırı aracıdır. En basit haliyle, ekranı ve tıklanacak butonları olmayan bir web tarayıcısı gibi çalışır. Hedef adresi yazarız, arka planda o adrese gider ve bulduğu sonucu terminal ekranına basar.
 
-### curl
+## Neden artık direkt IP'ye gidemiyoruz? (Token zorunluluğu)
 
-**curl** (Client URL), terminal üzerinden internetteki veya ağdaki bir sunucuya veri göndermeyi ya da oradan veri çekmeyi sağlayan bir komut satırı aracıdır. En basit haliyle ekranı ve butonları olmayan bir web tarayıcısı gibi çalışır: hedef adresi yazarız, arka planda o adrese gider ve bulduğu sonucu terminale basar.
+Eskiden EC2 makinesinin içindeyken 169.254.169.254 adresine doğrudan bir curl isteği atıp tüm metadata bilgilerini anında görebiliyorduk. Ancak bu durum güvenlik açığı yaratıyordu; makineye sızan zararlı bir bot veya yazılım da aynı kolaylıkla bu verilere erişebiliyordu.
 
-## Neden token gerekiyor? (IMDSv2)
+AWS, güvenliği artırmak için sistemi güncelledi (buna **IMDSv2** deniyor). Artık sisteme direkt soru soramıyoruz. Önce kapıyı çalıp "Ben yetkili bir kullanıcıyım, bana geçici bir giriş anahtarı (token) ver" dememiz gerekiyor. Sistemi ancak bu token'ı aldıktan sonra, o token'ı her sorunun yanına iliştirerek kullanabiliyoruz.
 
-Eskiden EC2 makinesinin içindeyken 169.254.169.254 adresine doğrudan bir curl isteği atıp tüm metadata bilgilerini görebiliyorduk. Ancak bu durum güvenlik açığı yaratıyordu; makineye sızan zararlı bir bot veya yazılım da aynı kolaylıkla bu verilere erişebiliyordu.
+## Token almak için kullanılan PUT istekli curl komutu
 
-AWS güvenliği artırmak için sistemi güncelledi; buna **IMDSv2** denir. Artık sisteme doğrudan soru soramıyoruz. Önce "Ben yetkili bir kullanıcıyım, bana geçici bir giriş anahtarı (token) ver" dememiz gerekiyor. Token'ı aldıktan sonra her isteğin yanına iliştirerek sistemi kullanabiliyoruz.
-
-## Token alma
-
-Token'ı oluşturup bir değişkene atamak için PUT istekli şu curl komutu çalıştırılır:
+Token'ı oluşturup makineye tanımlamak için şu komutu çalıştırmamız gerekir.
 
 ```bash frame="terminal"
 TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
 ```
+
+Komutun parçaları ve anlamları:
+
+- `TOKEN=$(...)`: curl komutunun bize vereceği karmaşık şifreyi kaybetmemek için onu `TOKEN` adında bir değişkene atar. Böylece sonraki adımlarda sadece `$TOKEN` yazarak bu şifreyi otomatik kullanabilirsin.
+- `curl -X PUT`: Normalde curl sadece veri okur (GET isteği). Biz burada `-X PUT` diyerek sunucuya, "Sadece okumayacağım, bana yeni bir token yaratıp vermeni talep ediyorum" demiş oluyoruz.
+- `"http://169.254.169.254/latest/api/token"`: Yeni anahtarın üretilip dağıtıldığı tam adres.
+- `-H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`: Token'ın ne kadar süre geçerli olacağını belirten başlık (Header) kuralıdır. 21600 saniye, bu şifrenin 6 saat boyunca geçerli olacağını sisteme söyler. 6 saat sonra bu token iptal olur ve yeni bir tane alman gerekir.
+
+![Terminalde token alma komutu ve echo $TOKEN çıktısı](../../../../assets/ekran/p218-1.webp)
 
 ```text title="Çıktı"
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100    56 100    56   0     0 20512      0 --:--:-- --:--:-- --:--:-- 28000
 ```
-
-Token'ın değişkene atandığını görmek için:
 
 ```bash frame="terminal"
 echo $TOKEN
@@ -46,24 +49,19 @@ echo $TOKEN
 <IMDS_TOKEN>
 ```
 
-Komutun parçaları:
+## Metadata listesi
 
-| Parça | Anlamı |
-|---|---|
-| `TOKEN=$(...)` | curl komutunun döndüreceği karmaşık anahtarı kaybetmemek için onu `TOKEN` adlı bir değişkene atar. Sonraki adımlarda sadece `$TOKEN` yazarak bu anahtar otomatik kullanılır. |
-| `curl -X PUT` | Normalde curl sadece veri okur (GET isteği). `-X PUT` ile sunucuya "Sadece okumayacağım, bana yeni bir token yaratıp vermeni talep ediyorum" demiş oluruz. |
-| `"http://169.254.169.254/latest/api/token"` | Yeni anahtarın üretilip dağıtıldığı tam adres. |
-| `-H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` | Token'ın ne kadar süre geçerli olacağını belirten başlık (header). 21600 saniye, token'ın 6 saat geçerli olacağını söyler. 6 saat sonra token iptal olur ve yenisini almak gerekir. |
+Şimdi `curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id` komutunu kullanarak metadata listesine ulaşabiliriz.
 
-## Metadata listesini görme
+:::caution[Düzeltme]
+Metadata listesini görmek için adres `/latest/meta-data/` ile bitmelidir (görüntüdeki ve aşağıdaki komut). Sonuna `instance-id` eklenirse liste değil, yalnızca makinenin ID'si döner.
+:::
 
-Token'ı kullanarak tüm metadata başlıklarını listelemek için:
+![Token ile meta-data adresine atılan curl isteği ve metadata başlıkları listesi](../../../../assets/ekran/p219-1.webp)
 
 ```bash frame="terminal"
 curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/
 ```
-
-`-v` parametresi istek ve yanıt başlıklarını da gösterir. Çıktının sonunda erişilebilen başlıklar listelenir:
 
 ```text title="Çıktı"
 *   Trying 169.254.169.254:80...
@@ -116,7 +114,9 @@ services/
 
 ## Belirli bir veriyi çekme
 
-Listelenen bilgilerden birini görmek için komutun sonuna verinin adını yazmak yeterlidir. Örneğin hostname:
+Gelin bu listelenen bilgilerden spesifik olarak görmek istediğimiz bir veriyi çekelim. Kullandığımız komutun sonuna verinin ismini yazarak yeniden çalıştırmamız yeterli olacaktır. `curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/hostname` gibi.
+
+![meta-data/hostname isteğinin çıktısında makinenin hostname bilgisi](../../../../assets/ekran/p219-2.webp)
 
 ```bash frame="terminal"
 curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/hostname
@@ -133,5 +133,3 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta
 * shutting down connection #0
 ip-172-31-0-10.ec2.internal
 ```
-
-Aynı şekilde adresin sonuna `instance-id` yazılarak (`.../latest/meta-data/instance-id`) makinenin ID'si alınabilir.

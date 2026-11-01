@@ -6,85 +6,52 @@ lessons: [17]
 order: 3
 ---
 
-[Servis modelleri](/bulut-temelleri/servis-modelleri/) sayfasında anlatılan değişimler, bir yazılım ekibinin projeyi ele alış biçimini de değiştirdi.
+Bu değişimlerin yazılım geliştirme döngüsüne nasıl etki ettiğini öğrenmek için yazımıza devam edelim.
+
+Bir yazılım ekibinin yazılım projesini nasıl ele aldığına ve bunun nasıl değişim gösterdiğine gelin birlikte bakalım.
 
 ## Geleneksel yazılım geliştirme döngüsü
 
-Yazılımlar geleneksel olarak şu aşamalardan geçer:
-
-1. **Gereksinim analizi**: Ekipçe yazılımın ne yapması gerektiği konuşulur.
-2. **Dizayn**: Belirlenen gereksinimlerin yazılıma dönüşmesi için ne yapılması gerektiği tartışılır ve işin yol haritası çıkarılır.
-3. **Kodlama / oluşturma**: Dizayn aşamasında belirlenen liste koda dökülür.
-4. **Test**: Yazılan kodun dizayna göre gereksinimleri karşılayıp karşılamadığı kontrol edilir; kodun kalitesi ve hızı gibi özellikleri de test edilir.
-5. **Versiyon**: Ortaya bir versiyon, yani uygulama çıkarılır ve başa dönülerek gereksinimler yeniden analiz edilir.
-
-Bu sürece döngü denmesinin temel sebebi, bir yazılımın bütün gereksinimlerini tek seferde belirleyip kodlayıp test etmenin mümkün olmamasıdır.
+Geleneksel olarak yazılımlar şu süreçlerden geçer; ilk olarak ekipçe bir gereksinim analizi yapılır. Burada yazdığımız yazılımın ne yapması gerektiği üzerine konuşuruz. Daha sonra belirlenen gereksinimleri dizayn aşamasında yazılım haline getirmemiz için ne yapmamız gerektiği hakkında tartışırız ve yapılacak işin yol haritasını çıkartırız. Ardından dizayn aşamasında belirlediğimiz bu listeyi kodlama-oluşturma adımına geçirerek kodunu yazmaya başlarız. Yazılan bu kodla ilgili test aşamasında dizayna göre oluşturulan kodlamanın gereksinimlerimizi karşılayıp karşılamadığını kontrol ederiz. Aynı zamanda kodun kalitesi ve hızı gibi özelliklerini de test ederiz. Son olarak ortaya bir versiyon yani uygulama çıkartılarak tekrar başa döneriz ve gereksinimleri yeniden analiz ederiz. İşte eskiden günümüze bir yazılım sürecini bu döngüyü takip ederek yürütüyorduk. Bu sürece döngü denmesinin temel sebebi, bir yazılımın bütün gereksinimlerini, yapması gerekenleri tek seferde belirleyip, kodlayıp, test edebilme imkanının olmamasıdır.
 
 ### Beta aşaması
 
-Döngüde hedeflenen gereksinimler tamamlanıp ilk versiyonun çıkmasına çok yakın bir dönemde kod **beta** aşamasına gelir. Beta, kodun neredeyse müşteriye gönderilmeye hazır olduğu ama tüm özellikleri kapsamayan ve bütün fonksiyonlarının çalıştığını garanti etmeyen halidir. Eskiden uygulamaya eklenecek her şey dışarıdaki müşterilerden geri bildirim (feedback) alınmadan geliştirildiği için beta sürüm müşterilere sunulur, bu sınırlı geri dönüşlerle hatalar düzeltilir ve nihai sürüme ulaşılırdı.
+Anlatılan bu döngüde gereksinim analizleriyle hedef olarak belirlediklerimizi tamamlayıp ilk versiyonu çıkartmaya çok yakın bir dönemde kodumuza beta aşaması gelir. Beta aşaması kodun neredeyse müşteriye gönderilmeye hazır olduğu ama tüm özellikleri kapsamayan ve bütün fonksiyonlarının çalıştığını garanti etmeyen bir halidir. Eskiden uygulamaya eklenecek her şey yazılım geliştirme ekibi tarafından dışarıdaki müşterilerden herhangi bir feedback almadan gerçekleştiği için beta aşaması müşterilere sunularak az da olsa sağlanan bu geri dönüşlerle uygulamamızdaki hataları düzeltirdik ve böylece nihai sürüme ulaşırdık.
 
 ## Eskiden dağıtım nasıl yapılırdı
 
-Yazılımın son hali müşteriye şöyle ulaştırılırdı:
+Yazılımın son halini dağıtım aşamasına geldiğimizde eskiden bu süreç şöyle işlerdi; geliştirmiş olduğumuz yazılımın son halini müşteriye ulaştırmak istediğimizde öncelikle bu yazılımı bir cd veya dvd'ye yüklerdik. Kendi sistemlerine nasıl kuracaklarına dair yönergeyle birlikte gönderirdik. Müşteri aldığı yazılımı kendi ekibiyle çalıştırarak kullanırdı. Herhangi bir sorunla karşılaştığında ise bize geri bildirim gönderirdi. Biz de yazılımın destek paketinde varsa yazılım ekiplerimizle bu sorunu çözen fix'i müşteriye gönderirdik. Müşteri bunu kendi sistemine kurardı ve sorun çözülmüş oluyordu. Ancak bu sayede yazılımla ilgili feedback toplamış oluyorduk çünkü yazılımın çalıştırıldığı sistemler bizim yönetimimizde değildi ve doğrudan müdahale edemiyorduk. Bu durumu yazılım firması tarafından ele alırsak geri bildirimin zor oluşu, yazılımın kurulduğu sistemin kontrolüne sahip olamayışı ve yüzlerce değişik sistem konfigürasyonu için uyumluluk sağlamanın zorluğu olumsuz sonuçlar doğuruyordu. Aynı zamanda problem çözmenin zahmetli ve yavaş olması, en ufak bir yeni özelliği barındıran sürümlere erişmenin aylar sürmesi, altyapı oluşturma ve yönetme işlemlerinin zahmetli ve pahalı olması da müşteri için oluşan olumsuzlukların başında geliyordu.
 
-1. Yazılım bir CD veya DVD'ye yüklenir, müşterinin kendi sistemine nasıl kuracağını anlatan yönergeyle birlikte gönderilirdi.
-2. Müşteri yazılımı kendi ekibiyle kurup kullanırdı.
-3. Bir sorunla karşılaştığında geri bildirim gönderirdi.
-4. Yazılımın destek paketinde varsa, sorunu çözen fix müşteriye gönderilir, müşteri bunu kendi sistemine kurardı.
-
-Geri bildirim ancak bu yolla toplanabiliyordu, çünkü yazılımın çalıştığı sistemler yazılım firmasının yönetiminde değildi ve doğrudan müdahale edilemiyordu.
-
-| Taraf | Olumsuz sonuçlar |
-| --- | --- |
-| Yazılım firması | Geri bildirim almanın zorluğu, yazılımın kurulduğu sistemin kontrolüne sahip olamamak, yüzlerce farklı sistem konfigürasyonuyla uyumluluk sağlamanın zorluğu |
-| Müşteri | Problemlerin çözümünün zahmetli ve yavaş olması, en ufak yeni özelliği içeren sürüme erişmenin aylar sürmesi, altyapı oluşturma ve yönetmenin zahmetli ve pahalı olması |
-
-Bu döngüyü takip ederek bir yazılımı oluşturmak bir yıldan fazla sürüyordu.
+Bu döngüyü takip ederek bir yazılımı oluşturmak bir yıldan daha fazla sürüyordu.
 
 ## Günümüzdeki değişim
 
-Yirmi yıl öncesine kadar yazılım geliştirme kısaca böyle işliyordu. Bugün döngüdeki aşamaların çoğu hâlâ takip edilse de gereksinim analizi sürece yayıldı ve müşterilerden çok daha fazla alınan geri bildirimlerle yazılım şekillenmeye başladı. En önemli değişim ise hız oldu.
+Yirmi yıl öncesine kadar yazılım geliştirme süreci kısaca böyle işlerdi. Günümüzde bu döngüde takip edilen aşamalar çoğunlukta olmakla birlikte gereksinim analizi sürece yayıldı ve müşterilerden çok daha fazla alınan geri dönüşler sayesinde yazılımımız şekillenmeye başladı. Ayrıca en önemli değişim burada hız faktörü oldu.
 
-Network bağlantı hızlarının artması ve sanallaştırma gibi kavramlarla bilgisayarlar daha kolay yönetilir hale geldi. Bu sayede software as a service modeli ortaya çıktı ve bahsedilen sıkıntıların çoğunu ortadan kaldıran bir yaklaşım geliştirildi:
+Network'lerin bağlantı hızlarının artması, sanallaştırma gibi kavramlarla bilgisayarlar daha kolay yönetilebiliyor hale geldi. Bu değişimler sayesinde software as a service modeli ortaya çıktı ve bu modelle birlikte bahsettiğimiz sıkıntıların çoğunu ortadan kaldıran bir yaklaşım geliştirildi.
 
-- Müşterinin isteğine göre, gerekirse eski usulde olduğu gibi yazılım yönetimiyle birlikte müşteriye verildi, gerekirse kurulum ve yönetim yazılım şirketine bırakıldı.
-- Müşteriler yazılıma internet üzerinden, bilgisayarlarına yüklenen bir client aracılığıyla ya da bir internet sitesine kullanıcı adı ve şifreyle girerek ulaşmaya başladı.
-- Ortaya çıkan sorunlar anında yazılım firmasının kendi sistemleri üzerinden çözülebilir hale geldi.
-- Yazılımlar firmanın sistemlerinde çalıştığı için geri bildirim toplamak amacıyla müşteriye gitmeye gerek kalmadı.
-
-Bu gelişmeler sayesinde işler çok hızlandı ve müşteri memnuniyeti arttı.
+Bu yaklaşım müşterilerin isteği doğrultusunda hareket ederek; gerekirse eski usulde olduğu gibi yazılımı yönetimiyle birlikte müşteriye verip gerekirse de yazılımın kurulumunu ve yönetimini şirkete bırakarak hizmet sağlamaya devam edildi. Müşteriler yeni yöntemde yazılıma internet üzerinden bilgisayarlarına yüklenen bir client aracılığıyla ya da internet sitesi üzerinden kullanıcı şifre girerek ulaşmaya başladı. Böylece ortaya çıkan sorunları anında kendi sistemlerimiz üzerinden çözer hale geldik. Ayrıca yazılımlar bizim sistemlerimizde çalıştığı için feedback toplamak amacıyla müşterilere gitmemize gerek kalmadı. Tüm bu olumlu gelişimler sayesinde işler çok hızlı hale geldi ve müşteri memnuniyeti de arttı.
 
 ## DevOps'un ortaya çıkışı
 
-Altyapı ve yazılım tarafındaki bu değişimler, ekiplerin birlikte çalışma şeklini de değiştirdi.
+Bu kısımda Infrastructure ve yazılım tarafında olan değişimlerden bahsettik şimdi gelin bu yazılım ve operasyondaki değişimlerin altyapıda birlikte çalışma şeklinin nasıl değiştiğine kısaca göz atalım.
 
-Eskiden amaçları ve yöneticileri farklı iki ekip vardı:
+Eskiden yazılım ve operasyon olmak üzere amaçları, yöneticileri farklı iki ekip vardı. Bir yazılım geliştirmek istediğimizde, yazılım ekibi bu süreci yönetiyordu. Yazılımın yeni bir sürümü ortaya çıktığında ise bu sürümü alarak operasyon ekiplerine devrediyordu. Operasyon ekipleri de bu sürümü alıp operasyon yapılacak sistemlere geçirerek yazılımı ayakta tutmaya çalışıyordu.
 
-- **Yazılım ekibi** yazılım geliştirme sürecini yönetir, yeni bir sürüm çıktığında bunu operasyon ekibine devrederdi. Nihai amacı müşterilerden toplanan geri bildirimler doğrultusunda operasyon ekibine kod göndermekti; ne kadar çok kod gönderirse o kadar başarılı sayılırdı.
-- **Operasyon ekibi** bu sürümü alıp operasyon yapılacak sistemlere geçirir ve yazılımı ayakta tutmaya çalışırdı. Amacı gönderilen kodu hayata geçirirken en az hatayı almak ve sistemin uzun süre ayakta kalmasını sağlamaktı.
+Yazılım ekibinin nihai amacı müşterilerden topladığı feedback'ler doğrultusunda yazılım geliştirme kodlarını operasyon ekiplerine göndermekti ne kadar kod gönderirse o kadar başarılı sayılırlardı. Operasyon ekiplerinin amacıysa gönderilen bu kodları hayata geçirirken en az hata almak ve uzun süre ayakta kalmasını sağlamaktı. Burada bir çıkar çatışması oluyordu ve bu iki ekip süreçte sorunlar yaşıyordu. Çünkü yazılım ekibi ne kadar yeni kod gönderirse o kadar başarılı sayılırken operasyon ekibi sistemde en az hata almaya çalışıyordu ancak gelen kodları hayata geçirirken hata yapma olasılıkları artıyordu. Sürecin bu kadar sancılı hale gelmesi sürecin hızını oldukça düşürdü ve verimsizleştirdi.
 
-Burada bir çıkar çatışması vardı: yazılım ekibi ne kadar çok yeni kod gönderirse o kadar başarılı sayılırken, operasyon ekibi en az hatayı hedefliyordu; ancak gelen her yeni kod, hayata geçirilirken hata olasılığını artırıyordu. Bu sancılı süreç hızı oldukça düşürdü ve verimsizleştirdi.
+İşte bu noktada iki ekibi birleştirip kaybedilen hızı yeniden kazanmak ve süreçte yaşanan sorunları ortadan kaldırmak hedeflendi. İki ekip yine farklı yöneticiler altında veya farklı şekillerde yönetilebilir ancak hedefler ortak olarak belirlendi. Bu ortak amaç ilk ortaya çıktığında basit olarak şu şekildeydi; "bir yazılım fikri ortaya çıktığı andan müşteriye sorunsuz şekilde iletileceği ana kadar olan süreyi ölçelim ve hedefimiz bu süreci kısaltmak olsun" dendi. Daha sonra bu fikir üzerine birçok yeni yöntemler eklenerek günümüzdeki DevOps şeklini aldı.
 
-Bu noktada iki ekibi birleştirip kaybedilen hızı yeniden kazanmak ve sorunları ortadan kaldırmak hedeflendi. İki ekip yine farklı yöneticiler altında veya farklı şekillerde yönetilebilir, ancak hedefler ortak belirlendi. Bu ortak amaç ilk ortaya çıktığında basitçe şuydu:
+Hedeflenen doğrultuda bu süreci kısaltmak için yapılabilecekler; süreci otomatize etmek, süreci monitör etmek ve tüm sistemde olan değişikliklerin daha kaliteli hale getirilmesi sorunların giderilmesi gibi yöntemlerdi.
 
-> Bir yazılım fikrinin ortaya çıktığı andan müşteriye sorunsuz şekilde iletileceği ana kadar geçen süreyi ölçelim ve hedefimiz bu süreyi kısaltmak olsun.
+Bahsedilen yöntemlerin uygulanması amacıyla geliştirilen Docker, Jenkins, Chef, Ansible, GitHub gibi araçlardı.
 
-Bu fikrin üzerine birçok yeni yöntem eklenerek bugünkü **DevOps** şekillendi. Süreyi kısaltmak için başvurulan yöntemler:
-
-- Süreci otomatize etmek
-- Süreci monitör etmek
-- Sistemdeki tüm değişikliklerin kalitesini artırmak ve sorunları gidermek
-
-Bu yöntemleri uygulamak için Docker, Jenkins, Chef, Ansible, GitHub gibi araçlar geliştirildi. DevOps, araçlarıyla birlikte ileride ayrıntılı olarak anlatılacaktır.
+DevOps kısmını daha sonra araçlarıyla birlikte ayrıntılı şekilde anlatmak üzere burada noktalayarak yazılım mimarisinde olan değişimlere geçiyoruz.
 
 ## Monolith'ten microservice mimarisine
 
-Bir yazılım iki katmandan oluşur:
+Mikroservis mimarisinde olan değişimleri incelemeden önce bazı tanımlamaları yaparak başlayalım; bir yazılım Front-End ve Back-End olmak üzere iki katmandan oluşur. Front-End yazılımın müşteriyle etkileşime girdiği son kısımdır burada doğrulama, veri giriş çıkışı gibi işlemler gerçekleşir. Back-End katmanında ise uygulamanın esas yapması gereken işlemler gerçekleşir bunlar; hesaplama, depolama, iletişim, loglama, analiz ve benzeri işlemlerdir.
 
-- **Front-End**: Yazılımın müşteriyle etkileşime girdiği son kısımdır. Doğrulama, veri giriş-çıkışı gibi işlemler burada gerçekleşir.
-- **Back-End**: Uygulamanın asıl yapması gereken işlemler burada gerçekleşir: hesaplama, depolama, iletişim, loglama, analiz ve benzeri.
+Eskiden Back-end katmanında gerçekleştirilen tüm işlem kodları tek bir kod bloğunda tutulurdu. Bu yöntem büyük sistemlerde esnek olmayışı, düzeltilmesinin zorluğu, tek kod tabanında tutulması ve yazmasının karmaşık oluşu gibi birçok sorun oluşturuyordu.
 
-Eskiden back-end katmanındaki tüm işlem kodları tek bir kod bloğunda tutulurdu (**monolith**). Bu yöntem büyük sistemlerde esnek olmaması, düzeltilmesinin zor olması, tek kod tabanında tutulması ve yazılmasının karmaşık olması gibi birçok sorun yaratıyordu.
-
-Monolith sistem **microservice** mimarisine çevrilerek her işlem bir servis haline getirildi. Örneğin önceden hesaplama ve iletişim aynı kodun içinde olduğu için birinde yapılan değişiklik diğerini de etkiliyordu. Microservice mimarisinde her işlem ayrılarak birbirinden bağımsız, gerektiğinde yalnızca birbiriyle iletişim kuran servisler haline getirildi. Servislerin birbiriyle nasıl konuştuğu [API](/bulut-temelleri/api/) sayfasında anlatılır.
+Bu monolith sistemi microservice mimarisine çevirerek her işlemi bir servis haline getirdik ve sorunların önüne geçtik. Örneğin önceden hesaplama ve iletişim aynı kodun içinde olduğu için birinde yapılan değişiklik diğerini de etkiliyordu ancak microservice mimarisi ile her işlem ayrılarak birbirinden bağımsız ve gerektiğinde sadece birbirleriyle iletişim kurabilen servisler haline getirildi.

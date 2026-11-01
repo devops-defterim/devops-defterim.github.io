@@ -8,13 +8,13 @@ order: 10
 
 ## systemd nedir
 
-systemd, Linux açıldığı andan kapandığı ana kadar her şeyin düzenli çalışmasını sağlayan bir orkestra şefidir. Linux yüklü bir bilgisayar açıldığında donanım elektriği alır, kernel hafızaya yüklenir ve tek bir program çalıştırır: systemd.
-
-systemd çalışmaya başladığı anda elindeki listeye bakar ve geri kalan her şeyi (ekran kartı sürücüsü, internet bağlantısı, ses servisi, giriş ekranı) o başlatır. O olmasaydı siyah ekranda yanıp sönen bir imleçten fazlasını göremezdik. Servisleri yönetir; başlatır, durdurur veya yeniden başlatır. Diğer bütün programlar systemd'nin çocukları ve torunlarıdır. PID'si 1'dir.
+Systemd, Linux'un açıldığı andan kapandığı ana kadar her şeyin düzenli çalışmasını sağlayan orkestra şefidir. Linux yüklü bir bilgisayar açıldığı andan itibaren donanım elektriği alır, kernel hafızaya yüklenir ve tek bir programı çalıştırır bu systemd'dir. Systemd çalışmaya başladığı an elindeki listeye bakar ve geri kalan her şeyi (ekran kartı sürücüsü, internet bağlantısı, ses servisi, giriş ekranı) o başlatır. O olmasaydı, siyah ekranda sadece yanıp sönen bir imleçten fazlasını göremezdik. Servisleri yöneterek başlatır, durdurur veya yeniden başlatır. Diğer bütün programlar systemd'nin çocukları ve torunlarıdır. PID'si 1'dir.
 
 ## systemctl ile durum görüntüleme
 
-systemd ile etkileşim için `systemctl` aracı kullanılır. Sistemde çalışan servisleri görmek için:
+Systemd ile etkileşim kurmak için `systemctl` aracını kullanırız. `sudo systemctl status` komutuyla sistemde şu an çalışan servisleri aşağıdaki ekranda gösterir. Çıkmak için `q`'ya basmamız gerekir.
+
+![sudo systemctl status ile sistemdeki servislerin ağaç görünümü](../../../assets/ekran/p046-1.webp)
 
 ```bash frame="terminal"
 sudo systemctl status
@@ -50,9 +50,9 @@ sudo systemctl status
 ...
 ```
 
-Çıkmak için `q` tuşuna basılır.
+Tek bir çalışan servisin durumuna bakmak istersek `systemctl status servisadi` komutunu kullanırız.
 
-Tek bir servisin durumuna bakmak için `systemctl status servisadi` kullanılır:
+![systemctl status systemd-journald.service çıktısı](../../../assets/ekran/p046-2.webp)
 
 ```bash frame="terminal"
 systemctl status systemd-journald.service
@@ -81,13 +81,7 @@ Sep 08 15:39:30 ip-172-31-0-10.eu-west-1.compute.internal systemd-journald[1038]
 
 ## Servisi enable etme
 
-Bir servisi yüklemek veya oluşturmak, o servisin bilgisayar açılışında otomatik başlayacağı anlamına gelmez. Açılışta otomatik başlaması için servisi enable etmemiz gerekir:
-
-```bash frame="terminal"
-sudo systemctl enable servisadı
-```
-
-Örnekte `sudo` olmadan yetki hatası alınır. `systemd-journald.service` ise static bir unit olduğu için enable edilemez:
+![systemd-journald.service için systemctl enable denemesi ve hata çıktısı](../../../assets/ekran/p047-1.webp)
 
 ```bash frame="terminal"
 systemctl enable systemd-journald.service
@@ -111,19 +105,23 @@ Possible reasons for having this kind of units are:
   instance name specified.
 ```
 
+Bir servisi yüklememiz, oluşturmamız o servisin otomatik başlayacağı anlamına gelmez. Bilgisayar başladığında bir servisin de otomatik olarak başlatılmasını istiyorsak enable etmemiz gerekir. Bunu `sudo systemctl enable servisadı` komutuyla yaparız.
+
+```bash frame="terminal"
+sudo systemctl enable servisadı
+```
+
 ## Servis yönetim komutları
 
-| İşlem | Komut |
-|---|---|
-| Servisi başlatma | `sudo systemctl start servisadı` |
-| Servisi durdurma | `sudo systemctl stop servisadı` |
-| Servisi yeniden başlatma | `sudo systemctl restart servisadı` |
-| Servisin konfigürasyonunu yeniden yükleme | `sudo systemctl reload servisadı` |
-| systemd'nin tüm konfigürasyonunu kontrol edip yeniden yükleme | `sudo systemctl daemon-reload` |
+Bir sistemi başlatmak istersek `sudo systemctl start servisadı`, bir sistemi durdurmak istersek `sudo systemctl stop servisadı`, bir sistemi yeniden başlatmak istersek `sudo systemctl restart servisadı`, bir sistemin konfigürasyonunu yeniden yükleyip yenilemek istersek `sudo systemctl reload servisadı` şeklinde kullanırız.
+
+Systemd'nin tüm konfigürasyonunu kontrol ederek her şeyi tekrar yüklemesi için `sudo systemctl daemon-reload` komutunu kullanırız.
 
 ## Unit dosyaları
 
-systemd neyi, nereden, nasıl ve ne zaman çalıştıracağını unit mantığı üzerinden bilir. Yönetmesini istediğimiz her şey için unit dosyalarına gider, onları yükler ve istenileni yapar. Unit dosyalarının bulunduğu yeri görmek için:
+Systemd neyi nereden, nasıl ve ne zaman çalıştıracağını nereden biliyor sorusunun cevabı unit mantığı üzerinden kurgular. Systemd çeşitli unit dosyaları üzerinden yönetmesini istediğimiz dosyaya gider yükler ve yapılması istenileni yapar.
+
+Bu unit'lerin nerede bulunduğuna bakmak istersek `ls -l /lib/systemd/system` komutunu kullanırız.
 
 ```bash frame="terminal"
 ls -l /lib/systemd/system

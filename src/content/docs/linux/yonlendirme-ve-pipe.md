@@ -8,17 +8,17 @@ order: 7
 
 ## Standart kanallar
 
-Linux'ta bir uygulama çalıştığında buna process denir. Her process'e üç stream (kanal) bağlanır:
+Linux'ta bir uygulama çalıştığı zaman bunun adı process olur ve Linux'ta bir uygulama çalıştığında bu uygulamaya üç tane stream yani kanal yapıştırılır. Bu üç kanal stdin(0), stdout(1) ve stderr(2) kanallarıdır.
 
-| Kanal | Numara | Görevi |
-|---|---|---|
-| stdin | 0 | Giriş kanalı, doğrudan klavyeye bağlıdır. Process'e input vermek istediğimizde bu girişe göndeririz, process de bu inputu alıp işler. |
-| stdout | 1 | Process bir bilgi üreteceği zaman bu kanala gönderir. Ekrana bağlıdır. |
-| stderr | 2 | Process bir hata üretecekse bu kanala gönderir. Bu da ekrana bağlıdır. |
+Stdin girişi direkt klavyeye bağlıdır. Bir prosese bir input vermek istediğimizde bu girişe göndeririz. Böylece process bu inputu alır ve işleyebilir.
+
+Process bir bilgi çıkartacağı zaman stdout stream'a gönderir. Ekranımıza bağlıdır. Eğer bir error üretecekse de stderr stream'a gönderir. Ekranımıza bağlıdır.
 
 ## Çıktıyı dosyaya yönlendirme: `>` ve `>>`
 
-Ekrana yazılan bir çıktıyı bir dosyanın içine yazmak için `>` karakteri kullanılır:
+Şimdi Linux shell'de kullanılan bazı karakterlere göz atalım. Ekrana yazdığımız bir çıktıyı istediğimiz bir dosyanın içine yazmak istersek aşağıdaki komutu kullanmamız gerekir. Buradaki karakterimiz `>`
+
+![echo çıktısının > ile deneme1.txt dosyasına yazılması ve cat ile okunması](../../../assets/ekran/p034-1.webp)
 
 ```bash frame="terminal"
 echo "bu bir deneme" >deneme1.txt
@@ -29,7 +29,9 @@ cat deneme1.txt
 bu bir deneme
 ```
 
-`>>` karakteri, solundaki process'in çıktısını sağdaki dosyaya gönderir. Dosyada veri varsa yeni mesaj dosyanın en sonuna eklenir:
+`>>` karakterini kullanarak soluna yazdığımız çalışan uygulamanın processi ana mesajını sağdaki dosyaya gönder demiş oluruz. Dosyada yazan veriler varsa bunun en sonuna bu mesajı ekler.
+
+![>> ile deneme1.txt dosyasının sonuna ikinci satırın eklenmesi](../../../assets/ekran/p034-2.webp)
 
 ```bash frame="terminal"
 echo "bu ikinci denemedir." >> deneme1.txt
@@ -43,21 +45,25 @@ bu ikinci denemedir.
 
 ## Çıktıyı yok etmek: `/dev/null`
 
-Bir script çalışırken çıktılarının terminale gelmesini istemiyorsak bu çıktıları başka bir yere yönlendirmemiz gerekir. `/dev/null` cihazı bir kara delik gibi düşünülebilir: gönderilen verileri yok eder, göstermez.
+Bir script çalışırken çıktılarını terminale göndermesini istemiyorsak bu çıktıları bir yere yönlendirmemiz gerekir. Bunun için `ls -al > /dev/null` komutuyla çıktılarımızı dev full cihazına göndeririz. Bu cihaz kara delik gibi düşünülebilir. Yolladığımız verileri yok eder göstermez.
 
 ```bash frame="terminal"
 ls -al > /dev/null
 ```
 
-Komutun çıktısını `/dev/null`'a göndermek ve hata alırsa hatayı da aynı yere göndermek için:
+Bir komutun çıktısını dev null cihazına hata alırsa bunu da dev full cihazına gönder demek için `komut > /dev/null 2>&1` şeklinde yazabiliriz.
 
 ```bash frame="terminal"
 komut > /dev/null 2>&1
 ```
 
+:::caution[Düzeltme]
+Bu komutlarda çıktı `/dev/null` cihazına gider. `/dev/full` ayrı bir cihazdır (yazmaya çalışınca "disk dolu" hatası verir). `2>&1`, stderr'i stdout'un gittiği yere, yani yine `/dev/null`'a yönlendirir.
+:::
+
 ## Girişi dosyadan almak: `<`
 
-`<` karakteri `>`'nin tersi yönde çalışır: sağdaki dosyanın içeriğini soldaki komutun standart inputuna verir. `sort` komutu kendisine verilen inputu sıralar.
+![sort < linuxsample.txt komutunun sıralanmış çıktısı](../../../assets/ekran/p035-1.webp)
 
 ```bash frame="terminal"
 sort < linuxsample.txt
@@ -79,11 +85,15 @@ Dört
 ...
 ```
 
-Bu komut `cat linuxsample.txt | sort` ile aynı işi yapar.
+Büyüktür karakterini kullanmak yerine aynı görevi gören küçüktür karakterini de şu şekilde kullanabiliriz. `sort < cat linuxsample.txt` bu komut `cat linuxsample.txt > sort` komutuyla aynı görevi üstlenecektir. Küçüktürün anlamı sağdakinin standart outputunu soldakinin standart inputuna attır. Ayrıca buradaki sort komutu verilen inputu sıralamaya yarar.
+
+:::caution[Düzeltme]
+Doğru yazım `sort < linuxsample.txt` şeklindedir (`<` sağına komut değil dosya alır). Bu komut `cat linuxsample.txt | sort` ile aynı işi yapar. `cat linuxsample.txt > sort` ise çıktıyı `sort` adında bir dosyaya yazar.
+:::
 
 ## Pipe: `|`
 
-`|` karakteri soldaki process'i çalıştırır ve standart outputunu sağdakine standart input olarak verir. Zincir uzadıkça her komutun çıktısı bir sonrakinin girdisi olur:
+![cat linuxsample.txt | sort | head -2 zincirinin çıktısı](../../../assets/ekran/p035-2.webp)
 
 ```bash frame="terminal"
 cat linuxsample.txt | sort | head -2
@@ -94,11 +104,17 @@ cat linuxsample.txt | sort | head -2
 A small river named Duden flows by their place and supplies it with the necessary regelialia.
 ```
 
+`|` karakterini kullanarak en sağda yazdığımız processi çalıştır standart outputunu solundakine standart input olarak ver ve bunu da çalıştırarak standart outputunu solundakine standart input olarak ver demiş oluruz. Şu şekilde kullanırız: `cat linuxsample.txt | sort | head -2`
+
+:::caution[Düzeltme]
+Pipe soldan sağa çalışır: en soldaki komutun standart outputu sağındaki komutun standart inputu olur. Örnekte `cat` çıktısı `sort`'a, `sort` çıktısı da `head -2`'ye gider.
+:::
+
 ## Komut zincirleme
 
 ### `;` ile sıralı çalıştırma
 
-Birden fazla komutu `;` ile ayırarak yan yana yazıp çalıştırabiliriz. Komutlar birbiriyle ilişkili değildir, sadece sırayla çalışırlar. Birinin hata vermesi diğerlerinin çalışmasına engel olmaz.
+![; ile ayrılmış üç echo komutunun sırayla çalışması](../../../assets/ekran/p035-3.webp)
 
 ```bash frame="terminal"
 echo "ornek" ; echo "ornek1" ; echo "ornek2"
@@ -110,9 +126,11 @@ ornek1
 ornek2
 ```
 
+Birden fazla komut girmemiz gerektiğinde bu komutları `;` ile ayırarak yan yana yazıp çalıştırabiliriz. Girdiğimiz komutlar birbiri ile ilişkili değildir. Sadece sırayla çalışırlar. Herhangi bir komutta hata almamız diğer komutların çalışmasına engel değildir.
+
 ### `&&`: ilki başarılıysa çalıştır
 
-İkinci komutun çalışmasını birincinin başarıyla çalışması şartına bağlamak için `&&` kullanılır. İlk komut hata verirse ikincisi çalışmaz:
+![ls hata verdiği için && sonrasındaki echo komutunun çalışmaması](../../../assets/ekran/p036-1.webp)
 
 ```bash frame="terminal"
 ls dkmkd && echo "ornek6"
@@ -122,9 +140,11 @@ ls dkmkd && echo "ornek6"
 ls: cannot access 'dkmkd': No such file or directory
 ```
 
+Birden fazla komutu girerek ikinci komutun çalışmasını birinin çalışması şartına bağlayarak yazmak istiyorsak `&&` karakterini kullanırız. İlk yazdığımız komut hata verirse ikinci yazdığımız çalışmaz.
+
 ### `||`: ilki başarısızsa çalıştır
 
-Soldaki komut çalışmazsa sağdakinin çalışmasını istiyorsak `||` kullanılır:
+![|| ile soldaki komut başarılıyken ve hata verdiğinde sağdaki komutun davranışı](../../../assets/ekran/p036-2.webp)
 
 ```bash frame="terminal"
 echo "ornek" || echo "ornek3"
@@ -143,18 +163,11 @@ ls: cannot access 'mdkc': No such file or directory
 ornek3
 ```
 
+Soldaki komutun çalışmaması durumunda sağdaki komutun çalışmasını istiyorsak `||` karakterini kullanırız.
+
 ## tar ile arşivleme
 
-Birden fazla dosyayı arşivleyerek tek bir arşiv dosyası oluşturmak için `tar` komutu kullanılır:
-
-| Parametre | Görevi |
-|---|---|
-| `-c` | Yeni bir tar arşivi oluşturur |
-| `-x` | Tar dosyasındaki içerikleri çıkarır |
-| `-t` | Arşivin içeriğini listeler |
-| `-f` | Üzerinde çalışılacak dosyayı belirtir |
-
-Arşiv oluşturma:
+![tar -cf ile dosyalar dizininden gonder.tar arşivinin oluşturulması ve ls -l çıktısı](../../../assets/ekran/p036-3.webp)
 
 ```bash frame="terminal"
 tar -cf gonder.tar dosyalar/
@@ -170,7 +183,7 @@ drwxr-xr-x. 2 ec2-user ec2-user     6 Jan  6 13:01 ornek1
 -rw-r--r--. 1 ec2-user ec2-user  1683 Jan  6 13:00 linuxsample.txt
 ```
 
-Arşivin içeriğini görüntüleme:
+![tar -tf ile gonder.tar arşivinin içeriğinin listelenmesi](../../../assets/ekran/p036-4.webp)
 
 ```bash frame="terminal"
 tar -tf gonder.tar
@@ -183,7 +196,7 @@ dosyalar/loglar/rapor.txt
 dosyalar/resim.jpg
 ```
 
-Arşivi başka bir dizine (burada `tmp`) çıkarma:
+![tar -xf ile arşivin tmp dizinine çıkarılması](../../../assets/ekran/p036-5.webp)
 
 ```bash frame="terminal"
 tar -xf ../gonder.tar
@@ -198,4 +211,4 @@ drwxr-xr-x. 2 ec2-user ec2-user 23 Jan  6 14:45 loglar
 -rw-r--r--. 1 ec2-user ec2-user  0 Jan  6 14:45 resim.jpg
 ```
 
-Arşivi sıkıştırma ve boyut kontrolü [Sıkıştırma, değişkenler ve geçmiş](/linux/degiskenler-ve-ortam/) sayfasında devam ediyor.
+Sistemde birden fazla dosyayı arşivleyerek arşiv oluşturmak için `tar` komutunu kullanırız. `tar -c` ile bir tar arşivi oluştururuz. Bir tar dosyasından çıkarmak için `tar -x` komutunu, içeriklerini görüntülemek için `tar -t` komutunu ve `tar -f` komutuyla da hangi dosya üzerinde çalışmak istediğimizi belirtebiliriz.

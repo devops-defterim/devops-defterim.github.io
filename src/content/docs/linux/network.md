@@ -6,13 +6,13 @@ lessons: [9]
 order: 18
 ---
 
-Bu sayfadaki çıktılar bir EC2 makinesinden alınmıştır. Makineye bağlanma adımları için [Bağlanma, SSH ve scp](/aws/ec2/baglanma-ssh-scp/) sayfasına bakılabilir.
+Şimdi bilgisayarı ağlar üzerinden yönetmek için kullandığımız araçlara göz atalım;
 
 ## Network adaptörleri
 
 ### ifconfig
 
-Makineye bağlı tüm network adaptörlerinin temel bilgilerini listeler:
+![ifconfig çıktısında enX0 ve lo adaptörleri](../../../assets/ekran/p074-1.webp)
 
 ```bash frame="terminal"
 ifconfig
@@ -38,9 +38,11 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
+Makinemize bağlı olan tüm network adaptörlerinin temel bilgilerini listelemek için `ifconfig` komutunu kullanırız.
+
 ### ip address
 
-Günümüzde `ifconfig` yerine `ip address show` kullanılıyor:
+![ip address show çıktısında lo ve enX0 arayüzleri](../../../assets/ekran/p074-2.webp)
 
 ```bash frame="terminal"
 ip address show
@@ -63,13 +65,13 @@ ip address show
        valid_lft forever preferred_lft forever
 ```
 
-`ifconfig`'ten farklı olarak `ip` komutuyla bir adaptöre IP adresi eklenebilir:
+Günümüzde `ifconfig` komutu yerine artık `ip address show` komutunu kullanıyoruz. `ifconfig` komutundan farklı olarak ip adresi eklememizi sağlar. Bunun için `sudo ip address add [IP_ADRESI]/[SUBNET_MASK] dev [ARAYUZ_ISMI]` komutunu kullanırız.
 
-```bash frame="terminal"
-sudo ip address add <IP_ADRESI>/<SUBNET_MASK> dev <ARAYUZ_ISMI>
-```
+:::caution[Düzeltme]
+`ifconfig` ile de bir arayüze IP adresi atanabilir (ör. `sudo ifconfig enX0 192.168.1.200 netmask 255.255.255.0`). `ip` komutunun farkı, `ifconfig`'in yerini alan güncel araç olması ve bir arayüze birden fazla adres eklemeyi doğrudan desteklemesidir.
+:::
 
-Örnek:
+![sudo ip address add ile enX0 arayüzüne 192.168.1.200/24 adresinin eklenmesi](../../../assets/ekran/p075-1.webp)
 
 ```bash frame="terminal"
 sudo ip address add 192.168.1.200/255.255.255.0 dev enX0
@@ -90,26 +92,22 @@ ip address show
        valid_lft forever preferred_lft forever
 ```
 
-Örnekteki `add` komutu `RTNETLINK answers: File exists` mesajını döndürdü. `ip address show` çıktısında `192.168.1.200/24` adresi `enX0` üzerinde görünüyor.
+Bunun için `sudo ip address add ipadresi/subnetmask dev networkadaptörü` komutunu kullanırız.
 
-Bir IP adresini silmek için:
-
-```bash frame="terminal"
-sudo ip address del <IP_ADRESI>/<SUBNET_MASK> dev <ARAYUZ_ISMI>
-```
+![sudo ip address del ile eklenen adresin silinmesi](../../../assets/ekran/p075-2.webp)
 
 ```bash frame="terminal"
 sudo ip address del 192.168.1.200/255.255.255.0 dev enX0
 ip address show
 ```
 
-Silme sonrasında `enX0` üzerinde yalnızca `172.31.0.10/20` adresi kalır.
+Bir ip adresini silmek istersek de `sudo ip address del ipadresi/subnetmask dev networkadaptörü` komutunu kullanırız.
 
 ## MAC adresi ve arp
 
-Ethernet kartı, Wi-Fi adaptörü gibi ağa bağlanabilen her donanımın üretim aşamasında üzerine kalıcı olarak yazılan fiziksel adrese **MAC adresi** denir. Dünyadaki her ağ kartının MAC adresi teorik olarak eşsizdir; cihazın dijital dünyadaki parmak izi gibidir. Network'e bağlanan her cihazın bir MAC adresi vardır.
+Ethernet kartı, Wi-Fi adaptörü gibi ağa bağlanabilen her donanımın üretim aşamasında üzerine kalıcı olarak kazınan fiziksel adrestir. Ethernet kartlarına fiziksel olarak unique olacak şekilde basılan adreslere “MAC adresi” denir. Dünyadaki her ağ kartının MAC adresi teorik olarak eşsizdir. Bu, cihazın dijital dünyadaki parmak izi gibidir. Networke bağlanan her cihazın MAC adresi vardır.
 
-MAC adreslerine `arp` komutuyla erişilir:
+![arp komutunun çıktısında enX0 üzerindeki ARP kayıtları](../../../assets/ekran/p076-1.webp)
 
 ```bash frame="terminal"
 arp
@@ -121,13 +119,9 @@ ip-172-31-0-1.eu-west-1  ether   02:00:00:00:00:02   C                     enX0
 ip-172-31-0-1.eu-west-1  ether   02:00:00:00:00:02   C                     enX0
 ```
 
-| Komut | İşlev |
-| --- | --- |
-| `arp -a <ip_adresi>` | Belirli bir IP adresiyle ilişkilendirilmiş MAC adresi olup olmadığına bakar |
-| `sudo arp -s <ip_adresi> -i <network_adaptoru> <mac_adresi>` | arp tablosuna yeni kayıt ekler |
-| `sudo arp -d <ip_adresi> <network_adaptoru>` | arp tablosundan kayıt siler |
+MAC adreslerine `arp` komutu ile erişebiliriz. Spesifik bir ip adresi ile ilişkilendirilmiş MAC adresi olup olmadığına bakmak istersek `arp -a ipadresi` komutunu kullanırız.
 
-Kayıt ekleme örneği:
+![sudo arp -s ile arp tablosuna yeni kayıt eklenmesi](../../../assets/ekran/p076-2.webp)
 
 ```bash frame="terminal"
 sudo arp -s 192.168.0.1 -i enX0 51:53:00:17:34:09
@@ -141,11 +135,17 @@ ip-172-31-0-1.eu-west-1  ether   02:00:00:00:00:02   C                     enX0
 ip-172-31-0-1.eu-west-1  ether   02:00:00:00:00:02   C                     enX0
 ```
 
+arp tablosuna yeni bir kayıt eklemek istersek `sudo arp -s ipadresi -i networkadaptörü macadresi` komutunu kullanırız. Bu tablodan bir kaydı silmek istersek de `sudo arp -d ipadresi networkadaptörü` şeklinde komutu kullanırız.
+
+:::caution[Düzeltme]
+Silme komutunda da adaptör adı `-i` ile verilir: `sudo arp -d ipadresi -i networkadaptörü`.
+:::
+
 ## Routing table
 
-Routing table (yönlendirme tablosu), bir ağ cihazının "hangi veri paketini, hangi yoldan, nereye göndermeliyim?" sorusuna cevap verdiği yapıdır. Bu tablo olmazsa bir bilgisayar aynı ağdaki başka bir cihaza veri gönderebilir, ama internete veya farklı bir alt ağa erişemez.
+Routing Table (Yönlendirme Tablosu), bir ağ cihazının hangi veri paketini, hangi yoldan, nereye göndermeliyim? sorularına cevap verdiği bir araçtır. Bu tablo olmazsa, bir bilgisayar aynı ağdaki arkadaşına veri gönderebilir ama internete veya farklı bir alt ağa erişemez.
 
-Bilgisayarda tanımlı routing table:
+![route -n çıktısında kernel IP routing table](../../../assets/ekran/p076-3.webp)
 
 ```bash frame="terminal"
 route -n
@@ -160,14 +160,9 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 172.31.0.2      0.0.0.0         255.255.255.255 UH    512    0        0 enX0
 ```
 
-Route ekleme ve silme komut iskeletleri:
+Bilgisayarımızda tanımlı olan routing table’a erişmek için `route -n` komutunu kullanırız.
 
-```bash frame="terminal"
-sudo ip route add <hedef_ag> via <ag_gecidi> dev <network_adaptoru>
-sudo ip route del <hedef_ag> via <ag_gecidi> dev <network_adaptoru>
-```
-
-Örnek:
+![sudo ip route add ile 199.199.199.0/24 ağına route eklenmesi ve route -n çıktısı](../../../assets/ekran/p077-1.webp)
 
 ```bash frame="terminal"
 sudo ip route add 199.199.199.0/24 via 172.31.0.1 dev enX0
@@ -184,19 +179,13 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 199.199.199.0   172.31.0.1      255.255.255.0   UG    0      0        0 enX0
 ```
 
+Routing table’a yeni bir route eklemek istersek `sudo ip route add hedefağ via ağgeçidi dev networkadaptörü` şeklindeki komut iskeletini kullanırız. Tablodan silmek istediğimiz bir route olursa da `sudo ip route del hedefağ via ağgeçidi dev networkadaptörü`
+
 ## Soketler: ss ve netstat
 
-Linux'ta ağ iletişimi **soket** adı verilen özel dosya yapıları üzerinden yürür. Bilgisayar TCP protokolü üzerinden bir network bağlantısı kurduğunda Linux'ta bir soket açılır. Soket sahte bir dosya gibi düşünülebilir: bir ucu soketi açan process'e, diğer ucu network tarafında bağlantı kurulan yere bağlanır. Process iletişim kurmak istediğinde sokete yazar, veri gönderilir; gelen veri sokete yazılır ve process soketten okur.
+Linux'ta ağ iletişimi, soket adı verilen özel dosya yapıları üzerinden yürütülür. Bilgisayarımız tcp protokolü üzerinde bir network bağlantısı kurduğu zaman Linux’ta bir soket açılır. Bu soket sahte dosya gibi düşünülebilir. Soketin bir ucu soketi açan prosese bağlanır diğer ucu da network tarafında o soketin gitmek istediği yani bağlantı kurduğu yere bağlanır. Bu port üzerinden iletişim kurmak istediğimiz zaman process sokete yazar, gönderilir, gelen sokete yazılır, process soketin içerisinden okur.
 
-| Komut | Ne listeler |
-| --- | --- |
-| `ss` | Sistemdeki tüm soketler |
-| `ss -4` | Yalnızca IPv4 üzerindeki soketler |
-| `ss -t` | Yalnızca TCP soketleri |
-| `ss -u` | Yalnızca UDP soketleri |
-| `ss -l` | Yalnızca dinleme (listening) yapan soketler |
-
-`ss` çıktısı uzundur; çoğunluğu `u_str` ve `u_dgr` tipindeki yerel (Unix) soketlerden oluşur:
+![ss komutunun çıktısında u_str ve u_dgr soketleri](../../../assets/ekran/p077-2.webp)
 
 ```bash frame="terminal"
 ss
@@ -213,6 +202,10 @@ u_dgr ESTAB 0      0                 /run/systemd/journal/dev-log 12480         
 ...
 ```
 
+Sistemde bulunan tüm soketleri `ss` komutu ile listeleyebiliriz.
+
+![ss -4 çıktısında IPv4 üzerindeki SSH bağlantısı](../../../assets/ekran/p078-1.webp)
+
 ```bash frame="terminal"
 ss -4
 ```
@@ -221,6 +214,10 @@ ss -4
 Netid State Recv-Q Send-Q Local Address:Port Peer Address:Port Process
 tcp   ESTAB 0      0      172.31.0.10:ssh    203.0.113.10:35102
 ```
+
+Sadece ipv4 üzerindeki soketleri görmek istersek `ss -4` komutunu kullanırız.
+
+![ss -u ve ss -t komutlarının çıktıları](../../../assets/ekran/p078-2.webp)
 
 ```bash frame="terminal"
 ss -u
@@ -239,11 +236,11 @@ State Recv-Q Send-Q Local Address:Port Peer Address:Port Process
 ESTAB 0      0      172.31.0.10:ssh    203.0.113.10:35102
 ```
 
-Örnekte `ss -u` yalnızca başlık satırını döndürdü; `ss -t` makineye açık SSH bağlantısını gösterdi.
+Sadece tcp soketlerini görmek için `ss -t` komutunu, sadece udp soketleri için `ss -u` komutunu kullanırız. Sadece dinleme yapan soketleri listelemek istersek `ss -l` komutunu kullanırız.
 
 ### netstat --help
 
-`netstat --help`, ağ istatistiklerini izlemek için kullanılan `netstat` aracının tüm fonksiyonlarını ve parametrelerini özetleyen kullanım rehberidir. Karmaşık ağ analizlerinde hangi filtrelerin kullanılabileceğini hatırlamak için bir referans noktasıdır.
+![netstat --help çıktısındaki parametre listesi](../../../assets/ekran/p078-3.webp)
 
 ```bash frame="terminal"
 netstat --help
@@ -281,9 +278,11 @@ usage: netstat [-vWeenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}
 ...
 ```
 
+`netstat --help` komutu, ağ istatistiklerini izlemek için kullanılan bu aracın tüm fonksiyonlarını ve parametrelerini özetleyen bir kullanım rehberidir. Karmaşık ağ analizleri yaparken hangi filtreleri kullanabileceğimizi hatırlamamıza yardımcı olan bir referans noktasıdır.
+
 ## DNS sorgusu: dig
 
-`dig` komutu bir alan adının hangi IP adresine ve hangi isim sunucularına bağlı olduğunu tüm teknik ayrıntılarıyla sorgular. Parametresiz çalıştırıldığında standart root server'ların DNS adresleri görülür:
+![Parametresiz dig komutunun çıktısında root server kayıtları](../../../assets/ekran/p079-1.webp)
 
 ```bash frame="terminal"
 dig
@@ -314,7 +313,9 @@ dig
 ;; MSG SIZE  rcvd: 239
 ```
 
-Bir alan adının hangi IP adresine karşılık geldiğini öğrenmek için `dig <web_adresi>` kullanılır:
+DNS sorgusu yapmamızı sağlayan araçlar vardır. Bunlardan ilki `dig` komutu. `dig` komutu, bir alan adının hangi IP adresine ve hangi isim sunucularına bağlı olduğunu tüm teknik detaylarıyla sorgulamamızı sağlar ve standart root server’ların DNS adreslerinin neler olduğunu görürüz.
+
+![dig www.google.com çıktısında A kayıtları](../../../assets/ekran/p079-2.webp)
 
 ```bash frame="terminal"
 dig www.google.com
@@ -338,7 +339,9 @@ www.google.com.         33      IN      A       209.85.202.105
 ...
 ```
 
-Bir web adresinin mail server (MX) kayıtları için `dig <web_adresi> MX` kullanılır:
+Dig ile öğrenmek istediğimiz bir alan adının hangi ip adresine denk geldiği eşleştirmesinin sonucuna ulaşırız bunu `dig webadresi` komutuyla yapabiliriz.
+
+![dig google.com MX çıktısında mail server kaydı](../../../assets/ekran/p080-1.webp)
 
 ```bash frame="terminal"
 dig google.com MX
@@ -354,14 +357,12 @@ google.com.             223     IN      MX      10 smtp.google.com.
 ...
 ```
 
+Dig aracıyla istediğimiz bir web adresinin mail server kayıtlarına da bakabiliriz. Bunun için `dig webadresi MX` komutunu kullanırız.
+
 ## /etc/hosts ve /etc/resolv.conf
 
-Hosts dosyası, internetteki DNS sistemi devreye girmeden önce işletim sisteminin ilk kontrol ettiği yerel bir metin dosyasıdır. Linux'ta `/etc/hosts` konumundadır.
+Hosts dosyası internetteki DNS sistemi devreye girmeden önce, işletim sisteminin ilk olarak kontrol ettiği yerel bir metin dosyasıdır. Linux'ta bu dosya `/etc/hosts` konumunda bulunur.
 
-Tarayıcıya bir web adresi yazıldığında bilgisayar bu ismin IP adresini bulmak için önce kendi hosts dosyasına bakar. Aradığı ismi orada bulursa dışarıdaki DNS sunucularına hiç sormadan doğrudan oradaki IP'ye gider.
+Bir web adresini tarayıcıya yazdığında, bilgisayarın bu ismin IP adresini bulmak için önce kendi içindeki hosts dosyasına bakar. Eğer aradığı ismi orada bulursa, dışarıdaki DNS sunucularına hiç sormadan doğrudan oradaki IP'ye gider.
 
-Makinedeki DNS server tanımı `/etc/resolv.conf` dosyasındadır; içeriğine bakmak için:
-
-```bash frame="terminal"
-cat /etc/resolv.conf
-```
+Makinemize DNS server tanımını yapmak için öncelikle `cat /etc/resolv.conf` komutuyla dosyayı açarız ve

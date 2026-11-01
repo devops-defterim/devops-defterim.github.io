@@ -6,35 +6,35 @@ lessons: [8]
 order: 17
 ---
 
-Bir EC2 makinesine yeni bir disk takıp Linux tarafında kullanılabilir hale getirmenin akışı şöyledir: diski oluştur ve makineye bağla, sistemin diski gördüğünü kontrol et, partition oluştur, formatla, bir klasöre mount et.
+## Yeni disk oluşturma ve makineye bağlama
 
-EBS volume ve snapshot konusu AWS tarafında [Volume ve snapshot](/aws/ebs-ve-ami/volume-ve-snapshot/) sayfasında ayrıca anlatılıyor.
+1. EC2 menüsünden **Elastic Block Store** başlığı altında **Volumes** seçeneğine tıklıyoruz.
 
-## Yeni disk oluşturma (AWS Console)
+   ![EC2 menüsünde Elastic Block Store altındaki Volumes seçeneği](../../../assets/ekran/p068-1.webp)
 
-1. **EC2** menüsünde **Elastic Block Store → Volumes** seçeneğine tıklanır.
-2. Açılan ekranda sağ üstteki `Create volume` butonuna tıklanır.
-3. Diskin özellikleri belirlenir. Ekranda görülen alanlar: `Size (GiB)`, `IOPS` (3000), `Throughput (MiB/s)` (125), `Availability Zone` (örnekte `us-east-1a`), `Snapshot ID - optional` (`Don't create volume from a snapshot`), `Encryption` ve `Tags - optional`.
-4. Sağ alttaki `Create volume` butonuna tıklanarak disk oluşturulur. Örnekte 10 GiB'lık bir `gp3` volume oluştu.
+2. Açılan ekranda sağ üstte bulunan **Create volume** butonuna yeni bir disk oluşturmak için tıklıyoruz.
 
-## Diski makineye bağlama
+   ![Volumes ekranının sağ üstündeki Create volume butonu](../../../assets/ekran/p068-2.webp)
 
-1. Volumes listesinde oluşturulan disk seçilir.
-2. **Actions → Attach volume** seçeneğine tıklanır.
-3. Açılan ekranda `Instance` alanından diskin bağlanacağı makine seçilir.
-4. `Attach volume` butonuna tıklanır.
+3. Oluşturacağımız diskin özelliklerini belirledikten sonra sağ altta bulunan **Create volume** butonuna tıklayarak diskimizi oluşturmuş oluruz.
 
-:::note
-Attach volume ekranındaki `Instance` listesinde yalnızca volume ile aynı Availability Zone'daki instance'lar görünür (ekrandaki açıklama: *Only instances in the same Availability Zone as the selected volume are displayed*).
-:::
+   ![Create volume ekranında boyut, IOPS, throughput ve Availability Zone gibi disk özellikleri](../../../assets/ekran/p069-1.webp)
 
-Disk artık sanal makineye bağlıdır, ancak üzerine henüz veri yazılamaz; çünkü üzerinde bir partition (bölümlendirme) yapısı yoktur. Partition, disk üzerinde verilerin yazılacağı alanın sınırlarını çizer: veriyi yazmaya hangi byte'tan başlanacağı, nerede bitirileceği ve bu alanın ne kadarının kullanılabileceği tanımlanır.
+4. Oluşturduğumuz diski makineye bağlamak için diskimizi seçtikten sonra **Actions** menüsü altında **Attach volume** seçeneğine tıklıyoruz.
 
-## Diskin görüldüğünü kontrol etme
+   ![Seçili volume için Actions menüsündeki Attach volume seçeneği](../../../assets/ekran/p069-2.webp)
+
+5. Açılan ekranda **Instance** altından diski hangi makineye bağlayacağımızı seçiyoruz. Ve **Attach volume** butonuna tıklıyoruz.
+
+   ![Attach volume ekranında diskin bağlanacağı instance seçimi](../../../assets/ekran/p070-1.webp)
+
+## Partition
+
+Artık oluşturduğumuz disk sanal makinemize bağlı ancak üzerine henüz veri yazabilir durumda değiliz; çünkü üzerinde bir partition (bölümlendirme) yapısı mevcut değil. Partition; disk üzerinde verilerin yazılacağı alanın sınırlarını çizer. Yani veriyi yazmaya hangi byte’tan başlanacağı, nerede bitirileceği ve bu alanın ne kadarının kullanılabileceği gibi tanımlamaların yapılması anlamına gelir.
 
 ### lsblk
 
-Diski bölümlere ayırmadan önce sistemin yeni donanımı tanıyıp tanımadığı kontrol edilir. `lsblk` (List Block Devices) komutu HDD, SSD ve NVMe sürücüler gibi veriyi bloklar halinde işleyen tüm blok cihazlarını hiyerarşik bir yapıda listeler. Böylece sistemde kaç disk takılı olduğu, adları (sdb, sdc gibi) ve kapasiteleri görülür.
+![lsblk çıktısında yeni takılan 10 GB'lık xvdf diski](../../../assets/ekran/p070-2.webp)
 
 ```bash frame="terminal"
 lsblk
@@ -49,11 +49,11 @@ xvda      202:0    0   8G  0 disk
 xvdf      202:80   0  10G  0 disk
 ```
 
-Yeni takılan 10 GB'lık disk `xvdf` olarak görünüyor ve üzerinde henüz partition yok.
+Diski bölümlere ayırmadan önce, sistemin bu yeni donanımı fiziksel olarak tanıyıp tanımadığını kontrol etmemiz gerekir. Bunun için `lsblk` (List Block Devices) komutunu kullanırız. Bu komut; sabit diskler (HDD), SSD’ler ve NVMe sürücüler gibi veriyi bloklar halinde işleyen tüm blok seviyesindeki cihazları hiyerarşik bir yapıda listeler. Bu sayede sisteme kaç tane disk takılı olduğunu, bu disklerin isimlerini (sdb, sdc gibi) ve kapasitelerini net bir şekilde görebiliriz.
 
 ### df -h
 
-`df -h` yalnızca işletim sistemine bağlanmış (mount edilmiş) ve veri yazmaya hazır alanların doluluk oranlarını raporlar. Bu yüzden diski bölümlendirip bağladıktan sonra, son aşamada kullanılır. Henüz mount edilmemiş `xvdf` bu listede yer almaz:
+![df -h çıktısında mount edilmiş dosya sistemleri](../../../assets/ekran/p071-1.webp)
 
 ```bash frame="terminal"
 df -h
@@ -69,9 +69,11 @@ tmpfs           475M     0  475M   0% /tmp
 tmpfs            95M     0   95M   0% /run/user/1000
 ```
 
+Sistemdeki fiziksel diskleri gördükten ve bölümlendirdikten sonra, son aşamada `df -h` komutunu kullanırız. Bu komut bize sadece işletim sistemine başarıyla bağlanmış (mount edilmiş) ve veri yazmaya hazır olan alanların doluluk oranlarını raporlar.
+
 ### fdisk -l
 
-Makinedeki disklerin ve oluşturulmuş partition'ların listesi:
+![sudo fdisk -l çıktısında xvda ve xvdf diskleri](../../../assets/ekran/p071-2.webp)
 
 ```bash frame="terminal"
 sudo fdisk -l
@@ -99,9 +101,11 @@ Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
 ```
 
+Makinede bulunan disklerin listesine ve oluşturulan partition’lara bakmak için `sudo fdisk -l` komutunu kullanırız.
+
 ## Partition oluşturma (fdisk)
 
-Bir disk üzerinde işlem yapmak için `fdisk` diskin yoluyla açılır, ardından gelen istemde yapılacak işlem yazılır:
+![sudo fdisk /dev/xvdf komutuyla açılan fdisk istemi](../../../assets/ekran/p072-1.webp)
 
 ```bash frame="terminal"
 sudo fdisk /dev/xvdf
@@ -118,15 +122,9 @@ Created a new DOS disklabel with disk identifier 0xaca3cf77.
 Command (m for help):
 ```
 
-Adımlar:
+Bir disk üzerinde işlem yapmak için öncelikle `sudo fdisk /dev/xvdf` komutunu yazarız gelen çıktıda yapmak istediğimiz işlemi yazarız.
 
-1. `n` yazılarak yeni bir partition oluşturulmak istendiği belirtilir.
-2. Partition'ın `p` (primary) mi `e` (extended) mi olacağı seçilir.
-3. Partition numarası verilir.
-4. Partition'ın diskte hangi sektörde başlayıp nerede biteceği yazılır. Örnekte ilk sektör varsayılan bırakıldı, son sektör için `+2GB` girildi.
-5. `w` ile değişiklikler kaydedilir, `q` (quit) ile çıkılır.
-
-Örnek oturum:
+![fdisk oturumunda n ile yeni partition oluşturma ve w ile kaydetme](../../../assets/ekran/p072-2.webp)
 
 ```text title="fdisk oturumu"
 Command (m for help): n
@@ -146,19 +144,23 @@ Calling ioctl() to re-read partition table.
 Syncing disks.
 ```
 
+1. `n` yazarak yeni bir partition oluşturmak istediğimizi söylemiş oluruz.
+2. Oluşturacağımız partition’un primary veya extended olduğunu belirterek devam ederiz.
+3. Ardından partition numarasını vererek devam ederiz.
+4. Diskin yazacağı byte’ın neresi olduğunu yazarız.
+5. `w` ile kaydedip quit ile çıkarız.
+
+:::caution[Düzeltme]
+fdisk'te `w` değişiklikleri diske yazar ve fdisk'ten kendisi çıkar; ayrıca `q` yazmak gerekmez. `q` ise değişiklikleri kaydetmeden çıkar.
+:::
+
 ## Formatlama: dosya sistemi oluşturma
 
-Oluşturulan partition'ı, kaba inşaatı bitmiş bir evin odalara bölünmesi gibi düşünebiliriz. Bu haliyle odalar henüz kullanıma hazır değildir; hangisinin mutfak, hangisinin yatak odası olacağını belirlemek ve içine eşyaları yerleştirmek gerekir. Aynı şekilde bir partition'a veri yazabilmek için ona hangi dosya sistemini kullanacağını söylemek, yani onu formatlamak gerekir.
+Oluşturduğumuz partition'ı, kaba inşaatı bitmiş bir evin odalarına bölünmesi gibi düşünebiliriz. Ancak bu haliyle odalar henüz kullanıma hazır değildir; hangisinin mutfak hangisinin yatak odası olduğunu belirlemek ve içine gerekli eşyaları yerleştirmek gerekir. Aynı şekilde, bir partition'ın üzerine veri yazabilmek için ona 'sen şu dosya sistemini kullanacaksın' dememiz, yani onu formatlamamız gerekir.
 
-Dosya sistemi, verilerin disk üzerinde hangi koordinatlarda duracağına, nasıl isimlendirileceğine ve nereye yazılacağına dair hiyerarşik tabloyu oluşturan yapıdır. Bu tablo sayesinde işletim sistemi aranan bir veriyi diskteki milyonlarca byte arasından saniyeler içinde bulup getirebilir.
+Buradaki dosya sistemi; verilerin disk üzerinde hangi koordinatlarda duracağına, nasıl isimlendirileceğine ve nereye yazılacağına dair hiyerarşik tabloyu oluşturan yapıdır. Bu tablo sayesinde işletim sistemi, aradığımız bir veriyi diskteki milyonlarca byte arasından saniyeler içinde bulup getirebilir.
 
-Komut iskeleti:
-
-```bash frame="terminal"
-sudo mkfs -t <dosya_sistemi_adi> <partition_yolu>
-```
-
-Örnekte partition `ext4` ile formatlandı:
+![sudo mkfs -t ext4 /dev/xvdf1 komutunun çıktısı](../../../assets/ekran/p073-1.webp)
 
 ```bash frame="terminal"
 sudo mkfs -t ext4 /dev/xvdf1
@@ -177,29 +179,23 @@ Creating journal (8192 blocks): done
 Writing superblocks and filesystem accounting information: done
 ```
 
-Bu işlemle disk veri kabul etmeye hazır hale gelir.
+Bahsettiğimiz formatlama işlemini yapmak için kullandığımız komut `sudo mkfs -t dosyasistemiismi partitionyolu` olmalıdır. Hangi dosya sistemi ile formatlayacaksak onun ismini kullanırız. Bu işlemle birlikte disk artık veri kabul etmeye hazır hale gelir. Ancak bu diski kullanabilmek için Linux'ta 'Mount' adı verilen işlemi yapmamız gerekir. Mount işlemi sayesinde, formatladığımız disk bölümünü sistemdeki boş bir klasörle bağlayarak diski kullanılabilir hale getiririz.
 
 ## Mount
 
-Diski kullanabilmek için Linux'ta **mount** işlemi yapılır. Mount ile formatlanan disk bölümü sistemdeki boş bir klasöre bağlanır ve disk kullanılabilir hale gelir.
+Bunun için kullandığımız komut iskeleti `sudo mount -t auto kullanılacakcihaz baglanacakklasör` şeklindedir.
 
-Komut iskeleti:
-
-```bash frame="terminal"
-sudo mount -t auto <kullanilacak_cihaz> <baglanacak_klasor>
-```
-
-Örnek:
+Örneğin `sudo mount -t auto /dev/xvdf1 /ornek/x1` komutunda `/dev/xvdf1` cihazını al `ornek` altındaki `x1` klasörüne bunu yapıştır demek istiyoruz. Bu sayede `ornek` altındaki `x1` klasörünün içine ne yazılırsa `/dev/xvdf1` partitiona da yazılmış olacak.
 
 ```bash frame="terminal"
 sudo mount -t auto /dev/xvdf1 /ornek/x1
 ```
 
-Bu komut `/dev/xvdf1` cihazını `/ornek` altındaki `x1` klasörüne bağlar. Bundan sonra `x1` klasörüne ne yazılırsa `/dev/xvdf1` partition'ına yazılmış olur.
-
 ## df -hT ile kontrol
 
-`df -hT` sistemdeki disk bölümlerinin doluluk oranlarını dosya sistemi tipiyle birlikte listeler:
+Şimdi `df -hT` komutuyla sistemdeki disk bölümlerinin doluluk oranlarını dosya sistemi tipiyle birlikte listeleyebiliriz.
+
+![df -hT çıktısında ext4 ile /ornek/x1 klasörüne bağlanmış /dev/xvdf1](../../../assets/ekran/p073-2.webp)
 
 ```bash frame="terminal"
 df -hT
@@ -216,7 +212,4 @@ tmpfs          tmpfs      95M     0   95M   0% /run/user/1000
 /dev/xvdf1     ext4      1.8G   24K  1.7G   1% /ornek/x1
 ```
 
-- `-h`: değerleri GB/MB gibi okunabilir biçimde gösterir.
-- `-T`: her bölümün dosya sistemi tipini gösterir.
-
-Yeni partition `/dev/xvdf1`, `ext4` dosya sistemiyle `/ornek/x1` klasörüne bağlanmış görünüyor.
+Buradaki `-h` parametresi verileri GB/MB gibi okunabilir formatta sunarken, `-T` parametresi her bir bölümün hangi veri yönetim mimarisine (teorik dosya sistemi yapısına) sahip olduğunu gösterir.
