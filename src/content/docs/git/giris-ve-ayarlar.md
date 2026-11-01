@@ -50,7 +50,7 @@ git config --list
 credential.helper=osxkeychain
 init.defaultbranch=main
 user.name=Ad Soyad
-user.email=kullanici@example.com
+user.email=**********@*****.com
 filter.lfs.clean=git-lfs clean -- %f
 filter.lfs.smudge=git-lfs smudge -- %f
 filter.lfs.process=git-lfs filter-process

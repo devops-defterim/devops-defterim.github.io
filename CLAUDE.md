@@ -56,14 +56,15 @@ Dosya ve klasör adları ASCII (ç→c, ğ→g, ı/İ→i, ö→o, ş→s, ü→
   - Terminal → kod bloğu. Prompt atılır. Komut `bash frame="terminal"` bloğunda, çıktı ayrı `text title="Çıktı"` bloğunda.
   - Konsol adımları → numaralı liste (**EC2 → Instances → Launch instance**).
   - Tablo → Markdown tablo. Şema → tablo/metin.
-- PDF'teki ekran görüntülerinin hepsi, karartma yapılmadan, PDF'teki yerine eklenir:
-  - Çıkarma: `python tools/screenshots/extract.py <pdf> work/<tarih>/raw`, WebP'ye çevirme: `python tools/screenshots/export.py work/<tarih>/raw` → `src/assets/ekran/<pNNN-k>.webp` (N: PDF sayfası, k: sayfadaki sıra).
+- PDF'teki ekran görüntülerinin hepsi PDF'teki yerine eklenir. Yalnızca kritik bilgiler (hesap ID, e-posta, access/secret key, şifre, token, IAM ID'leri) bulanıklaştırılır; görüntünün geri kalanı olduğu gibi kalır:
+  - Çıkarma: `python tools/screenshots/extract.py <pdf> work/<tarih>/raw`, OCR geçişleri (`pipeline.py` içindeki adımlar) ve bulanıklaştırıp WebP'ye çevirme: `python tools/screenshots/blur.py work/<tarih>/raw <ocr1.json,...>` → `src/assets/ekran/<pNNN-k>.webp` (N: PDF sayfası, k: sayfadaki sıra).
   - Sayfada: `![Anlamlı alt metin](../../../assets/ekran/p018-1.webp)`. O görüntüden aktarılan kod bloğu/tablo hemen altına gelir.
-  - `pipeline.py` / `redact.py` isteğe bağlı karartma hattıdır; varsayılan akışta kullanılmaz.
+  - Hesap ID'leri `private-notes/critical-accounts.txt` dosyasından okunur. Sonuç yeniden OCR'lanıp kritik desen kalmadığı doğrulanır.
+- Metinde kritik bilgiler yıldızla yazılır: hesap ID `************`, access key 20, secret key/token 40 yıldız, e-posta `**********@*****.com`.
 - Metin, kullanıcının PDF'teki cümleleridir. Sadece yazım/noktalama düzeltilir, komut ve buton adları `kod`/**kalın** yapılır, metin `##` başlıklarla bölünür, konsol adımları aynı kelimelerle numaralı listeye çevrilir. Cümleler yeniden yazılmaz, özetlenmez; notta olmayan açıklama eklenmez.
 - Kullanıcının cümlesinde teknik hata varsa cümle kalır, altına `:::caution[Düzeltme]` kutusu eklenir ve review notlarına yazılır.
 - Komutlar harfi harfine aktarılır. Emin olunamayan karakter tahmin edilmez, review notlarına sayfa numarasıyla yazılır.
-- Hassas veri yer tutucuyla değişir, orijinal değer hiçbir yere yazılmaz: `<AWS_ACCOUNT_ID>`, `<AWS_ACCESS_KEY_ID>`, `<AWS_SECRET_ACCESS_KEY>`, `<GITHUB_TOKEN>`, `kullanici@example.com`, kişi adı → `Ad Soyad` / `ornek` / `ornekkullanici`, public IP → `203.0.113.x`, private IP → `172.31.0.x`, hostname → `ip-172-31-0-10`, kaynak ID'leri → `i-0123456789abcdef0` vb.
+- Hassas veri yer tutucuyla değişir, orijinal değer hiçbir yere yazılmaz: kritik bilgiler yıldızla (yukarıda), kişi adı → `Ad Soyad` / `ornek` / `ornekkullanici`, public IP → `203.0.113.x`, private IP → `172.31.0.x`, hostname → `ip-172-31-0-10`, kaynak ID'leri → `i-0123456789abcdef0` vb.
 - Uyarı kutuları: `:::note`, `:::tip`, `:::caution`, `:::danger` (notta geçen uyarı cümleleri için, metin aynen).
 - İç bağlantılar `/modul/sayfa/` biçiminde ve sadece var olan sayfalara.
 

@@ -33,17 +33,18 @@ Komutun çıktısı, kopyalanmasın diye ayrı bir blokta verilir:
 total 0
 ```
 
-## Yer tutucular
+## Gizlenen bilgiler
 
-Metindeki komut ve çıktılarda kişisel ve hesaba özel değerler yer tutucularla yazıldı. Ekran görüntülerinde ise gerçek değerler görünür:
+Hesap numarası, erişim anahtarları, şifreler, token'lar ve e-posta adresleri gibi kritik bilgiler ekran görüntülerinde bulanıklaştırıldı, metinlerde yıldızla gösterildi:
 
-| Yer tutucu | Anlamı |
+| Gösterim | Anlamı |
 |---|---|
-| `<AWS_ACCOUNT_ID>` | 12 haneli AWS hesap numaran |
-| `<AWS_ACCESS_KEY_ID>`, `<AWS_SECRET_ACCESS_KEY>` | IAM kullanıcısının erişim anahtarları |
-| `203.0.113.10` | Sunucunun public IP adresi |
-| `172.31.0.10` | Sunucunun VPC içindeki private IP adresi |
-| `kullanici@example.com` | E-posta adresi |
+| `************` | 12 haneli AWS hesap numarası |
+| `********************` | AWS access key ID |
+| `****************************************` | AWS secret access key veya GitHub token |
+| `**********@*****.com` | E-posta adresi |
+
+Komutları kendin denerken bu yerlere kendi değerlerini yazmalısın. Kod bloklarındaki `203.0.113.10` gibi IP adresleri ve `ornekkullanici` gibi adlar da örnek değerlerdir.
 
 ## Sayfa düzeni
 

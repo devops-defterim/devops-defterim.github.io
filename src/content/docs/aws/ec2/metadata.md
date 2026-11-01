@@ -46,7 +46,7 @@ echo $TOKEN
 ```
 
 ```text title="Çıktı"
-<IMDS_TOKEN>
+********************************************************
 ```
 
 ## Metadata listesi
@@ -71,7 +71,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta
 > Host: 169.254.169.254
 > User-Agent: curl/8.17.0
 > Accept: */*
-> X-aws-ec2-metadata-token: <IMDS_TOKEN>
+> X-aws-ec2-metadata-token: ********************************************************
 >
 * Request completely sent off
 < HTTP/1.1 200 OK

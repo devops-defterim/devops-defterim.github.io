@@ -74,7 +74,7 @@ aws ec2 describe-instances
     "Reservations": [
         {
             "ReservationId": "r-0123456789abcdef0",
-            "OwnerId": "<AWS_ACCOUNT_ID>",
+            "OwnerId": "************",
             "Groups": [],
             "Instances": [
                 {
@@ -82,8 +82,8 @@ aws ec2 describe-instances
                     ...
                     "Hypervisor": "xen",
                     "IamInstanceProfile": {
-                        "Arn": "arn:aws:iam::<AWS_ACCOUNT_ID>:instance-profile/Ec2-Admin-Acess",
-                        "Id": "<INSTANCE_PROFILE_ID>"
+                        "Arn": "arn:aws:iam::************:instance-profile/Ec2-Admin-Acess",
+                        "Id": "*********************"
                     },
                     "NetworkInterfaces": [
                         {

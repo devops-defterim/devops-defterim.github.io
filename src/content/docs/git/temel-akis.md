@@ -61,19 +61,19 @@ git log
 
 ```text title="Çıktı"
 commit e5a64c00d4e0766e749656c40d94948b2be649aa (HEAD -> main)
-Author: Ad Soyad <kullanici@example.com>
+Author: Ad Soyad <**********@*****.com>
 Date:   Sun Jan 25 16:12:24 2026 +0300
 
     ornek dosyasında son değişiklik
 
 commit 320860ec2ce4d6d5a132876d718a678a098db687
-Author: Ad Soyad <kullanici@example.com>
+Author: Ad Soyad <**********@*****.com>
 Date:   Sun Jan 25 16:10:32 2026 +0300
 
     ornek dosyasına yeni ekleme yapıldı.
 
 commit 8dbdaaa2342ea1be3c458369c65dcfb9fce5fadd
-Author: Ad Soyad <kullanici@example.com>
+Author: Ad Soyad <**********@*****.com>
 Date:   Sun Jan 25 15:52:32 2026 +0300
 
     yeni dosyalar olusturuldu

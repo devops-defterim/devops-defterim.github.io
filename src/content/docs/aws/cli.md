@@ -43,8 +43,8 @@ aws configure
 ```
 
 ```text title="Çıktı"
-AWS Access Key ID [****************]: <AWS_ACCESS_KEY_ID>
-AWS Secret Access Key [****************]: <AWS_SECRET_ACCESS_KEY>
+AWS Access Key ID [****************]: ********************
+AWS Secret Access Key [****************]: ****************************************
 Default region name [me-central-1]: eu-west-1
 Default output format [json]: json
 ```
@@ -55,9 +55,9 @@ aws sts get-caller-identity
 
 ```json title="Çıktı"
 {
-    "UserId": "<AWS_USER_ID>",
-    "Account": "<AWS_ACCOUNT_ID>",
-    "Arn": "arn:aws:iam::<AWS_ACCOUNT_ID>:user/ornekkullanici"
+    "UserId": "*********************",
+    "Account": "************",
+    "Arn": "arn:aws:iam::************:user/ornekkullanici"
 }
 ```
 
@@ -123,7 +123,7 @@ aws ec2 describe-instances --instance-ids i-0123456789abcdef0
     "Reservations": [
         {
             "ReservationId": "r-0123456789abcdef0",
-            "OwnerId": "<AWS_ACCOUNT_ID>",
+            "OwnerId": "************",
             "Groups": [],
             "Instances": [
                 {

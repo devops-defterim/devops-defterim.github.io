@@ -23,7 +23,7 @@ AWS hesabımıza giriş yaparken root üzerinden değil de oluşturduğumuz kull
 ![IAM Dashboard'un sağındaki AWS Account kutusunda IAM kullanıcıları için sign-in URL'i](../../../../assets/ekran/p135-1.webp)
 
 ```text
-https://<AWS_ACCOUNT_ID>.signin.aws.amazon.com/console
+https://************.signin.aws.amazon.com/console
 ```
 
 Buradaki numarayı akılda tutmak zor olacağından **Create** diyerek bu numaraya bir alias atayabiliyoruz.

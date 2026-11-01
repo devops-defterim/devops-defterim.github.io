@@ -27,7 +27,7 @@ Kullanıcı bilgileri `git config` komutuyla verilir: `git config --global user.
 ![git commit çıktısında eklenen dosyalar](../../../assets/ekran/p113-3.webp)
 
 ```bash frame="terminal"
-git config --global user.email "kullanici@example.com"
+git config --global user.email "**********@*****.com"
 git config --global user.name "Ad Soyad"
 git init
 git add .
@@ -126,7 +126,7 @@ cd ~/onepage
 echo "Bilgiler güncelleniyor..."
 # Not: Orijinal dosyada ISIM ve EPOSTA anahtar kelimeleri aranıyor
 sed -i 's/ISIM/Ad Soyad/g' index.html
-sed -i 's/EPOSTA/kullanici@example.com/g' index.html
+sed -i 's/EPOSTA/**********@*****.com/g' index.html
 
 # 4. Dosyaları web klasörüne kopyala
 echo "Web sitesi yayına alınıyor..."

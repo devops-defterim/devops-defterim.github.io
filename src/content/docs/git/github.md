@@ -57,7 +57,7 @@ Artık şifre yerine bize verilen token’ı kopyalayıp terminal ekranımızda 
 ![Tokens (classic) listesinde oluşturulan token ve kopyalama uyarısı](../../../assets/ekran/p089-1.webp)
 
 ```text title="Tokens (classic)"
-<GITHUB_TOKEN>
+****************************************
 ```
 
 ## git pull
