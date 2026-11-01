@@ -1,139 +1,77 @@
-# Yayın: Cloudflare Pages
+# Yayın: GitHub Pages
 
-Site `https://devops-defterim.pages.dev` adresinde, alan adı gerektirmeden ve ücretsiz olarak yayınlanır.
+Site `https://ozmenyasin111.github.io/devops-defterim/` adresinde, alan adı gerektirmeden ve ücretsiz yayınlanır. Kaynak: `github.com/ozmenyasin111/devops-defterim` (public).
 
 ## Karar
 
-Barındırma için **Cloudflare Pages** seçildi. Koşullar 2026-10-31 tarihinde web'den kontrol edildi. Değişebilecekleri için kurulum gününde resmi sayfalardan tekrar bak.
+Barındırma için **GitHub Pages** kullanılıyor (site sahibinin tercihi). Koşullar 2026-11-01 itibarıyla:
 
-| Kriter | GitHub Pages | Cloudflare Pages | Netlify | Vercel |
-|---|---|---|---|---|
-| Ücretsiz HTTPS alt alan adı | `kullanici.github.io` | `proje.pages.dev` | `proje.netlify.app` | `proje.vercel.app` |
-| Ücretsiz planda private kaynak repo | Hayır (Pages için Pro gerekir) | Evet | Evet | Evet |
-| Özel HTTP başlıkları (CSP, HSTS vb.) | Hayır, sadece `<meta>` | Evet, `_headers` dosyası | Evet | Evet |
-| Ücretsiz planda ticari kullanım | Ticari site olarak kullanım yasak | Kısıt yok | İzinli | Hobby planı kişisel ve ticari olmayan kullanım içindir |
-| Ücretsiz plan limitleri | 1 GB site, 100 GB/ay soft bant genişliği | 500 build/ay, statik istekler sınırsız | Aylık 300 kredi; aşılınca projeler durur | Hobby limitleri |
+- Ücretsiz planda Pages yalnızca **public** repolarda çalışır. Repo herkese açıktır; `private-notes/`, kaynak PDF/PNG'ler ve çalışma dosyaları `.gitignore` ile repoya girmez.
+- Limitler: yayınlanan site en fazla 1 GB, aylık ~100 GB bant genişliği (soft limit), dağıtım zaman aşımı 10 dakika.
+- GitHub Pages ticari işlem amaçlı siteler için kullanılamaz; kişisel not sitesi için uygundur.
+- **Özel HTTP başlığı tanımlanamaz.** Bu yüzden güvenlik politikası meta etiketle verilir (aşağıda).
 
-Gerekçeler:
+Kaynak: https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
 
-- **Güvenlik başlıkları:** GitHub Pages özel başlık desteklemiyor. CSP `<meta>` ile verilebilir ama `frame-ancestors`, meta etiketle çalışmaz. Bu yüzden tıklama korsanlığına karşı koruma ve `X-Content-Type-Options` gibi başlıklar verilemez. Cloudflare Pages `_headers` dosyasıyla bunların hepsini destekler.
-- **Private repo:** İstersen kaynak repoyu private tutabilirsin; ücretsiz planda Cloudflare bunu destekliyor.
-- **Limitler:** Statik dosya istekleri sınırsız. Ayda 500 build bu proje için fazlasıyla yeterli.
-- **Netlify** de uygun bir alternatif, ama kredi sistemi aşımda siteyi durdurabiliyor. **Vercel**'in ücretsiz planı ticari olmayan kullanımla sınırlı.
+## Nasıl yayınlanıyor
 
-Cloudflare yeni özellikleri "Workers static assets" ürününe ekliyor ama Pages destekleniyor. İleride geçiş gerekirse `_headers` dosyası Workers'ta da aynen çalışır.
+`.github/workflows/deploy.yml`, `main` dalına her push'ta:
 
-Kaynaklar:
-- https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
-- https://developers.cloudflare.com/pages/platform/limits/
-- https://developers.cloudflare.com/pages/configuration/headers/
-- https://developers.cloudflare.com/workers/static-assets/migration-guides/migrate-from-pages/
-- https://www.netlify.com/blog/introducing-netlify-free-plan/
-- https://vercel.com/docs/plans/hobby
+1. Bağımlılıkları kurar (`npm ci`), siteyi derler (`npm run build`), bağlantı ve hassas veri kontrollerini çalıştırır (`npm run check`).
+2. `dist/` klasörünü Pages artifact'i olarak yükler ve yayınlar.
 
-## 1. Hesap güvenliği (önce bunu yap)
+Kontrollerden biri başarısız olursa yayın yapılmaz. Pull request'lerde `.github/workflows/ci.yml` aynı kontrolleri yayınlamadan çalıştırır.
 
-- **GitHub:** Settings → Password and authentication → Two-factor authentication'ı aç. Mümkünse passkey veya authenticator uygulaması kullan; SMS'i tercih etme. Kurtarma kodlarını parola yöneticisinde sakla.
-- **Cloudflare:** My Profile → Authentication → Two-Factor Authentication'ı aç. Kurtarma kodlarını sakla.
-- **E-posta hesabın:** Her iki hesabın bağlı olduğu e-postada da 2FA açık olsun. Hesap kurtarma bu e-postadan yapılır.
-- Commit'lerde gerçek e-posta görünmesin: GitHub → Settings → Emails → "Keep my email addresses private" seçili olsun. Bu repo yerelde zaten GitHub noreply adresini kullanıyor.
+Site bir alt dizinde (`/devops-defterim/`) yayınlandığı için `astro.config.mjs` içinde `base` tanımlıdır. Markdown'da iç bağlantılar `/modul/sayfa/` biçiminde yazılır; `scripts/postbuild.mjs` önekleri build sonrasında ekler.
 
-## 2. GitHub reposu
+## İlk kurulum (yapıldı)
 
-1. GitHub'da yeni repo oluştur: ad `devops-defterim`, görünürlük Public ya da Private. README, .gitignore ve lisans **ekleme**; repo boş kalsın.
-2. Yerelde uzak adresi ekle ve gönder:
+1. Repo oluşturuldu ve gönderildi: `gh repo create ozmenyasin111/devops-defterim --public --source . --push`
+2. Pages kaynağı GitHub Actions olarak ayarlandı: repo → **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+3. İlk yayın `deploy.yml` ile yapıldı.
 
-   ```bash
-   git remote add origin https://github.com/<kullanici>/devops-defterim.git
-   git push -u origin main
-   ```
+Başka bir hesap veya repo adına taşınırsa `astro.config.mjs` içindeki `SITE` ve `BASE`, `scripts/postbuild.mjs` ve `scripts/check-links.mjs` içindeki varsayılan `/devops-defterim` değerleri güncellenmelidir (ya da `SITE_BASE` ortam değişkeni verilir).
 
-3. Göndermeden önce repoya ne gireceğini kontrol et. Listede PDF, PNG, `private-notes/` veya prompt dosyası olmamalı:
+## Güncelleme akışı
 
-   ```bash
-   git ls-files
-   ```
+```bash
+npm run build && npm run check   # yerelde kontrol
+git add -A && git commit -m "..."
+git push                          # Actions derler ve yayınlar (1-3 dakika)
+```
 
-4. **Settings → Code security** altında Dependabot alerts ve Dependabot security updates'i aç. Secret scanning ve push protection'ı da aç; public repoda ücretsizdir.
+Yayın durumunu repo → **Actions** sekmesinden izleyebilirsin. Hatalı bir yayını geri almak için ilgili commit'i `git revert` ile geri alıp push etmek yeterlidir.
 
-## 3. Cloudflare Pages projesi
+## Güvenlik
 
-1. https://dash.cloudflare.com adresinde ücretsiz hesap aç ve 2FA'yı etkinleştir.
-2. **Workers & Pages → Create → Pages → Connect to Git** yolunu izle.
-3. GitHub'ı bağla. Cloudflare GitHub uygulamasına **sadece** `devops-defterim` reposuna erişim ver ("Only select repositories").
-4. Build ayarları:
+### Sayfa içi güvenlik politikası
 
-   | Alan | Değer |
-   |---|---|
-   | Project name | `devops-defterim` (adres: `devops-defterim.pages.dev`; doluysa başka bir ad seç ve `astro.config.mjs` içindeki `site` değerini güncelle) |
-   | Production branch | `main` |
-   | Framework preset | None |
-   | Build command | `npm run build` |
-   | Build output directory | `dist` |
-   | Root directory | boş |
+GitHub Pages özel başlık desteklemediği için `scripts/postbuild.mjs` her HTML sayfasının `<head>` başına şunları ekler:
 
-   Node sürümü repodaki `.node-version` dosyasından okunur. Okunmazsa **Settings → Variables** altına `NODE_VERSION = 24` ekle.
+- `Content-Security-Policy` (meta):
+  - `script-src 'self'` + sayfalardaki inline script'lerin SHA-256 hash'leri (`'unsafe-inline'` yok); `'wasm-unsafe-eval'` yalnızca Pagefind araması için.
+  - `default-src 'self'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'none'`, `upgrade-insecure-requests`.
+  - `style-src` için `'unsafe-inline'` var (Starlight ve Expressive Code inline `style` öznitelikleri kullanıyor; script çalıştırmaya izin vermez).
+- `referrer` meta: `strict-origin-when-cross-origin`.
 
-5. **Save and Deploy**. İlk build birkaç dakika sürer.
+**Sınırlamalar** (meta etiketle verilemeyenler):
 
-## 4. İlk yayını doğrula
+- `frame-ancestors` (ve `X-Frame-Options`): site başka bir sitede iframe içinde gösterilebilir. Sitede form veya oturum olmadığı için risk düşüktür.
+- `X-Content-Type-Options`, `Permissions-Policy`: verilemez.
+- HTTPS: `github.io` adresleri HTTPS ile sunulur; repo → **Settings → Pages → Enforce HTTPS** seçili olmalıdır.
 
-1. `https://devops-defterim.pages.dev` adresini aç. Menü, arama ve açık/koyu mod çalışmalı.
-2. Güvenlik başlıklarını kontrol et:
+Bu başlıklar gerekirse site, `_headers` destekleyen bir barındırıcıya (ör. Cloudflare Pages) taşınabilir.
 
-   ```bash
-   curl -sI https://devops-defterim.pages.dev/ | grep -iE 'content-security|x-frame|x-content|referrer|permissions|strict-transport'
-   ```
+### Hesap güvenliği
 
-3. Tarayıcı geliştirici araçlarında Console sekmesinde CSP hatası olmamalı.
+- **GitHub 2FA:** Settings → Password and authentication → Two-factor authentication. Authenticator uygulaması veya passkey kullan; kurtarma kodlarını parola yöneticisinde sakla.
+- **E-posta gizliliği:** Settings → Emails → "Keep my email addresses private". Bu repo commit'lerde GitHub noreply adresini kullanır.
+- **Token'lar:** Kullanılmayan personal access token'ları Settings → Developer settings altından sil.
 
-## 5. Güvenlik başlıkları
+### Repo ayarları
 
-Başlıklar `npm run build` sırasında `scripts/postbuild-headers.mjs` tarafından `dist/_headers` dosyasına yazılır:
-
-- `Content-Security-Policy`:
-  - `script-src 'self'` ve sayfalardaki inline script'lerin SHA-256 hash'leri. `'unsafe-inline'` yoktur.
-  - `'wasm-unsafe-eval'` sadece Pagefind aramasının WebAssembly modülü için.
-  - `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'none'`.
-  - `style-src` için `'unsafe-inline'` var, çünkü Starlight ve Expressive Code inline `style` öznitelikleri kullanıyor. Script çalıştırmaya izin vermediği için risk düşük.
-- `X-Content-Type-Options: nosniff`
-- `X-Frame-Options: DENY`, eski tarayıcılar için.
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy`: kamera, mikrofon, konum ve benzerleri kapalı.
-- `Strict-Transport-Security: max-age=31536000`
-
-Yeni bir inline script eklenirse hash otomatik hesaplanır. CSP satırı Cloudflare'in 2000 karakter sınırını aşarsa build hata verir. Harici script, analitik ve font CDN'i eklenmemelidir.
-
-Pages, `*.pages.dev` alt alan adında HTTPS'i otomatik sağlar.
-
-## 6. Güncelleme akışı
-
-1. Değişikliği yerelde yap.
-2. Kontrol et:
-
-   ```bash
-   npm run build && npm run check
-   ```
-
-3. Commit'le ve `main`'e gönder. Cloudflare Pages otomatik olarak yeni build alır ve yayınlar.
-4. Pull request açarsan Cloudflare her PR için bir önizleme adresi üretir, GitHub Actions da build ve kontrolleri çalıştırır (`.github/workflows/ci.yml`).
-5. Dependabot haftalık güncelleme PR'ları açar. CI geçerse merge et.
-
-Geri almak için Cloudflare'de **Deployments** listesinden önceki bir yayında **Rollback** seçilebilir.
-
-## 7. Branch protection
-
-GitHub → repo → **Settings → Rules → Rulesets → New branch ruleset**:
-
-- Target: `main` (Default branch).
-- **Restrict deletions** ve **Block force pushes** açık.
-- **Require a pull request before merging**: tek başına çalışıyorsan onay sayısını 0 bırakabilirsin.
-- **Require status checks to pass**: `build` (CI iş akışı).
-- Bypass listesine kimseyi ekleme. Acil durumda kuralı geçici olarak kapatırsın.
-
-## 8. CI güvenliği
-
-- İş akışı sadece `contents: read` yetkisiyle çalışır.
-- Action'lar commit SHA'sıyla sabitlenmiştir. Dependabot bunları da günceller.
-- `persist-credentials: false` ayarı token'ın checkout sonrası diskte kalmasını engeller.
-- Hiç secret kullanılmaz. Deploy'u Cloudflare kendi Git entegrasyonuyla yapar.
+- **Branch protection:** Settings → Rules → Rulesets → New branch ruleset → hedef `main`:
+  - Restrict deletions ve Block force pushes açık.
+  - İstersen "Require a pull request before merging" ve "Require status checks to pass: build". Tek başına çalışıyorsan doğrudan push'a izin vermek için bu ikisini kapalı bırakabilirsin.
+- **Code security:** Dependabot alerts, Dependabot security updates, Secret scanning ve Push protection açık olsun (public repoda ücretsiz).
+- **Actions:** Settings → Actions → General → Workflow permissions: "Read repository contents and packages permissions". İş akışları gereken yetkileri kendileri tanımlar; action'lar commit SHA'sıyla sabitlenmiştir ve Dependabot günceller. Secret kullanılmaz.

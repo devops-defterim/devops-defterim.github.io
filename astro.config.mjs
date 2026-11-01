@@ -4,8 +4,13 @@ import starlight from '@astrojs/starlight';
 import { modules } from './src/config/modules.mjs';
 import { buildSidebar } from './src/config/sidebar.mjs';
 
+// GitHub Pages proje sitesi: https://ozmenyasin111.github.io/devops-defterim/
+const SITE = 'https://ozmenyasin111.github.io';
+const BASE = '/devops-defterim';
+
 export default defineConfig({
-	site: 'https://devops-defterim.pages.dev',
+	site: SITE,
+	base: BASE,
 	output: 'static',
 	trailingSlash: 'always',
 	build: { inlineStylesheets: 'never' },

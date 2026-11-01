@@ -11,7 +11,7 @@ src/config/lessons.mjs                ders no → video başlığı (sayfa meta 
 src/config/sidebar.mjs                menüyü klasör + frontmatter order'dan üretir
 src/components/                       Starlight override'ları (Header, Head, PageTitle, ...)
 src/styles/theme.css                  palet, tipografi
-scripts/                              build sonrası _headers, link ve hassas veri kontrolü
+scripts/                              build sonrası CSP meta/base önek, link ve hassas veri kontrolü
 tools/pdf-fingerprints.py             PDF sayfa parmak izleri
 tools/screenshots/                    ekran görüntüsü çıkarma ve WebP'ye çevirme (isteğe bağlı karartma)
 src/assets/ekran/                     PDF'teki ekran görüntüleri (WebP)
@@ -25,7 +25,7 @@ Kaynak PDF/PNG'ler, render'lar ve çalışma dosyaları repoya girmez (`.gitigno
 ```bash
 npm ci                    # bağımlılıklar
 npm run dev               # yerel geliştirme
-npm run build             # dist/ + dist/_headers (CSP hash'leri)
+npm run build             # dist/ + CSP meta etiketleri ve base önekli bağlantılar (scripts/postbuild.mjs)
 npm run check             # iç bağlantı + hassas veri kontrolü (build sonrası)
 ```
 
@@ -73,7 +73,8 @@ Dosya ve klasör adları ASCII (ç→c, ğ→g, ı/İ→i, ö→o, ş→s, ü→
 
 ## Kurallar
 
-- Push, deploy, uzak repo işlemleri kullanıcı istemeden yapılmaz.
+- Push (= yayın) kullanıcı istemeden yapılmaz.
 - Harici script, analitik, font CDN'i eklenmez. Fontlar `@fontsource` paketleriyle self-host.
 - Yeni inline script eklenirse CSP hash'i build sonrası otomatik eklenir; harici kaynak eklenmez.
+- Site GitHub Pages'te `/devops-defterim/` alt dizininde yayınlanır (`main`'e push = yayın, `.github/workflows/deploy.yml`). İç bağlantılar `/modul/sayfa/` yazılır; önek build sonrası eklenir.
 - Bağımlılıklar minimumda; `npm audit` temiz kalmalı.

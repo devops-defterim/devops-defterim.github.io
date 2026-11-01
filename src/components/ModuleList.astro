@@ -3,16 +3,17 @@ import { getCollection } from 'astro:content';
 import { modules } from '../config/modules.mjs';
 
 const docs = await getCollection('docs');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const items = modules
 	.filter((m) => m.sidebar !== false)
 	.map((m) => {
 		const pages = docs
 			.filter((d) => d.id.startsWith(`${m.dir}/`))
 			.sort((a, b) => (a.data.order ?? 999) - (b.data.order ?? 999));
-		return pages.length ? { ...m, href: `/${pages[0].id}/`, count: pages.length } : null;
+		return pages.length ? { ...m, href: `${base}/${pages[0].id}/`, count: pages.length } : null;
 	})
 	.filter((m) => m !== null);
-items.push({ label: 'Hakkında', href: '/hakkinda/', summary: 'Notların hangi eğitimden tutulduğu, kaynaklar ve kapsam.' });
+items.push({ label: 'Hakkında', href: `${base}/hakkinda/`, summary: 'Notların hangi eğitimden tutulduğu, kaynaklar ve kapsam.' });
 ---
 
 <ul class="bd-module-list">

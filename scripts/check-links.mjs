@@ -4,6 +4,8 @@ import path from 'node:path';
 import { walk } from './lib.mjs';
 
 const DIST = path.resolve('dist');
+// Site bir alt dizinde yayınlanıyor (GitHub Pages proje sitesi); kontrol ederken bu önek atılır.
+const BASE = (process.env.SITE_BASE ?? '/devops-defterim').replace(/\/$/, '');
 if (!fs.existsSync(DIST)) {
 	console.error('dist yok. Önce npm run build çalıştır.');
 	process.exit(1);
@@ -20,7 +22,8 @@ function idsOf(file) {
 }
 
 function resolveTarget(urlPath) {
-	const clean = decodeURIComponent(urlPath);
+	let clean = decodeURIComponent(urlPath);
+	if (BASE && (clean === BASE || clean.startsWith(`${BASE}/`))) clean = clean.slice(BASE.length) || '/';
 	const candidates = [path.join(DIST, clean), path.join(DIST, clean, 'index.html')];
 	return candidates.find((c) => fs.existsSync(c) && fs.statSync(c).isFile());
 }
@@ -29,7 +32,7 @@ const errors = [];
 let checked = 0;
 for (const page of pages) {
 	const html = fs.readFileSync(page, 'utf8');
-	const pageUrl = '/' + path.relative(DIST, page).replace(/index\.html$/, '');
+	const pageUrl = `${BASE}/` + path.relative(DIST, page).replace(/index\.html$/, '');
 	for (const [, attr, raw] of html.matchAll(/\s(href|src)="([^"]+)"/g)) {
 		if (/^(https?:|mailto:|data:|javascript:)/.test(raw) || raw.startsWith('//')) continue;
 		const url = new URL(raw.replace(/&amp;/g, '&'), `https://local${pageUrl}`);
