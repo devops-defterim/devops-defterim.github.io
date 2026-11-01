@@ -1,0 +1,70 @@
+---
+import Default from '@astrojs/starlight/components/Sidebar.astro';
+import TableOfContents from 'virtual:starlight/components/TableOfContents';
+
+const { toc } = Astro.locals.starlightRoute;
+const hasToc = Boolean(toc && toc.items.length > 1);
+---
+
+{
+	hasToc && (
+		<details class="bd-toc" open data-sidebar-toc>
+			<summary>Bu sayfada</summary>
+			<TableOfContents />
+		</details>
+	)
+}
+<Default />
+
+<style>
+	.bd-toc {
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid var(--sl-color-hairline);
+	}
+	.bd-toc summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		cursor: pointer;
+		list-style: none;
+		font-weight: 600;
+		font-size: var(--sl-text-base);
+		color: var(--sl-color-white);
+		padding: 0.2em var(--sl-sidebar-item-padding-inline);
+	}
+	.bd-toc summary::-webkit-details-marker {
+		display: none;
+	}
+	.bd-toc summary::after {
+		content: '';
+		width: 0.5rem;
+		height: 0.5rem;
+		border-right: 2px solid currentColor;
+		border-bottom: 2px solid currentColor;
+		transform: rotate(-45deg);
+		margin-inline-end: 0.35rem;
+		transition: transform 0.15s;
+	}
+	.bd-toc[open] summary::after {
+		transform: rotate(45deg);
+	}
+	.bd-toc :global(h2) {
+		display: none;
+	}
+	.bd-toc :global(ul) {
+		margin-top: 0.25rem;
+	}
+	.bd-toc :global(a) {
+		display: block;
+		font-size: var(--sl-text-sm);
+		text-decoration: none;
+		color: var(--sl-color-gray-2);
+		overflow-wrap: anywhere;
+		padding-block: 0.15rem;
+		padding-inline: var(--sl-sidebar-item-padding-inline);
+	}
+	.bd-toc :global(a:hover),
+	.bd-toc :global(a[aria-current='true']) {
+		color: var(--sl-color-accent-high);
+	}
+</style>

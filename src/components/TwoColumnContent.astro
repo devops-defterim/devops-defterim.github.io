@@ -1,0 +1,11 @@
+---
+// "Bu sayfada" listesi sol menüde (Sidebar.astro). Sağ sütun kullanılmıyor.
+---
+
+<div class="main-pane"><slot /></div>
+
+<style>
+	.main-pane {
+		isolation: isolate;
+	}
+</style>

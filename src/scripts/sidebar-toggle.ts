@@ -34,6 +34,11 @@ function init() {
 		sync();
 	});
 	pane.addEventListener('toggle', sync);
+	// Mobilde "Bu sayfada" listesinden bir başlığa tıklanınca çekmece kapansın.
+	pane.querySelector('[data-sidebar-toc]')?.addEventListener('click', (event) => {
+		const link = (event.target as HTMLElement).closest('a');
+		if (link && !desktop.matches && pane.matches(':popover-open')) pane.hidePopover();
+	});
 	desktop.addEventListener('change', sync);
 	sync();
 }

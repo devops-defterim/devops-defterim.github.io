@@ -4,6 +4,12 @@ description: AWS Console üzerinden EC2 sanal makinesi oluşturma, durdurup baş
 module: baslangic
 lessons: [1]
 order: 2
+prev:
+  link: /baslangic/siteyi-kullanma/
+  label: Siteyi kullanma
+next:
+  link: /linux/isletim-sistemi-ve-shell/
+  label: İşletim sistemi, terminal ve shell
 ---
 
 ## EC2 ekranına ulaşma

@@ -1,4 +1,4 @@
-/* Bulut Defteri teması: tek vurgu rengi (petrol yeşili) ve sıcak nötrler. */
+/* DevOps Defterim teması: tek vurgu rengi (petrol yeşili) ve sıcak nötrler. */
 
 :root {
 	--sl-font: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -126,4 +126,9 @@
 	height: auto;
 	border: 1px solid var(--sl-color-hairline);
 	border-radius: 6px;
+}
+
+/* "Bu sayfada" sol menüde; mobildeki üst şerit kullanılmıyor */
+:root[data-has-toc] {
+	--sl-mobile-toc-height: 0rem;
 }

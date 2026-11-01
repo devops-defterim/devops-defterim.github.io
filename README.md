@@ -1,4 +1,4 @@
-# Bulut Defteri
+# DevOps Defterim
 
 Linux, Git ve GitHub, bulut bilişim temelleri ve AWS üzerine Türkçe ders notları. Notlar, Ottoo ve Ayti.tech iş birliğiyle düzenlenen "Bulut Bilişim ve DevOps Bootcamp" eğitiminden tutulmuş kişisel notlardır; resmi materyal değildir.
 

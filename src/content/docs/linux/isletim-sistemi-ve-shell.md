@@ -4,6 +4,9 @@ description: İşletim sisteminin ortaya çıkışı, kernel ve sistem çağrıl
 module: linux
 lessons: [1]
 order: 1
+prev:
+  link: /baslangic/calisma-makinesi/
+  label: Çalışma makinesini açma
 ---
 
 [Sanal makinemizi oluşturduk](/baslangic/calisma-makinesi/) şimdi biraz teorik kısma geçelim.

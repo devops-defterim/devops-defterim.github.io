@@ -47,10 +47,9 @@ Kullanıcıya şunları sun ve onayını bekle; onaysız dosya yazma:
 
 ## 4b. Ekran görüntüleri
 
-- `python tools/screenshots/pipeline.py <pdf> work/<tarih>/ekran` çalıştır. Gereken araçlar: `pymupdf`, `pillow`, `swiftc`, `tesseract`.
-- Dosya adları PDF sayfa numarasına bağlıdır (`pNNN-k`). Tam sürüm PDF'te sayfa numaraları kaydıysa eski görüntüleri yeni numaralarla eşleyip sayfalardaki yolları güncelle.
-- Her yeni görüntüyü gözle kontrol et (alt ajanlara paylaştırılabilir). Kaçakları `private-notes/redact-manual.json`'a oransal kutu olarak ekleyip hattı yeniden çalıştır.
-- Görüntüleri ilgili sayfada, PDF'teki konumuna denk gelen metnin ardına anlamlı alt metinle ekle.
+- `python tools/screenshots/extract.py <pdf> work/<tarih>/raw` ve `python tools/screenshots/export.py work/<tarih>/raw` çalıştır (gerekenler: `pymupdf`, `pillow`). Görüntüler karartılmadan eklenir.
+- Dosya adları PDF sayfa numarasına bağlıdır (`pNNN-k`). Tam sürüm PDF'te sayfa numaraları kaydıysa sayfalardaki yolları yeni numaralara göre güncelle.
+- Her görüntüyü ilgili sayfada PDF'teki yerine, anlamlı alt metinle ekle; kopyalanabilir kod bloğu altına gelir.
 
 ## 5. Güncelle ve doğrula
 

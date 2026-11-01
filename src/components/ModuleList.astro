@@ -4,6 +4,7 @@ import { modules } from '../config/modules.mjs';
 
 const docs = await getCollection('docs');
 const items = modules
+	.filter((m) => m.sidebar !== false)
 	.map((m) => {
 		const pages = docs
 			.filter((d) => d.id.startsWith(`${m.dir}/`))

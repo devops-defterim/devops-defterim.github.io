@@ -5,7 +5,7 @@ import { modules } from './src/config/modules.mjs';
 import { buildSidebar } from './src/config/sidebar.mjs';
 
 export default defineConfig({
-	site: 'https://bulut-defteri.pages.dev',
+	site: 'https://devops-defterim.pages.dev',
 	output: 'static',
 	trailingSlash: 'always',
 	build: { inlineStylesheets: 'never' },
@@ -15,7 +15,7 @@ export default defineConfig({
 	markdown: { smartypants: false },
 	integrations: [
 		starlight({
-			title: 'Bulut Defteri',
+			title: 'DevOps Defterim',
 			description: 'Linux, Git ve AWS üzerine Türkçe ders notları.',
 			defaultLocale: 'root',
 			locales: { root: { label: 'Türkçe', lang: 'tr' } },
@@ -53,6 +53,8 @@ export default defineConfig({
 				Header: './src/components/Header.astro',
 				MobileMenuToggle: './src/components/MobileMenuToggle.astro',
 				PageTitle: './src/components/PageTitle.astro',
+				Sidebar: './src/components/Sidebar.astro',
+				TwoColumnContent: './src/components/TwoColumnContent.astro',
 			},
 		}),
 	],

@@ -18,4 +18,4 @@ Notlar Linux, Git ve GitHub, bir mini proje, bulut bilişim temelleri ve AWS'nin
 Bunlar kişisel notlardır, eğitimin resmi materyali değildir. Eğitmen veya eğitimi düzenleyen kurumlar tarafından hazırlanmamış ya da onaylanmamıştır. Hatalar bana aittir.
 :::
 
-Komutlar ders sırasında alınan ekran görüntülerinden aktarıldı. Hesap numaraları, IP adresleri ve kişisel bilgiler gibi değerler yer tutucularla değiştirildi. Örneğin `<AWS_ACCOUNT_ID>` ya da `203.0.113.10` gördüğün yerde kendi değerini kullanmalısın.
+Sayfalardaki ekran görüntüleri ders sırasında alındı. Görüntülerin altındaki kopyalanabilir komutlarda hesap numarası, IP adresi gibi değerler yer tutucuyla yazıldı. Örneğin `<AWS_ACCOUNT_ID>` ya da `203.0.113.10` gördüğün yerde kendi değerini kullanmalısın.

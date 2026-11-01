@@ -32,7 +32,7 @@ function collect(dirAbs, slugPrefix, groupLabels) {
 
 export function buildSidebar(modules) {
 	const groups = modules
-		.filter((m) => fs.existsSync(path.join(DOCS_DIR, m.dir)))
+		.filter((m) => m.sidebar !== false && fs.existsSync(path.join(DOCS_DIR, m.dir)))
 		.map((m) => ({
 			label: m.label,
 			collapsed: true,

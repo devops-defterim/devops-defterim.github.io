@@ -1,4 +1,4 @@
-# Bulut Defteri
+# DevOps Defterim
 
 Kişisel ders notlarından (Bulut Bilişim ve DevOps Bootcamp) üretilen statik dokümantasyon sitesi. Astro + Starlight, tamamen statik çıktı. İç planlama notları `private-notes/` altında (git'e girmez).
 
@@ -13,8 +13,8 @@ src/components/                       Starlight override'ları (Header, Head, Pa
 src/styles/theme.css                  palet, tipografi
 scripts/                              build sonrası _headers, link ve hassas veri kontrolü
 tools/pdf-fingerprints.py             PDF sayfa parmak izleri
-tools/screenshots/                    ekran görüntüsü çıkarma, OCR ve karartma hattı
-src/assets/ekran/                     karartılmış ekran görüntüleri (WebP)
+tools/screenshots/                    ekran görüntüsü çıkarma ve WebP'ye çevirme (isteğe bağlı karartma)
+src/assets/ekran/                     PDF'teki ekran görüntüleri (WebP)
 .claude/skills/yeni-pdf-isle/         yeni PDF işleme akışı
 ```
 
@@ -56,11 +56,10 @@ Dosya ve klasör adları ASCII (ç→c, ğ→g, ı/İ→i, ö→o, ş→s, ü→
   - Terminal → kod bloğu. Prompt atılır. Komut `bash frame="terminal"` bloğunda, çıktı ayrı `text title="Çıktı"` bloğunda.
   - Konsol adımları → numaralı liste (**EC2 → Instances → Launch instance**).
   - Tablo → Markdown tablo. Şema → tablo/metin.
-- PDF'teki ekran görüntülerinin kendisi de, hassas alanları karartılmış olarak sayfaya eklenir:
-  - Üretim: `python tools/screenshots/pipeline.py <pdf> work/<tarih>/ekran` → `src/assets/ekran/<pNNN-k>.webp` (N: PDF sayfası, k: sayfadaki sıra).
-  - Kişisel desenler `private-notes/redact-names.txt`, elle kutular `private-notes/redact-manual.json` içindedir (oransal `[x0, y0, x1, y1]`).
-  - Karartma otomatiktir (dört OCR geçişi, AWS Console hesap menüsü ve GitHub avatar kuralları). Yayından önce karartılmış çıktı yeniden OCR'lanıp desenlerle taranır; Finder, ev dizini, tarayıcı, Teams gibi riskli görüntüler gözle kontrol edilir. Kaçaklar elle kutuyla kapatılıp hat yeniden çalıştırılır.
-  - Sayfada PDF'teki yerine eklenir: `![Anlamlı alt metin](../../../assets/ekran/p018-1.webp)`. O görüntüden aktarılan kod bloğu/tablo hemen altına gelir.
+- PDF'teki ekran görüntülerinin hepsi, karartma yapılmadan, PDF'teki yerine eklenir:
+  - Çıkarma: `python tools/screenshots/extract.py <pdf> work/<tarih>/raw`, WebP'ye çevirme: `python tools/screenshots/export.py work/<tarih>/raw` → `src/assets/ekran/<pNNN-k>.webp` (N: PDF sayfası, k: sayfadaki sıra).
+  - Sayfada: `![Anlamlı alt metin](../../../assets/ekran/p018-1.webp)`. O görüntüden aktarılan kod bloğu/tablo hemen altına gelir.
+  - `pipeline.py` / `redact.py` isteğe bağlı karartma hattıdır; varsayılan akışta kullanılmaz.
 - Metin, kullanıcının PDF'teki cümleleridir. Sadece yazım/noktalama düzeltilir, komut ve buton adları `kod`/**kalın** yapılır, metin `##` başlıklarla bölünür, konsol adımları aynı kelimelerle numaralı listeye çevrilir. Cümleler yeniden yazılmaz, özetlenmez; notta olmayan açıklama eklenmez.
 - Kullanıcının cümlesinde teknik hata varsa cümle kalır, altına `:::caution[Düzeltme]` kutusu eklenir ve review notlarına yazılır.
 - Komutlar harfi harfine aktarılır. Emin olunamayan karakter tahmin edilmez, review notlarına sayfa numarasıyla yazılır.

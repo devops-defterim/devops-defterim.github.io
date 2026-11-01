@@ -1,6 +1,6 @@
 # Yayın: Cloudflare Pages
 
-Site `https://bulut-defteri.pages.dev` adresinde, alan adı gerektirmeden ve ücretsiz olarak yayınlanır.
+Site `https://devops-defterim.pages.dev` adresinde, alan adı gerektirmeden ve ücretsiz olarak yayınlanır.
 
 ## Karar
 
@@ -40,11 +40,11 @@ Kaynaklar:
 
 ## 2. GitHub reposu
 
-1. GitHub'da yeni repo oluştur: ad `bulut-defteri`, görünürlük Public ya da Private. README, .gitignore ve lisans **ekleme**; repo boş kalsın.
+1. GitHub'da yeni repo oluştur: ad `devops-defterim`, görünürlük Public ya da Private. README, .gitignore ve lisans **ekleme**; repo boş kalsın.
 2. Yerelde uzak adresi ekle ve gönder:
 
    ```bash
-   git remote add origin https://github.com/<kullanici>/bulut-defteri.git
+   git remote add origin https://github.com/<kullanici>/devops-defterim.git
    git push -u origin main
    ```
 
@@ -60,12 +60,12 @@ Kaynaklar:
 
 1. https://dash.cloudflare.com adresinde ücretsiz hesap aç ve 2FA'yı etkinleştir.
 2. **Workers & Pages → Create → Pages → Connect to Git** yolunu izle.
-3. GitHub'ı bağla. Cloudflare GitHub uygulamasına **sadece** `bulut-defteri` reposuna erişim ver ("Only select repositories").
+3. GitHub'ı bağla. Cloudflare GitHub uygulamasına **sadece** `devops-defterim` reposuna erişim ver ("Only select repositories").
 4. Build ayarları:
 
    | Alan | Değer |
    |---|---|
-   | Project name | `bulut-defteri` (adres: `bulut-defteri.pages.dev`; doluysa başka bir ad seç ve `astro.config.mjs` içindeki `site` değerini güncelle) |
+   | Project name | `devops-defterim` (adres: `devops-defterim.pages.dev`; doluysa başka bir ad seç ve `astro.config.mjs` içindeki `site` değerini güncelle) |
    | Production branch | `main` |
    | Framework preset | None |
    | Build command | `npm run build` |
@@ -78,11 +78,11 @@ Kaynaklar:
 
 ## 4. İlk yayını doğrula
 
-1. `https://bulut-defteri.pages.dev` adresini aç. Menü, arama ve açık/koyu mod çalışmalı.
+1. `https://devops-defterim.pages.dev` adresini aç. Menü, arama ve açık/koyu mod çalışmalı.
 2. Güvenlik başlıklarını kontrol et:
 
    ```bash
-   curl -sI https://bulut-defteri.pages.dev/ | grep -iE 'content-security|x-frame|x-content|referrer|permissions|strict-transport'
+   curl -sI https://devops-defterim.pages.dev/ | grep -iE 'content-security|x-frame|x-content|referrer|permissions|strict-transport'
    ```
 
 3. Tarayıcı geliştirici araçlarında Console sekmesinde CSP hatası olmamalı.
