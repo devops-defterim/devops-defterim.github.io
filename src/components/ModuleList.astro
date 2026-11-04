@@ -8,7 +8,7 @@ const items = modules
 	.filter((m) => m.sidebar !== false)
 	.map((m) => {
 		const pages = docs
-			.filter((d) => d.id.startsWith(`${m.dir}/`))
+			.filter((d) => d.id.startsWith(`${m.dir}/`) && !d.data.sidebar?.hidden)
 			.sort((a, b) => (a.data.order ?? 999) - (b.data.order ?? 999));
 		return pages.length ? { ...m, href: `${base}/${pages[0].id}/`, count: pages.length } : null;
 	})

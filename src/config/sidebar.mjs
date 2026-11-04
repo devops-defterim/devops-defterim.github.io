@@ -5,6 +5,11 @@ import { fileURLToPath } from 'node:url';
 const DOCS_DIR = fileURLToPath(new URL('../content/docs/', import.meta.url));
 const PAGE_EXT = /\.mdx?$/;
 
+function isHidden(file) {
+	const frontmatter = fs.readFileSync(file, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+	return /^sidebar:\s*\n\s+hidden:\s*true\s*$/m.test(frontmatter?.[1] ?? '');
+}
+
 function readOrder(file) {
 	const source = fs.readFileSync(file, 'utf8');
 	const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -23,7 +28,7 @@ function collect(dirAbs, slugPrefix, groupLabels) {
 				order: Math.min(...children.map((c) => c.order)),
 				item: { label: groupLabels[name] ?? name, collapsed: true, items: children.map((c) => c.item) },
 			});
-		} else if (PAGE_EXT.test(name) && !name.startsWith('index.')) {
+		} else if (PAGE_EXT.test(name) && !name.startsWith('index.') && !isHidden(abs)) {
 			entries.push({ order: readOrder(abs), item: { slug: slugPrefix + name.replace(PAGE_EXT, '') } });
 		}
 	}

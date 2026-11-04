@@ -3,6 +3,8 @@ title: Siteyi kullanma
 description: Menü, arama, kod blokları ve sayfa düzeni hakkında kısa bilgiler.
 module: baslangic
 order: 1
+sidebar:
+  hidden: true
 prev: false
 next:
   link: /baslangic/calisma-makinesi/

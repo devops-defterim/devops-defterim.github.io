@@ -2,13 +2,13 @@
 // Yeni modül eklemek: src/content/docs/<dir>/ klasörünü oluştur ve bu listeye bir girdi ekle.
 // Sayfaların modül içindeki sırası frontmatter'daki `order` alanından gelir.
 // Alt klasörler menüde grup olur; grup adı `groups` içinden okunur.
-// `sidebar: false` olan modül menüde ve ana sayfadaki listede görünmez (ör. ana sayfadaki düğmelerden açılan Başlangıç).
+// `sidebar: false` olan modül menüde ve ana sayfadaki listede görünmez.
+// Tek bir sayfayı menüden gizlemek için o sayfanın frontmatter'ına `sidebar: { hidden: true }` yazılır.
 export const modules = [
 	{
 		dir: 'baslangic',
-		label: 'Başlangıç',
-		summary: 'Siteyi kullanma ve derslerde kullanılan çalışma makinesi.',
-		sidebar: false,
+		label: 'Gerekli Kurulumlar',
+		summary: 'Derslerde kullanılan AWS çalışma makinesinin açılması.',
 	},
 	{
 		dir: 'linux',
