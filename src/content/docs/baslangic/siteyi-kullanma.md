@@ -48,6 +48,4 @@ Hesap numarası, erişim anahtarları, şifreler, token'lar ve e-posta adresleri
 
 Komutları kendin denerken bu yerlere kendi değerlerini yazmalısın. Kod bloklarındaki `203.0.113.10` gibi IP adresleri ve `ornekkullanici` gibi adlar da örnek değerlerdir.
 
-## Sayfa düzeni
-
-Her sayfanın başlığının altında notun tutulduğu ders yazar. Sayfanın sonunda önceki ve sonraki sayfaya bağlantılar bulunur.
+Sayfanın sonunda önceki ve sonraki sayfaya bağlantılar bulunur.
