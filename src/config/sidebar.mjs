@@ -39,5 +39,5 @@ export function buildSidebar(modules) {
 			items: collect(path.join(DOCS_DIR, m.dir), `${m.dir}/`, m.groups ?? {}).map((e) => e.item),
 		}))
 		.filter((g) => g.items.length > 0);
-	return groups;
+	return [...groups, { slug: 'iletisim' }];
 }

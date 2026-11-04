@@ -13,6 +13,7 @@ const items = modules
 		return pages.length ? { ...m, href: `${base}/${pages[0].id}/`, count: pages.length } : null;
 	})
 	.filter((m) => m !== null);
+items.push({ label: 'İletişim', href: `${base}/iletisim/`, summary: 'Soru, öneri ve geri bildirimler için LinkedIn bağlantısı.' });
 ---
 
 <ul class="bd-module-list">
