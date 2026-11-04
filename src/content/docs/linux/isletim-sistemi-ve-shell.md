@@ -5,8 +5,8 @@ module: linux
 lessons: [1]
 order: 1
 prev:
-  link: /baslangic/calisma-makinesi/
-  label: Çalışma makinesini açma
+  link: /baslangic/ec2-instance-connect/
+  label: EC2 Instance Connect ile bağlanma
 ---
 
 [Sanal makinemizi oluşturduk](/baslangic/calisma-makinesi/) şimdi biraz teorik kısma geçelim.
